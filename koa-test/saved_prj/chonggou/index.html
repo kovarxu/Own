@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scaleable=no">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>warrenty</title>
+  <link rel="stylesheet" href="style/xys.css">
+  <link rel="stylesheet" href="style/main.css">
+</head>
+<body>
+  <div class="container">
+    <!-- 被保人信息 -->
+    <section class="info-wrapper">
+      <h2 class="title row items-center justify-between">
+        <div class="title-name">
+          被保人信息
+        </div>
+        <div class="icon-wrapper">
+          <img src="image/icon_01.png" alt="add a new item" class="title-icon">
+        </div>
+      </h2>
+      <ul class="person-info">
+        <li class="info-item row items-center">
+          <div class="icon-wrapper">
+            <div class="icon select-icon"></div>
+          </div>
+          <div class="person-info">
+            <div class="person-name">陈小波</div>
+            <div class="person-id">441558788781585244X</d>
+          </div>
+        </li>
+        <li class="info-item row items-center">
+          <div class="icon-wrapper">
+            <div class="icon not-select-icon"></div>
+          </div>
+          <div class="person-info">
+            <div class="person-name">欧阳小波</div>
+            <div class="person-id">4552544487815822544</div>
+          </div>
+        </li>
+      </ul>
+    </section>
+
+    <!-- 保险公司 -->
+    <section class="info-wrapper">
+      <ul class="other-info">
+        <li class="info-item row items-center justify-between">
+          <div class="item-name">保险公司</div>
+          <div class="item-value">平安保险</div>
+        </li>
+        <li class="info-item row items-center justify-between">
+          <div class="item-name">产品名称</div>
+          <input type="text" class="item-value item-input" placeholder="请输入保险名称" />
+        </li>
+        <li class="info-item row items-center justify-between">
+          <div class="item-name">保单号</div>
+          <input type="text" class="item-value item-input" placeholder="请输入保险保单号" />
+        </li>
+        <li class="info-item row items-center justify-between">
+          <div class="item-name">保障开始</div>
+          <div class="icon-wrapper row items-center justify-end">
+            <span class="icon more-icon"></span>
+          </div>
+        </li>
+        <li class="info-item row items-center justify-between">
+          <div class="item-name">
+            保障终止
+            <div class="icon-info row items-center">
+              <span class="icon select-icon"></span>
+              终生
+            </div>
+          </div>
+          <div class="icon-wrapper row items-center justify-end">
+            <span class="icon more-icon"></span>
+          </div>
+        </li>
+      </ul>
+    </section>
+
+    <!-- 保障内容 -->
+    <section class="info-wrapper">
+      <h2 class="title">保障内容</h2>
+      <ul class="insurance-info ">
+        <li class="info-item row items-center justify-between">
+          <div class="item-name">保险责任</div>
+          <div class="more-info row items-center">
+            重疾
+            <span class="icon more-icon"></span>
+          </div>
+        </li>
+        <li class="info-item row items-center justify-between">
+          <div class="item-name assurance-value">保额</div>
+          <div class="item-value">
+            <input type="text" value="150" class="money-value" />
+            <span class="money-unit">万元</span>
+          </div>
+        </li>
+      </ul>
+    </section>
+
+    <!-- 保障内容2 -->
+    <section class="info-wrapper">
+      <h2 class="title row items-center justify-between">
+        <div class="title-name">
+          保障内容2
+        </div>
+        <div class="delete-item">删除</div>
+      </h2>
+      <ul class="insurance-info">
+        <li class="info-item row items-center justify-between">
+          <div class="item-name">保险责任</div>
+          <div class="more-info row items-center">
+            重疾
+            <span class="icon more-icon"></span>
+          </div>
+        </li>
+        <li class="info-item row items-center justify-between">
+          <div class="item-name assurance-value">保额</div>
+          <div class="item-value">
+            <input type="text" value="150" class="money-value" />
+            <span class="money-unit">万元</span>
+          </div>
+        </li>
+      </ul>
+    </section>
+  </div>
+
+  <!-- 新增保障内容 -->
+  <div class="add-content">
+    <div class="tips">
+      <img src="image/icon_04.png" alt="add content icon" class="add-icon">
+      新增保障内容
+    </div>
+  </div>
+
+  <!-- 备份保险单信息页 -->
+  <section class="info-wrapper backup">
+    <h2 class="first-title">备份保险单信息页（可选）</h2>
+    <h3 class="second-title">保险单信息页含个人信息，保障信息等内容</h3>
+    <div class="upload row items-center flex-wrap">
+      <div class="add-item">
+        <img src="image/icon_05.png" alt="add a new item" class="add-item-icon">
+      </div>
+      <div class="example-item">
+        <div class="example-name">示例照片</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 到期提醒 -->
+  <section class="expire-note row items-center justify-between">
+    <h2 class="title">到期提醒我<a href="#" class="see-note">查看提醒详情</a></h2>
+    <div class="icon-wrapper row items-center">
+      <div class="icon control-icon"></div>
+    </div>
+  </section>
+
+  <!-- 按钮 -->
+  <div class="assure">确定</div>
+</body>
+</html>

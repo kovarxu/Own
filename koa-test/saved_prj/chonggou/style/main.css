@@ -1,0 +1,290 @@
+
+input[type=text], textarea {
+  width: 10em;
+  height: 4.3rem;
+  border: none;
+  text-align: right;
+  background: none;
+}
+
+img {
+  vertical-align: middle;
+}
+
+.info-wrapper {
+  padding-left: 1.15rem;
+  border-bottom: 1.0rem solid #eee;
+}
+
+.info-wrapper .title {
+  height: 3.9rem;
+  margin-left: -1.15rem;
+  padding-left: 1.15rem;
+  border-bottom: 1px solid #e2e5e7;
+  line-height: 3.9rem;
+  font-size: 1.5rem;
+  font-weight: 700;
+}
+
+.info-wrapper .info-item {
+  border-bottom: 1px solid #e2e5e7;
+}
+
+.info-wrapper .info-item, .info-wrapper .title {
+  padding-right: 1.6rem;
+}
+
+.info-wrapper .info-item:last-child {
+  border: none;
+}
+
+/* 图标 */
+span.icon {
+  display: inline-block;
+}
+
+.icon {
+  background-repeat: no-repeat;
+  background-size: contain;
+}
+
+.select-icon {
+  width: 1.6rem;
+  height: 1.6rem;
+  background-image: url(../image/icon_02.png);
+}
+
+.not-select-icon {
+  width: 1.6rem;
+  height: 1.6rem;
+  background-image: url(../image/icon_03.png);
+}
+
+.more-icon {
+  width: 0.8rem;
+  height: 1.1rem;
+  background-image: url(../image/icon_07.png);
+}
+
+.control-icon {
+  width: 3.3rem;
+  height: 1.6rem;
+  background-image: url(../image/icon_06.png);
+}
+
+/* 被保人信息 */
+
+.title .title-icon {
+  width: 2.2rem;
+  margin-right: 0.15rem;
+}
+
+.info-item .person-info {
+  padding-right: 1.15rem;
+  line-height: 1.8rem;
+}
+
+.person-info .info-item {
+  padding: 1.25rem 0;
+  border-bottom: 1px solid #e2e5e7;
+}
+
+.person-info .icon-wrapper {
+  padding-right: 1.1rem;
+  padding-bottom: 1.8rem;
+}
+
+.person-info .person-name {
+  font-size: 1.5rem;
+}
+
+.person-info .person-id {
+  font-size: 1.2rem;
+  color: #666;
+}
+
+.info-item .assurance-value {
+  max-width: 4em;
+  text-align: justify;
+  line-height: 0;
+}
+
+.assurance-value:after {
+  content: 'fill elem';
+  display: inline-block;
+  width: 4em;
+  height: 0;
+  visibility: hidden;
+}
+
+/* 保险公司 */
+
+.other-info .info-item, .insurance-info .info-item {
+  height: 4.3rem;
+  border-bottom: 1px solid #e2e5e7;
+  font-size: 1.5rem;
+}
+
+.insurance-info .money-value {
+  width: 5em;
+}
+
+.other-info .info-item:last-child .icon {
+  vertical-align: -0.2rem;
+}
+
+.other-info .icon-wrapper {
+  width: 2.5rem;
+  height: 100%;
+}
+
+.info-item .item-input {
+  
+  color: #969696;
+}
+
+.more-info {
+  height: 100%;
+  padding-left: 1.0rem;
+}
+
+.more-info .more-icon {
+  margin-left: 1.0rem;
+}
+
+.item-name .icon-info, .icon-info .select-icon {
+  display: inline-block;
+  color: #ababab;
+}
+
+.item-name .icon-info {
+  margin-left: 2rem;
+}
+
+/* 保障内容 */
+
+.title .delete-item {
+  padding-left: 1.0rem;
+  font-size: 1.3rem;
+  color: #fe5b70;
+}
+
+/* 新增内容 */
+
+.add-content {
+  padding: 0 0.8rem 2.1rem;
+  background-color: #eee; 
+}
+
+.add-content .tips {
+  border: 1px dashed;
+  line-height: 4.45rem;
+  font-size: 1.5rem;
+  color: #8c7fee;
+  text-align: center;
+  background-color: #fff;
+}
+
+.add-content .add-icon {
+  width: 1.35rem;
+  vertical-align: -.2rem;
+}
+
+/* 备份信息页 */
+
+.backup {
+  width: 100%;
+  overflow: hidden;
+}
+
+.backup .first-title {
+  padding-top: 1.1rem;
+  padding-bottom: 0.75rem;
+  font-size: 1.5rem;
+  font-weight: 700;
+}
+
+.backup .second-title {
+  padding-bottom: 1.4rem;
+  font-size: 1.3rem;
+}
+
+.backup .upload {
+  margin-right: -2.3rem;
+}
+
+.upload > div {
+  margin-right: 2.3rem;
+  margin-bottom: 1.7rem;
+}
+
+.upload .add-item {
+  width: 9.9rem;
+  height: 9.9rem;
+  border: 1px dashed #8c7fee;
+  line-height: 10.0rem;
+  text-align: center;
+}
+
+.upload .add-item-icon {
+  width: 2.8rem;
+}
+
+.upload .example-item {
+  position: relative;
+  width: 9.9rem;
+  height: 9.9rem;
+  background: #efeeff;
+}
+
+.example-item .example-name {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  height: 1.8rem;
+  font-size: 1.1rem;
+  line-height: 1.8rem;
+  text-align: center;
+  color: #fff;
+  background-color: #7a7982;
+}
+
+/* 到期提醒 */
+
+.expire-note {
+  height: 8.85rem;
+  padding-left: 1.15rem;
+  border-bottom: 3.0rem solid #eee;
+}
+
+.expire-note .title {
+  font-size: 1.5rem;
+  font-weight: 700;
+}
+
+.expire-note .see-note {
+  padding-left: 1.5rem;
+  font-size: 1.3rem;
+  font-weight: normal;
+  text-decoration: underline;
+  color: #8c7fee;
+}
+
+.expire-note .icon-wrapper {
+  height: 100%;
+  padding-left: 0.6rem;
+  margin-right: 1.45rem;
+}
+
+.expire-note .enable-icon {
+  width: 3.3rem;
+}
+
+/* 确定按钮 */
+.assure {
+  font-size: 1.8rem;
+  line-height: 4.9rem;
+  text-align: center;
+  color: #fff;
+  background: #fe5b70;
+}

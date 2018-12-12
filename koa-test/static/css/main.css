@@ -4,3 +4,8 @@ header {
   line-height: 1.5;
   color: red;
 }
+
+footer {
+  font-size: 20px;
+  color: blue;
+}
