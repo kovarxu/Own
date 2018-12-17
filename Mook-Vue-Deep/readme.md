@@ -20,4 +20,8 @@ Vue深入探索课程笔记
 ## 第2章 Vue+Webpack的前端工程工作流搭建
 
 -------------
+新建build文件夹，用于放置配置文件
 
+* 加入webpack.config.base.js(所有环境都会用到)
+* 加入webpack.config.client.js
+* 
