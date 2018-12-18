@@ -30,3 +30,22 @@ propaganda
 entail: to involve sth that cannot be avoided
 dodge
 stagger / shatter / stamp
+
+hierarchy
+conscientious
+stall
+staple
+statement
+resolve
+stereotype
+prospective
+
+flutter
+aspiration / ambition / pretension
+toll
+clasp
+strand
+concise
+preliminary
+streak / stream / streamline
+stride
