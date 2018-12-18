@@ -9,7 +9,7 @@ spite / out of spite
 vi / deviate
 -ure / fracture
 
-setback
+setback / fallback
 arrogant / conceit
 ponder
 spoil
@@ -18,7 +18,7 @@ sprinkle
 ensue
 clutch
 
-sentiment
+sentiment / sentimental
 overhead
 huddle
 reconcile
@@ -27,6 +27,6 @@ stab
 rivalry
 idiom
 propaganda
-entail
+entail: to involve sth that cannot be avoided
 dodge
 stagger / shatter / stamp
