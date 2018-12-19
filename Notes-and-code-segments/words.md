@@ -49,3 +49,19 @@ concise
 preliminary
 streak / stream / streamline
 stride
+
+eligible
+discreet / discern
+coverge / grope
+ascertain
+soar = a soaring skyscraper
+strive - endure
+promote / prompt
+stroll
+stumble / stamp / stump / stagger
+feasible
+stun
+sturdy
+convene / conference
+gracious / elegant
+intimate
