@@ -43,9 +43,9 @@ prospective
 flutter
 aspiration / ambition / pretension
 toll
-clasp
-strand
-concise
-preliminary
+clasp - 卡紧 抱紧 抓紧
+strand - thread / aspect / land along ocean / leave sb. in a place
+concise - giving only the information that is necessary and important,
+preliminary - in preparation for ...
 streak / stream / streamline
-stride
+stride - long step / developing
