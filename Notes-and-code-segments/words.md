@@ -48,9 +48,7 @@ strand - thread / aspect / land along ocean / leave sb. in a place
 concise - giving only the information that is necessary and important,
 preliminary - in preparation for ...
 streak / stream / streamline
-<<<<<<< HEAD
 stride - long step / developing
-=======
 stride
 
 eligible
@@ -68,4 +66,3 @@ sturdy
 convene / conference
 gracious / elegant
 intimate
->>>>>>> origin/dev
