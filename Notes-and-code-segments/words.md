@@ -65,4 +65,20 @@ convene / conference
 gracious / elegant
 intimate
 
+reassure / assure / ensure
+subordinate / affiliate / subsidiary (subsidy)
+redundant / versatile
+extinct / extinguish / intact / exempt
+slump
+indifferent
+affection / sensation / intuition / instinct
 
+contempt / comtemplate
+plunge
+slick
+dissipate
+at length / in essence / in bulk
+divine
+suite / outfit
+designate / appoint / entitle / delegate / inaugurate
+dispense / dispensable / indispensable (necessary)
