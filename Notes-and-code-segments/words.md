@@ -49,9 +49,7 @@ concise - giving only the information that is necessary and important,
 preliminary - in preparation for ...
 streak / stream / streamline
 stride - long step / developing
-stride
 
-eligible
 discreet / discern
 coverge / grope
 ascertain

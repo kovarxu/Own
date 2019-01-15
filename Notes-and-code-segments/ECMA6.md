@@ -59,6 +59,28 @@ ES6入门
 * `Reflect.enumerate(obj)` 返回Iterator对象，自身 + 继承 (可枚举，无Symbol)
 * 遍历次序：先所有属性值为数值，然后为字符串，最后是Symbol，后二者按照生成时间排序
 
+### Additions
+
+* reduce函数
+`reduce(func(accumulator, currentValue, currentIndex, array), initialValue)`
+如果未提供initialValue，则reduce从array的[1]位置开始，一般提供它较为安全
+`[].reduce(func, iv) 和 [iv].reduce(func, iv)`均返回iv
+如果在reduce中修改了array，不会**增大**(但是可能减小)目前的currentIndex遍历区间，变更会实际应用到array上面
+
+* map函数
+`map(func(cur, index, array), thisArg)`
+注意使用`["1", "2", "3"].map(parseInt)`会得到`[1, NaN, NaN]`，因为parseInt接收2个参数，index被当做进制参数传入了
+应使用`["1", "2", "3"].map(x => parseInt(x, 10))`
+
+### 数组相关
+
+* 赋初值
+对于V8引擎，含有`empty slot`的数组处理速度减慢且不可回复
+`const ul = new Array(3).fill(0)`对于对象是浅拷贝，每个slot对应的是同一对象
+`const ol = Array.from(new Array(3), () => ({}))`深拷贝，每个slot对应不同对象
+或者直接`const ol = Array.from({length: 3}, () => ({}))`
+
 ### Symbol
 
 * ES5
+
