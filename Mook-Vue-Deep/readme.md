@@ -1,27 +1,21 @@
-Vue制作Todo应用课程
-
-前端的价值
-* 搭建前段工程
-* 网络优化 加快、缓存HTTP
-* API定制 与后端交流API
-* nodejs层 搭建环境 有时在前后端中加一层node层，用于转发、数据分析等
-
-Vue深入探索课程笔记
-
-## vue-loader + webpack项目配置
+# 注册送50g流量,加快npm安装速度
+注册即送50g流量，付费用户赠送Netflix，HBO账号
 
 
-学习内容：
-* Vue项目开发
-* Vue + Webpack工作流
-* Vue + Vue-Router + Vuex项目架构
-* Vue服务端渲染深度集成
+# About
+这是慕课网上[Vue+Webpack打造todo应用](https://www.imooc.com/learn/935)课程的源码
 
-## 第2章 Vue+Webpack的前端工程工作流搭建
 
--------------
-新建build文件夹，用于放置配置文件
+# 使用方法
+```
+git clone https://github.com/Jokcy/vue-todo-tech.git
+```
+进入项目目录，运行
+```
+npm install
+```
+然后执行
+```
+npm run dev
+开始开发项目
 
-* 加入webpack.config.base.js(所有环境都会用到)
-* 加入webpack.config.client.js
-* 

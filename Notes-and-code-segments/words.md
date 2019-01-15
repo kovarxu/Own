@@ -84,3 +84,35 @@ divine
 suite / outfit
 designate / appoint / entitle / delegate / inaugurate
 dispense / dispensable / indispensable (necessary)
+
+orthodox
+inventory
+latent / lateral
+curb / inhibit
+shove / shave
+scrape / scrap
+fort / cascade
+overtake / surpass / surplus
+
+susceptible
+suspension
+dart
+sanction
+elapse / eclipse
+retain
+bound (must be / compulsory | jump | restraint)
+proximity (adjacent)
+sustain
+patriot / portrait
+cozy (a ~ bathrobe / family gathering)
+articulate the sensation
+impetus / momentum
+
+deliberate - think carefully | do sth on purposes | done slowly and carefully
+adjacent / junction / adjunct
+substantial - large in amount | strongly built
+agony | distress
+denote | designate | signify
+contemplate - think carefully | think carefully for accept | look at for a long time
+conscious / conscientious
+bust
