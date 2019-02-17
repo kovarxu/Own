@@ -8,7 +8,6 @@ rog- / arrogant
 spite / out of spite
 vi / deviate
 -ure / fracture
-
 setback / fallback
 arrogant / conceit
 ponder
@@ -114,3 +113,39 @@ denote | designate | signify
 contemplate - think carefully | think carefully for accept | look at for a long time
 conscious / conscientious
 bust
+
+blunt
+tame
+crumble
+integral
+overturn
+intelligent / intelligible
+
+magnificent
+stray / ramble / roam / wander
+remedy
+cordial / cardinal
+groan / moan
+tenant
+immerse / submerge
+shabby
+flare / flutter / fluctuate / flush
+sensation / sentiment
+bump / scratch / scrape / scrap
+
+complement / compliment / commentary / commendation
+frantic
+artillery / ammunition
+dwell on / come upon / draw upon
+scramble
+allocate / designate
+terrace / terrain
+mediate in / between
+defect / betray
+ingredient / gradient
+pasture / pastime
+terrific
+mobilize
+preach / peach / pitch
+instrumental
+testify / verify
