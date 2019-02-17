@@ -28,29 +28,39 @@ class Shape {
   }
 }
 
-Shape.strokePath = function (points) {
+Shape.strokePath = function (ctx, points) {
   points.forEach(item => {
     ctx.lineTo(item[0], item[1]);
   })
 }
 
-const arrow = new Shape([[0, 0], [200, 0], [160, -20], [300, 10], [160, 40], [200, 20], [0, 20]]);
+class Arrow extends Shape {
+  constructor () {
+    super([[0, -10], [200, -10], [160, -30], [300, 0], [160, 30], [200, 10], [0, 10]]);
+  }
+  
+  draw (x, y) {
+    // 先获取canvas
+    let shapeCanvas = getCanvas('shapeCanvas');
+    if (! shapeCanvas) {
+      shapeCanvas = newCanvas(canvasWidth, canvasHeight, 'shapeCanvas');
+      saveCanvas(shapeCanvas);
+    }
+    let shapeCtx = shapeCanvas.ctx;
 
-arrow.draw = function (x, y) {
-  ctx.save();
-    ctx.setTransform(this.sx, 0, 0, this.sy, x, y);
-    ctx.rotate(this.rotate);
-    ctx.beginPath();
-      Shape.strokePath(this.points);
-    ctx.closePath();
-    ctx.fillStyle = this.color;
-    ctx.fill();
-  ctx.restore();
+    shapeCtx.save();
+    // 注意这三个的顺序
+    shapeCtx.translate(x, y);
+    shapeCtx.rotate(this.rotate);
+    shapeCtx.scale(this.sx, this.sy);
+      shapeCtx.beginPath();
+        Shape.strokePath(shapeCtx, this.points);
+      shapeCtx.closePath();
+      shapeCtx.fillStyle = this.color;
+      shapeCtx.fill();
+    shapeCtx.restore();
+    rerender();
+  }
 }
 
-setTimeout(() => {
-  arrow.setRotate(.5);
-  arrow.setScale(2.0);
-  arrow.draw(100, 100);
-}, 1000)
 

@@ -6,5 +6,6 @@
 }
 
 #canvas {
+  display: block;
   background: #ccc;
 }
