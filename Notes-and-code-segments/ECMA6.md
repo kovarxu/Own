@@ -1,4 +1,4 @@
-ES6入门
+## ES6入门
 
 ### let和const命令
 
@@ -79,8 +79,4 @@ ES6入门
 `const ul = new Array(3).fill(0)`对于对象是浅拷贝，每个slot对应的是同一对象
 `const ol = Array.from(new Array(3), () => ({}))`深拷贝，每个slot对应不同对象
 或者直接`const ol = Array.from({length: 3}, () => ({}))`
-
-### Symbol
-
-* ES5
 
