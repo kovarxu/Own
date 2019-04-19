@@ -33,9 +33,4 @@ export class Client {
         }
         this.store.timestamp = response.timestamp
     }
-
-    update (data: string): void {
-        this.store.data = data
-        this.store.timestamp = Date.now()
-    }
 }
