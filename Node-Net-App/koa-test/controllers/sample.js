@@ -16,7 +16,8 @@ module.exports = {
           next();
         }
         ctx.set('Content-Type', contentType)
-        ctx.set("Access-Control-Allow-Origin", "*")
+        ctx.set("Access-Control-Allow-Origin", "http://127.0.0.1")
+        ctx.set("Access-Control-Allow-Credentials", true)
         const result = await fs.readFileSync('static/img/' + pid)
         ctx.body = result
         next()

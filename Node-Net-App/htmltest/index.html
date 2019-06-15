@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>index</title>
+</head>
+<body>
+    <canvas id="canvas"></canvas>
+    <script src="https://code.jquery.com/jquery-1.12.4.js" integrity="sha256-Qw82+bXyGq6MydymqBxNPYTaUXXq7c8v3CwiYwLLNXU=" crossorigin="anonymous"></script>
+    <script>
+        // const img = new Image()
+        // // img.crossOrigin = 'use-credentials'
+        // img.src = 'http://127.0.0.1:9000/img/blueflower.jpg'
+        // $.ajax({
+        //     type: 'GET',
+        //     url: 'https://sslstatic.xiaoyusan.com/dev/dev/act/img/1541327291.png',
+        //     headers: {
+        //         'Content-Type': 'image/jpeg'
+        //     },
+        //     beforeSend (XHR) {
+                
+        //     },
+        //     success: function (msg) {
+        //         console.log(msg)
+        //     }
+        // })
+        const XHR = new XMLHttpRequest()
+        XHR.open('GET', 'https://sslstatic.xiaoyusan.com/dev/dev/act/img/1541327291.png')
+        XHR.onreadystatechange = function () {
+            if (XHR.readyState === 4 && XHR.status === '200') {
+                console.log('success')
+            }
+        }
+        // XHR.setRequestHeader('Content-Type', 'image/jpeg')
+        XHR.send()
+    </script>
+</body>
+</html>
