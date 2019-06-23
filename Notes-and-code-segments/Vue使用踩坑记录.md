@@ -38,6 +38,16 @@ directives: {
 }
 ```
 
+4. 定义方法使用:
+
+```javascript
+methods: {
+    getElement (selector) {
+        return this.$el.querySelector(selector);
+    }
+}
+```
+
 --------------
 
 ## Vue实现一个`slideToggle`
