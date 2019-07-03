@@ -10,9 +10,6 @@ export interface ClientDataStore {
     items: {
         [id: string]: ClientDataItem
     }
-    changed: {
-        [id: string]: number
-    }
 }
 
 export class Client {
@@ -35,14 +32,5 @@ export class Client {
             }
         }
         this.store.timestamp = response.timestamp
-    }
-
-    update (id: string, value: number): void {
-        let store = this.store
-        store.items[id] = {
-            id,
-            value
-        }
-        
     }
 }

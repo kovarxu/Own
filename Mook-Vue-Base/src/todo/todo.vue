@@ -19,21 +19,52 @@
       @filterchange="onFilterChange"
       @clearcompleted="clearCompleted"
     ></Tabs>
+    <TSlot>
+      <!-- vue2.6.0之后使用v-slot:user这种语法 -->
+      <template slot="user"> 
+        Time
+      </template>
+      <template slot="phone">
+        <span>800-880-8852</span>
+      </template>
+    </TSlot>
+    <t-scoped>
+      <!-- vue2.6.0之后使用v-slot:default="slotScoped"这种语法 -->
+      <!-- 内部都是 function (scopedSlot) {...} 这种形式 -->
+      <template slot="default" slot-scope="{items}">
+        my scoped slot: {{ items }}
+      </template>
+    </t-scoped>
+    <A></A>
   </section>  
 </template>
 
 <script>
   import Item from './item.vue'
   import Tabs from './tabs.vue'
+  import TSlot from './tslot.vue'
+  import TScoped from './tscoped.vue'
+  import A from './a.vue'
 
   let todoId = 0;
   export default {
     components: {
       Item,
       Tabs,
+      TSlot,
+      TScoped,
+      A
+    },
+    inject: {
+      
+    },
+    mounted () {
+      console.log(this);
+      this.$listeners.google.call(this);
     },
     data () {
       return {
+        flag: 'todo',
         todos: [{
           id: 0,
           completed: false,

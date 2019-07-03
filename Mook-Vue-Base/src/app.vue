@@ -2,7 +2,7 @@
   <div id="app">
     <div id="cover"></div>
     <Header></Header>
-    <Todo></Todo>
+    <Todo also="yes" @google="onGoogle" @hook:mounted="onTestHook"></Todo>
     <Footer></Footer>
     <Toggle v-for="item in items" :item="item" :container-width="containerWidth"></Toggle>
   </div>
@@ -21,8 +21,12 @@ export default {
     Todo,
     Toggle,
   },
+  provide: {
+    foo: 'items'
+  },
   data () {
     return {
+      flag: 'app',
       containerWidth: 0,
       items: [
         {
@@ -48,6 +52,15 @@ export default {
       this.containerWidth = window.outerWidth;
     })
   },
+  methods: {
+    onGoogle () {
+      // do nothing
+      console.log('google called ' + this.flag)
+    },
+    onTestHook () {
+      console.log('hook called')
+    }
+  }
 }
 </script>
 
