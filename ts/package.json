@@ -8,8 +8,5 @@
   },
   "keywords": [],
   "author": "",
-  "license": "ISC",
-  "devDependencies": {
-    "chai": "^4.2.0"
-  }
+  "license": "ISC"
 }

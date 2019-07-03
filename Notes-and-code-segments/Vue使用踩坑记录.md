@@ -56,4 +56,4 @@ methods: {
 
 2. 改进，使用`max-height`代替`height`实现
 
-3. 自己写一个`toggle`组件
+3. 自己写一个`toggle`组件, 依据`FLIP`原则进行

@@ -7,6 +7,13 @@ import './assets/images/sky.jpg'
 const root = document.createElement('div')
 document.body.appendChild(root)
 
-new Vue({
+Vue.directive('blue', {
+  inserted (el, binding) {
+    console.log('binding', binding)
+    el.style.color = 'blue'
+  }
+})
+
+const v = new Vue({
   render: h => h(App)
 }).$mount(root)
