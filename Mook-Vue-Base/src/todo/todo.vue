@@ -19,18 +19,21 @@
       @filterchange="onFilterChange"
       @clearcompleted="clearCompleted"
     ></Tabs>
+    <Few></Few>
   </section>  
 </template>
 
 <script>
   import Item from './item.vue'
   import Tabs from './tabs.vue'
+  import Few from './few.vue'
 
   let todoId = 0;
   export default {
     components: {
       Item,
       Tabs,
+      Few
     },
     data () {
       return {
