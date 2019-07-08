@@ -8,8 +8,8 @@ let program = createProgram(gl, vts, fms)
 
 // found attribute and uniform
 let positionAttributeLocation = gl.getAttribLocation(program, 'a_position')
-let resolutionUniformLocation = gl.getUniformLocation(program, 'u_resolution')
-let matcontrolUniformLocation = gl.getUniformLocation(program, 'u_matcontrol')
+// unifiorm attribute u_matrix
+let matrixUniformLocation = gl.getUniformLocation(program, 'u_matrix')
 
 // create and bind buffer
 let positionBuffer = gl.createBuffer()
@@ -52,10 +52,11 @@ let size = 2, type = gl.FLOAT, normalize = false, stride = 0, offset = 0
 gl.vertexAttribPointer(positionAttributeLocation, size, type, normalize, stride, offset)
 
 // transform matrix data
-let pr
+let pr = Object.create(null)
 
 function main () {
   // set uniform veriables
+  initMatrix()
   setUniforms()
   render()
 }
@@ -72,21 +73,38 @@ function render () {
   // bind the attribute/buffer we set
   gl.bindVertexArray(vao)
 
-  // set uniforms
-  let width = gl.canvas.width, height = gl.canvas.height
-  gl.uniform2f(resolutionUniformLocation, width, height)
-  changeM(pr)
-  gl.uniformMatrix3fv(matcontrolUniformLocation, false, pr.m)
+  // run n times
+  let identity = m3unit()
 
-  // render
-  let primitiveType = gl.TRIANGLES
-  let offset = 0, count = 18
-  gl.drawArrays(primitiveType, offset, count)
+  // coordinate projection
+  let width = gl.canvas.width, height = gl.canvas.height
+  let projection = [
+    2 / width, 0, 0,
+    0, -2 / height, 0,
+    -1, 1, 1
+  ]
+
+  for (let i = 0; i < 5; i++) {
+    changeM(pr, identity)
+    gl.uniformMatrix3fv(matrixUniformLocation, false, m3mul(identity, projection))
+
+    // render
+    let primitiveType = gl.TRIANGLES
+    let offset = 0, count = 18
+    gl.drawArrays(primitiveType, offset, count)
+  }
 }
 
-function setUniforms () {
-  pr = {tx: 0, ty: 0, rot: 0, sx: 100, sy: 100}
+function initMatrix () {
+  pr.tx = 141
+  pr.ty = 83
+  pr.rot = 0
+  pr.sx = 78
+  pr.sy = 70
   Object.defineProperty(pr, 'm', { writable: true, value: {} })
+}
+
+function setUniforms () { 
   initRangeWidget('tx', 'ty', 'rot', 'sx', 'sy', pr)
   observe(pr, render)
 }
@@ -97,11 +115,11 @@ function resizeCanvas () {
   if (ch !== sh) mc.height = sh
 }
 
-function changeM (pr) {
+function changeM (pr, base) {
   // set rotation orientation to clockwise
   let sita = toRad(360 - Number(pr.rot)), c = Math.cos(sita), s = Math.sin(sita)
   let tx = Number(pr.tx), ty = Number(pr.ty), sx = Number(pr.sx) / 100, sy = Number(pr.sy) / 100
-  let tranlation = [
+  let translation = [
     1, 0, 0,
     0, 1, 0,
     tx, ty, 1
@@ -116,7 +134,12 @@ function changeM (pr) {
     0, sy, 0,
     0, 0, 1
   ]
-  pr.m = m3mul( scale, rotation, tranlation )
+  if (!base || typeof base !== 'object' || !base.length) {
+    pr.m = m3mul( scale, rotation, translation )
+  } else {
+    let idk = m3mul( base, scale, rotation, translation )
+    for (let i = 0; i < base.length; i++) base[i] = idk[i]
+  }
 }
 
 function clear () {

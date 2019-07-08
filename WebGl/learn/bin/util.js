@@ -79,10 +79,19 @@ function createProgram (gl, vertexShader, fragmentShader) {
       ]
       if (rest.length && mul) {
         rest.forEach(item => {
-          mul(out, out, item)
+          mul(out, item, out)
         })
       }
       return out
+    }
+
+    // identity matrix, or unit matrix
+    global.m3unit = function () {
+      return [
+        1, 0, 0,
+        0, 1, 0,
+        0, 0, 1
+      ]
     }
     
     // to radian util
@@ -101,8 +110,10 @@ function initRangeWidget () {
       let key = args[i]
       let ele = document.querySelector('#' + key)
       if (ele) {
+        let liveDataDisplayEle = ele.nextSibling
         ele.oninput = function () {
           obj[key] = ele.value
+          if (liveDataDisplayEle) liveDataDisplayEle.innerHTML = ele.value
         }
       }
     }
