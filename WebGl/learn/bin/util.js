@@ -61,3 +61,75 @@ function createProgram (gl, vertexShader, fragmentShader) {
   gl.deleteProgram(program)
 }
 
+/* --------------------- */
+// matrix 
+;(function(global) {
+  if (global.glMatrix) {
+    const mat3 = global.glMatrix.mat3
+    const toRad = global.glMatrix.glMatrix.toRadian
+    
+    // 3d matrix multiply
+    global.m3mul = function () {
+      let rest = Array.prototype.slice.call(arguments)
+      let mul = mat3.mul
+      let out = [
+        1, 0, 0,
+        0, 1, 0,
+        0, 0, 1
+      ]
+      if (rest.length && mul) {
+        rest.forEach(item => {
+          mul(out, out, item)
+        })
+      }
+      return out
+    }
+    
+    // to radian util
+    global.toRad = toRad
+  }
+})(window)
+
+/* --------------------- */
+// control widget
+function initRangeWidget () {
+  let args = Array.prototype.slice.call(arguments)
+  if (args.length === 0) return
+  let obj = args[args.length-1]
+  if (typeof obj === 'object') {
+    for (let i = 0; i < args.length - 1; i++) {
+      let key = args[i]
+      let ele = document.querySelector('#' + key)
+      if (ele) {
+        ele.oninput = function () {
+          obj[key] = ele.value
+        }
+      }
+    }
+  }
+}
+
+function observe (obj, cbs) {
+  if (!obj || typeof obj !== 'object') return
+  if (!obj.__ob__) {
+    if (typeof cbs === 'function') cbs = [cbs]
+    for (key in obj) {
+      let val = obj[key]
+      if (val !== undefined) {
+        Object.defineProperty(obj, key, {
+          get () {
+            return val
+          },
+          set (newVal) {
+            if (newVal !== val) {
+              val = newVal
+              cbs.forEach(cb => cb.call(this, obj))
+            }
+          }
+        })
+      }
+    }
+  }
+  obj.__ob__ = true
+}
+

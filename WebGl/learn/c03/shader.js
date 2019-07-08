@@ -5,16 +5,16 @@ in vec2 a_position;
 out vec4 v_color;
 
 uniform vec2 u_resolution;
-uniform vec2 u_translation;
+uniform mat3 u_matcontrol;
 
 void main () {
-  vec2 relpos = a_position + u_translation;
+  vec2 relpos = (u_matcontrol * vec3(a_position, 1.0)).xy;
   vec2 ratio = relpos / u_resolution;
   vec2 clipSpace = ratio * 2.0 - 1.0;
 
-  gl_Position = vec4(clipSpace * vec2(1, -1), 0, 1.0);
+  gl_Position = vec4(clipSpace * vec2(1, -1), 0, 1);
 
-  v_color = gl_Position * 0.5 + 0.5;
+  v_color = gl_Position * 0.9 + 0.5;
 }
 `
 
