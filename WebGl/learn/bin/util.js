@@ -66,6 +66,7 @@ function createProgram (gl, vertexShader, fragmentShader) {
 ;(function(global) {
   if (global.glMatrix) {
     const mat3 = global.glMatrix.mat3
+    const mat4 = global.glMatrix.mat4
     const toRad = global.glMatrix.glMatrix.toRadian
     
     // 3d matrix multiply
@@ -85,12 +86,39 @@ function createProgram (gl, vertexShader, fragmentShader) {
       return out
     }
 
+    // 4d matrix multiply
+    global.m4mul = function () {
+      let rest = Array.prototype.slice.call(arguments)
+      let mul = mat4.mul
+      let out = [
+        1, 0, 0, 0,
+        0, 1, 0, 0,
+        0, 0, 1, 0,
+        0, 0, 0, 1
+      ]
+      if (rest.length && mul) {
+        rest.forEach(item => {
+          mul(out, item, out)
+        })
+      }
+      return out
+    }
+
     // identity matrix, or unit matrix
     global.m3unit = function () {
       return [
         1, 0, 0,
         0, 1, 0,
         0, 0, 1
+      ]
+    }
+
+    global.m4unit = function () {
+      return [
+        1, 0, 0, 0,
+        0, 1, 0, 0,
+        0, 0, 1, 0,
+        0, 0, 0, 1
       ]
     }
     
