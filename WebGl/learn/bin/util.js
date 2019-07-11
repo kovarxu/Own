@@ -65,8 +65,8 @@ function createProgram (gl, vertexShader, fragmentShader) {
 // matrix 
 ;(function(global) {
   if (global.glMatrix) {
-    const mat3 = global.glMatrix.mat3
-    const mat4 = global.glMatrix.mat4
+    const mat3 = global.m3 = global.glMatrix.mat3
+    const mat4 = global.m4 = global.glMatrix.mat4
     const toRad = global.glMatrix.glMatrix.toRadian
     
     // 3d matrix multiply

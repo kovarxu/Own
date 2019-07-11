@@ -305,7 +305,7 @@ gl.vertexAttribPointer(colorAttributeLocation, size, type, normalize, stride, of
 let pr = Object.create(null)
 
 function main () {
-  // set uniform veriables
+  // set uniform variables
   initMatrix()
   setUniforms()
   render()
@@ -329,17 +329,8 @@ function render () {
   // bind the attribute/buffer we set
   gl.bindVertexArray(vao)
 
-  // coordinate projection
-  let width = gl.canvas.width, height = gl.canvas.height, depth = 400
-  let projection = [
-    2 / width, 0, 0, 0,
-    0, -2 / height, 0, 0,
-    0, 0, 2 / depth, 0,
-    -1, 1, 0, 1
-  ]
-
   changeM(pr)
-  gl.uniformMatrix4fv(matrixUniformLocation, false, m4mul(pr.m, projection))
+  gl.uniformMatrix4fv(matrixUniformLocation, false, m4mul(pr.m))
 
   // render
   let primitiveType = gl.TRIANGLES
@@ -348,6 +339,7 @@ function render () {
 }
 
 function initMatrix () {
+  pr.per = 100
   pr.tx = 0
   pr.ty = 0
   pr.tz = 0
@@ -361,7 +353,7 @@ function initMatrix () {
 }
 
 function setUniforms () { 
-  initRangeWidget('tx', 'ty', 'tz', 'rotx', 'roty', 'rotz', 'sx', 'sy', 'sz', pr)
+  initRangeWidget('per', 'tx', 'ty', 'tz', 'rotx', 'roty', 'rotz', pr)
   observe(pr, render)
 }
 
@@ -372,11 +364,10 @@ function resizeCanvas () {
 }
 
 function changeM (pr, base) {
-  // set rotation orientation to clockwise
   let sitaX = toRad(Number(pr.rotx)), c1 = Math.cos(sitaX), s1 = Math.sin(sitaX),
       sitaY = toRad(Number(pr.roty)), c2 = Math.cos(sitaY), s2 = Math.sin(sitaY),
       sitaZ = toRad(Number(pr.rotz)), c3 = Math.cos(sitaZ), s3 = Math.sin(sitaZ)
-  let tx = Number(pr.tx), ty = Number(pr.ty), tz = Number(pr.tz)
+  let tx = Number(pr.tx), ty = Number(pr.ty), tz = Number(pr.tz), per = Number(pr.per) / 100,
       sx = Number(pr.sx) / 100, sy = Number(pr.sy) / 100, sz = Number(pr.sz) / 100
   let translation = [
     1, 0, 0, 0,
@@ -408,10 +399,22 @@ function changeM (pr, base) {
     0, 0, sz, 0,
     0, 0, 0, 1
   ]
+  // coordinate projection
+  let left = 0, right = gl.canvas.clientWidth, bottom = gl.canvas.clientHeight, top = 0, near = 400, far = 0
+  let projection = []
+  m4.ortho(projection, left, right, bottom, top, near, far)
+
+  // perspective conversion
+  let perspective = [
+    1, 0, 0, 0,
+    0, 1, 0, 0,
+    0, 0, 1, per,
+    0, 0, 0, 1
+  ]
   if (!base || typeof base !== 'object' || !base.length) {
-    pr.m = m4mul( scale, rotationZ, rotationY, rotationX, translation )
+    pr.m = m4mul( scale, rotationZ, rotationY, rotationX, translation, projection, perspective )
   } else {
-    let idk = m4mul( base, scale, rotationZ, rotationY, rotationX, translation )
+    let idk = m4mul( base, scale, rotationZ, rotationY, rotationX, translation, projection, perspective )
     for (let i = 0; i < base.length; i++) base[i] = idk[i]
   }
 }
