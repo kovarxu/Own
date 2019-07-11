@@ -4,7 +4,7 @@ pass data from vertex shader to fragment shader
 
 write some `out v_abc` in vertex shader, and `in v_abc` in fragment shader, no need to specify the value in javascript files
 
-## control buffer
+### control buffer
 
 `gl.vertexAttribPointer(location, numComponents, typeOfData, normalizeFlag, strideToNextPieceOfData, offsetIntoBuffer);`
 `location: atrib location; numComponents: 1-4; typeOfData: following; normalizeFray: follwing; ...`
@@ -42,7 +42,7 @@ but in webgl(or opengl), it would be:
   tx, ty, tz, 1
 ]
 
-### matrix convertion
+### matrix convertion (this may be not correct)
 
 two meanings for:
 
@@ -56,4 +56,17 @@ two meanings for:
     second, translate the coordinate's original point(O) to translation[x], translation[y]
     third, rotate the coordinate in an anti-clockwise orientation
     last, run scale
+
+### matrix transposed (or this could be right)
+
+[ST * RT * TT * PT] -> u_matrix
+
+[VT] -> a_position
+
+in shader: 
+
+                                             in opengl and webgl         in mathmatics
+    gl_Position = u_matrix * a_position = [ST * RT * TT * PT] * VT = (V * [P * T * R * S])T
+
+
 
