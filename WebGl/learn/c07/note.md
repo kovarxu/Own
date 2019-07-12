@@ -25,6 +25,22 @@ perspective: function(fieldOfViewInRadians, aspect, near, far) {
 
 this function is widely used in perspective
 
+### some attentions
+
+at first, in our view, the positive of x is right, y is down, z is inner.
+
+without perspective, we can regard camera position as Infinity.
+
+so if we add `translateZ`, we move the object inner, and if it exceed the range of z, something will miss.
+
+after perspective, the positive of x is right, y is up, z outer, which is a standard model in our thought.
+
+and then, our y + 100 & z + 100 means move y upper for 100 units and z outer for 100, respectively.
+
+### about rot direction
+
+if we look at positive x/y/z, positive spin angle will make anticlockwise rotation
+
 ### how to get this function ??
 
 ![deduce](./deduce.jpg)

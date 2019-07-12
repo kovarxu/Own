@@ -308,6 +308,7 @@ function main () {
   // set uniform variables
   initMatrix()
   setUniforms()
+  // draw first screen
   render()
 }
 
@@ -329,32 +330,45 @@ function render () {
   // bind the attribute/buffer we set
   gl.bindVertexArray(vao)
 
-  changeM(pr)
-  gl.uniformMatrix4fv(matrixUniformLocation, false, m4mul(pr.m))
+  drawObjectCircle(pr)
+}
 
-  // render
-  let primitiveType = gl.TRIANGLES
-  let offset = 0, count = 16 * 6
-  gl.drawArrays(primitiveType, offset, count)
+function drawObjectCircle (pr) {
+  let cameraRy = toRad(pr.camera), radius = pr.radius, pov = toRad(pr.pov)
+  let caMatrix = m4rotateY(cameraRy)
+  // inverse matrix of camera matrix
+  let icaMatrix = m4.invert(m4unit(), caMatrix)
+
+  // perspective matrix
+  let width = gl.canvas.clientWidth, height = gl.canvas.clientHeight
+  let perspective = m4.perspective(m4unit(), pov, width / height, 1, 2000)
+
+  for (let i = 0; i < 5; i++) {
+    let sita = 2 * Math.PI / 5 * i
+    let x = radius * Math.cos(sita), z = radius * Math.sin(sita)
+    let rotationX = m4rotateX(Math.PI / 2)
+    let rotationY = m4rotateY(Math.PI / 2)
+    let translation = m4translate(x, -100, z)
+    let matrix = m4mul(rotationY, translation, icaMatrix, perspective)
+    gl.uniformMatrix4fv(matrixUniformLocation, false, matrix)
+
+    // render
+    let primitiveType = gl.TRIANGLES
+    let offset = 0, count = 16 * 6
+    gl.drawArrays(primitiveType, offset, count)
+  }
 }
 
 function initMatrix () {
-  pr.pov = 100
-  pr.tx = -150
-  pr.ty = 0
-  pr.tz = -360
-  pr.rotx = 0
-  pr.roty = 0
-  pr.rotz = 0
-  pr.sx = 100
-  pr.sy = 100
-  pr.sz = 100
+  pr.camera = 100;
+  pr.radius = 150;
+  pr.pov = 90;
   Object.defineProperty(pr, 'm', { writable: true, value: {} })
 }
 
 function setUniforms () { 
-  initRangeWidget('pov', 'tx', 'ty', 'tz', 'rotx', 'roty', 'rotz', pr)
-  observe(pr, render)
+  initRangeWidget('camera', 'radius', 'pov', pr)
+  observe(pr, [render])
 }
 
 function resizeCanvas () {
@@ -363,7 +377,7 @@ function resizeCanvas () {
   if (ch !== sh) mc.height = sh
 }
 
-function changeM (pr, base) {
+function changeM (pr) {
   let sitaX = toRad(Number(pr.rotx)), c1 = Math.cos(sitaX), s1 = Math.sin(sitaX),
       sitaY = toRad(Number(pr.roty)), c2 = Math.cos(sitaY), s2 = Math.sin(sitaY),
       sitaZ = toRad(Number(pr.rotz)), c3 = Math.cos(sitaZ), s3 = Math.sin(sitaZ)
@@ -408,11 +422,11 @@ function changeM (pr, base) {
   let aspect = right / bottom, perspective = []
   m4.perspective(perspective, pov, aspect, 1, 2000)
 
-  if (!base || typeof base !== 'object' || !base.length) {
+  if (!pr.base || typeof pr.base !== 'object' || !pr.base.length) {
     pr.m = m4mul( scale, rotationZ, rotationY, rotationX, translation, perspective )
   } else {
-    let idk = m4mul( base, scale, rotationZ, rotationY, rotationX, translation, projection, perspective )
-    for (let i = 0; i < base.length; i++) base[i] = idk[i]
+    let idk = m4mul( pr.base, scale, rotationZ, rotationY, rotationX, translation, projection, perspective )
+    for (let i = 0; i < pr.base.length; i++) pr.base[i] = idk[i]
   }
 }
 

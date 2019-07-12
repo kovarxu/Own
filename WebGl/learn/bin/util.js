@@ -121,6 +121,56 @@ function createProgram (gl, vertexShader, fragmentShader) {
         0, 0, 0, 1
       ]
     }
+
+    global.m4translate = function (tx, ty, tz) {
+      tx = tx || 0, ty = ty || 0, tz = tz || 0
+      return [
+        1, 0, 0, 0,
+        0, 1, 0, 0,
+        0, 0, 1, 0,
+        tx, ty, tz, 1
+      ]
+    }
+
+    global.m4rotateX = function (r) {
+      var c = Math.cos(r), s = Math.sin(r)
+      return [
+        1, 0, 0, 0,
+        0, c, s, 0,
+        0,-s, c, 0,
+        0, 0, 0, 1
+      ]
+    }
+
+    global.m4rotateY = function (r) {
+      var c = Math.cos(r), s = Math.sin(r)
+      return [
+        c, 0,-s, 0,
+        0, 1, 0, 0,
+        s, 0, c, 0,
+        0, 0, 0, 1
+      ]
+    }
+
+    global.m4rotateZ = function (r) {
+      var c = Math.cos(r), s = Math.sin(r)
+      return [
+        c, s, 0, 0,
+       -s, c, 0, 0,
+        0, 0, 1, 0,
+        0, 0, 0, 1
+      ]
+    }
+
+    global.m4scale = function (sx, sy, sz) {
+      sx = sx || 1, sy = sy || 1, sz = sz || 1
+      return [
+        sx, 0,  0,  0,
+        0, sy,  0,  0,
+        0,  0, sz,  0,
+        0,  0,  0,  1
+      ]
+    }
     
     // to radian util
     global.toRad = toRad
