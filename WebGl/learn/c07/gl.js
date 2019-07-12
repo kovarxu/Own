@@ -409,7 +409,7 @@ function changeM (pr, base) {
   m4.perspective(perspective, pov, aspect, 1, 2000)
 
   if (!base || typeof base !== 'object' || !base.length) {
-    pr.m = m4mul( scale, rotationZ, rotationY, rotationX, translation, projection, perspective )
+    pr.m = m4mul( scale, rotationZ, rotationY, rotationX, translation, perspective )
   } else {
     let idk = m4mul( base, scale, rotationZ, rotationY, rotationX, translation, projection, perspective )
     for (let i = 0; i < base.length; i++) base[i] = idk[i]

@@ -1,4 +1,13 @@
+## from frustum to canonical view volume
 ### normal perspective
+
+> previous version
+>> projection --- m4.projection: project a bastard space to a standard space (x, y, z in -1 to 1, respectively)
+>> perspective --- scale (x, y) based on z, such as `x / (1.0 + z * fudgement)`
+>
+> current version
+>> perspective --- use an unique matrix to convert all of these
+
 
 ```javascript
 perspective: function(fieldOfViewInRadians, aspect, near, far) {
@@ -16,5 +25,7 @@ perspective: function(fieldOfViewInRadians, aspect, near, far) {
 
 this function is widely used in perspective
 
+### how to get this function ??
 
+![deduce](./deduce.jpg)
 
