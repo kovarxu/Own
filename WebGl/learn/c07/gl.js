@@ -339,7 +339,7 @@ function render () {
 }
 
 function initMatrix () {
-  pr.per = 100
+  pr.pov = 100
   pr.tx = 0
   pr.ty = 0
   pr.tz = 0
@@ -353,7 +353,7 @@ function initMatrix () {
 }
 
 function setUniforms () { 
-  initRangeWidget('per', 'tx', 'ty', 'tz', 'rotx', 'roty', 'rotz', pr)
+  initRangeWidget('pov', 'tx', 'ty', 'tz', 'rotx', 'roty', 'rotz', pr)
   observe(pr, render)
 }
 
@@ -367,7 +367,7 @@ function changeM (pr, base) {
   let sitaX = toRad(Number(pr.rotx)), c1 = Math.cos(sitaX), s1 = Math.sin(sitaX),
       sitaY = toRad(Number(pr.roty)), c2 = Math.cos(sitaY), s2 = Math.sin(sitaY),
       sitaZ = toRad(Number(pr.rotz)), c3 = Math.cos(sitaZ), s3 = Math.sin(sitaZ)
-  let tx = Number(pr.tx), ty = Number(pr.ty), tz = Number(pr.tz), per = Number(pr.per) / 100,
+  let tx = Number(pr.tx), ty = Number(pr.ty), tz = Number(pr.tz), pov = Number(pr.pov) / 100,
       sx = Number(pr.sx) / 100, sy = Number(pr.sy) / 100, sz = Number(pr.sz) / 100
   let translation = [
     1, 0, 0, 0,
@@ -405,12 +405,9 @@ function changeM (pr, base) {
   m4.ortho(projection, left, right, bottom, top, near, far)
 
   // perspective conversion
-  let perspective = [
-    1, 0, 0, 0,
-    0, 1, 0, 0,
-    0, 0, 1, per,
-    0, 0, 0, 1
-  ]
+  let aspect = right / bottom, perspective = []
+  m4.perspective(perspective, pov, aspect, 1, 2000)
+
   if (!base || typeof base !== 'object' || !base.length) {
     pr.m = m4mul( scale, rotationZ, rotationY, rotationX, translation, projection, perspective )
   } else {
