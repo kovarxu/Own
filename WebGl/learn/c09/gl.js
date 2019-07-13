@@ -334,13 +334,16 @@ function render () {
 }
 
 function drawObjectCircle (pr) {
-  let cameraRy = toRad(pr.camera), radius = pr.radius, pov = toRad(pr.pov)
-  let caMatrix = m4mul(m4translate(0, 0, 2 * radius), m4rotateY(cameraRy))
+  let tx = Number(pr.tx), ty = Number(pr.ty), tz = Number(pr.tz), radius = Number(pr.radius)
   // inverse matrix of camera matrix
-  let icaMatrix = m4.invert(m4unit(), caMatrix)
+  let caPosition = [tx, ty, tz], center = [radius, 30, 0], up = [0, 1, 0]
+
+  // be careful that this util handled invert by default, so we needn't do that by ourselves
+  let caMatrix = m4.lookAt(m4unit(), caPosition, center, up)
+  // no need this: let icaMatrix = m4.invert([], caMatrix)
 
   // perspective matrix
-  let width = gl.canvas.clientWidth, height = gl.canvas.clientHeight
+  let width = gl.canvas.clientWidth, height = gl.canvas.clientHeight, pov = Math.PI / 2
   let perspective = m4.perspective(m4unit(), pov, width / height, 1, 2000)
 
   for (let i = 0; i < 6; i++) {
@@ -348,8 +351,8 @@ function drawObjectCircle (pr) {
     let x = radius * Math.cos(sita), z = radius * Math.sin(sita)
     let rotationX = m4rotateX(Math.PI)
     // let rotationY = m4rotateY(Math.PI / 2)
-    let translation = m4translate(x, 80, z)
-    let matrix = m4mul(rotationX, translation, icaMatrix, perspective)
+    let translation = m4translate(x, 30, z)
+    let matrix = m4mul(rotationX, translation, caMatrix, perspective)
     gl.uniformMatrix4fv(matrixUniformLocation, false, matrix)
 
     // render
@@ -360,14 +363,15 @@ function drawObjectCircle (pr) {
 }
 
 function initMatrix () {
-  pr.camera = 100;
-  pr.radius = 150;
-  pr.pov = 90;
+  pr.radius = 200
+  pr.tx = 0
+  pr.ty = 0
+  pr.tz = 200
   Object.defineProperty(pr, 'm', { writable: true, value: {} })
 }
 
 function setUniforms () { 
-  initRangeWidget('camera', 'radius', 'pov', pr)
+  initRangeWidget('radius', 'tx', 'ty', 'tz', pr)
   observe(pr, [render])
 }
 

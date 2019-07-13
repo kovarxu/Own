@@ -1,5 +1,7 @@
 ### orthographic
 
+**mention that the coordinate rule in webgl is "left hand rule" by default, but not "right hand rule", which is more acceptable and intelligible.**
+
 a more flexible projection method.
 
 [
