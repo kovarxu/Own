@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+  <title>gl c11</title>
+  <style>
+    #app {position: relative; float: left; font-size: 11px;}
+    #mc{ border: 1px solid #9e339e; width: 640px; height: 480px; }
+    #control-box {position: absolute; top: 10px; right: 10px;}
+    #control-box input {margin-left: 10px; margin-right: 10px; vertical-align: middle;}
+    #control-box span {display: inline-block; min-width: 25px; text-align: right; margin-right: 12px; }
+  </style>
+</head>
+<body>
+  <div id="app">
+    <canvas id="mc"></canvas>
+
+    <div class="control-box" id="control-box">
+      <div class="control">
+        <span>radius</span><input type="range" name="" min="0", max="400" value="200" id="radius"><span>200</span>
+      </div>
+      <div class="control">
+        <span>tx</span><input type="range" name="" min="-200", max="400" value="0" id="tx"><span>0</span>
+      </div>
+      <div class="control">
+        <span>ty</span><input type="range" name="" min="-200", max="400" value="0" id="ty"><span>0</span>
+      </div>
+      <div class="control">
+        <span>tz</span><input type="range" name="" min="-200", max="400" value="200" id="tz"><span>200</span>
+      </div>
+    </div>
+  </div>
+
+  <script src="../bin/gl-matrix.js"></script>
+  <script src="../bin/util.js"></script>
+  <script src="shader.js"></script>
+  <script src="gl.js"></script>
+</body>
+</html>
