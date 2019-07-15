@@ -73,3 +73,40 @@ gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
 
 how does the shader know which texture to use for someTexture?
 
+```javascript
+/* pseudo code start */
+const gl = {
+  activeTextureUnit: 0,
+  textureUnits: [
+    { TEXTURE_2D: null, TEXTURE_CUBE_MAP: null, TEXTURE_3D: null, TEXTURE_2D_ARRAY: null, },
+    { TEXTURE_2D: null, TEXTURE_CUBE_MAP: null, TEXTURE_3D: null, TEXTURE_2D_ARRAY: null, },
+    { TEXTURE_2D: null, TEXTURE_CUBE_MAP: null, TEXTURE_3D: null, TEXTURE_2D_ARRAY: null, },
+    { TEXTURE_2D: null, TEXTURE_CUBE_MAP: null, TEXTURE_3D: null, TEXTURE_2D_ARRAY: null, },
+    { TEXTURE_2D: null, TEXTURE_CUBE_MAP: null, TEXTURE_3D: null, TEXTURE_2D_ARRAY: null, },
+    { TEXTURE_2D: null, TEXTURE_CUBE_MAP: null, TEXTURE_3D: null, TEXTURE_2D_ARRAY: null, },
+    { TEXTURE_2D: null, TEXTURE_CUBE_MAP: null, TEXTURE_3D: null, TEXTURE_2D_ARRAY: null, },
+    { TEXTURE_2D: null, TEXTURE_CUBE_MAP: null, TEXTURE_3D: null, TEXTURE_2D_ARRAY: null, },
+    { TEXTURE_2D: null, TEXTURE_CUBE_MAP: null, TEXTURE_3D: null, TEXTURE_2D_ARRAY: null, },
+    ...
+  ];
+}
+/* pseudo code end */
+
+// active a unit
+// at init time
+const indexOfTextureUnit = 5;
+const ourTexture = gl.createTexture();
+// insert code it init texture here.
+ 
+...
+ 
+// at render time
+gl.activeTexture(gl.TEXTURE0 + indexOfTextureUnit);
+gl.bindTexture(gl.TEXTURE_2D, ourTexture);
+
+// max number of textures supported, at least 32
+gl.getParameter(gl.AX_COMBINED_TEXTURE_IMAGE_UNITS); // 32
+// different shaders have different number
+gl.getParameter(gl.MAX_VERTEX_TEXTURE_IMAGE_UNITS); // 16
+gl.getParameter(gl.MAX_TEXTURE_IMAGE_UNITS); // 16
+```
