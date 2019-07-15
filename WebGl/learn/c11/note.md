@@ -12,7 +12,7 @@ Create and Bind Texture -->> fill texture with a kind of color or an image -->> 
 
 We can use textures directly, even though we never have gotten the texture2D uniform variable specified in the fragment shader.
 
-left, top corner of the texture is (u, v) = (0, 0)
+texture use (s, t, u, v), but *what we usually used for 2D textures is called (u, v), not (s, t)*
 
 ```javascript 
 function initTexture () {
@@ -44,9 +44,32 @@ we need specify `image.crossOrigin = 'anonymous'`, or a DOMException may raise.
 
 ### generateMipmap
 
-`gl.generateMipmap(gl.TEXTURE_2D)` we gen bitmap for the texture, that need 1/3 more memory space (it create 1*1, 2*2, 4*4, 8*8, ..., sqrt(a)*sqrt(a)) but it's more smooth if we encounter a big image.
+when we take a 16\*16 image and draw on 2\*2 plain, what photoshop do is average the 4 equalent zone in the original image, but it's very slow in GPU, so what the GPU does is it uses a mipmap
+
+A mipmap is a collection of progressively smaller images, each one 1/4th the size of the previous one
+
+`gl.generateMipmap(gl.TEXTURE_2D)` we gen bitmap for the texture, that need 1/3 more memory space (it create 1*1, 2*2, 4*4, 8*8, ..., sqrt(a)*sqrt(a))
+
 
 ### texture atalas
 
 we merge some small pictures in a big image, and can get then through texture coordinate.
+
+### texture settings
+
+```javascript
+// repeat in x axis, such as REPEAT, CLAMP_TO_EDGE, MIRROR_REPEAT
+gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
+// repeat in y axis
+gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
+// filters (view filter.jpg)
+gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, s.filter);
+gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
+```
+
+`TEXTURE_MIN_FILTER` is the setting used when the size you are drawing is smaller than the largest mip. TEXTURE_MAG_FILTER is the setting used when the size you are drawing is larger than the largest mip. For `TEXTURE_MAG_FILTER` only NEAREST and LINEAR are valid settings.
+
+### texture units
+
+how does the shader know which texture to use for someTexture?
 

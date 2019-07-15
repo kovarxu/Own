@@ -12,14 +12,13 @@ module.exports = {
           } else if (pid.endsWith('png')) {
             contentType += 'png'
           }
+          ctx.set('Content-Type', contentType)
+          ctx.set("Access-Control-Allow-Origin", "*")
+          const result = await fs.readFileSync('static/img/' + pid)
+          ctx.body = result
+          next()
         } else {
           next();
         }
-        ctx.set('Content-Type', contentType)
-        ctx.set("Access-Control-Allow-Origin", "http://127.0.0.1")
-        ctx.set("Access-Control-Allow-Credentials", true)
-        const result = await fs.readFileSync('static/img/' + pid)
-        ctx.body = result
-        next()
     }
 }
