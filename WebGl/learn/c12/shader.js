@@ -23,8 +23,23 @@ in vec2 v_textcoord;
 out vec4 outColor;
 
 uniform sampler2D u_texture;
+uniform float u_kernel[9];
+uniform float u_kernel_weight;
 
 void main () {
-  outColor = texture(u_texture, v_textcoord).bgra;
+  vec2 onePixel = vec2(1) / vec2(textureSize(u_texture, 0));
+
+  vec4 colorSum = 
+    texture(u_texture, v_textcoord + onePixel * vec2(-1, -1)) * u_kernel[0] + 
+    texture(u_texture, v_textcoord + onePixel * vec2(0, -1)) * u_kernel[1] + 
+    texture(u_texture, v_textcoord + onePixel * vec2(1, -1)) * u_kernel[2] + 
+    texture(u_texture, v_textcoord + onePixel * vec2(-1, 0)) * u_kernel[3] + 
+    texture(u_texture, v_textcoord + onePixel * vec2(0, 0)) * u_kernel[4] + 
+    texture(u_texture, v_textcoord + onePixel * vec2(1, 0)) * u_kernel[5] + 
+    texture(u_texture, v_textcoord + onePixel * vec2(-1, 1)) * u_kernel[6] + 
+    texture(u_texture, v_textcoord + onePixel * vec2(0, 1)) * u_kernel[7] + 
+    texture(u_texture, v_textcoord + onePixel * vec2(1, 1)) * u_kernel[8];
+
+  outColor = vec4((colorSum / u_kernel_weight).rgb, 1);
 }
 `

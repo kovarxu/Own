@@ -11,6 +11,8 @@ let positionAttributeLocation = gl.getAttribLocation(program, 'a_position')
 let coordAttributeLocation = gl.getAttribLocation(program, 'a_textcoord')
 // unifiorm attribute u_matrix
 let matrixUniformLocation = gl.getUniformLocation(program, 'u_matrix')
+let kernelUniformLocation = gl.getUniformLocation(program, 'u_kernel[0]')
+let kernelWeightUniformLocation = gl.getUniformLocation(program, 'u_kernel_weight')
 
 // create and bind buffer
 let positionBuffer = gl.createBuffer()
@@ -61,13 +63,51 @@ gl.vertexAttribPointer(coordAttributeLocation, size, type, normalize, stride, of
 
 /* ----------- texture attribute ---------- */
 
-// transform matrix data
-let pr = Object.create(null)
-
-// animation global variables
-let then = 0, currot = 0
-const rotPerSecond = 90
-
+// kernel sets
+const kernelSettings = [
+  {
+    name: 'Sharpen',
+    data: [
+      0, -1,  0,
+      -1,  5, -1,
+      0, -1,  0,
+    ]
+  },
+  {
+    name: 'EdgeDetect',
+    data: [
+      -1, -1, -1,
+      -1,  8, -1,
+      -1, -1, -1,
+    ]
+  },
+  {
+    name: 'GaussBlur',
+    data: [
+      0.045, 0.122, 0.045,
+      0.122, 0.332, 0.122,
+      0.045, 0.122, 0.045,
+    ]
+  },
+  {
+    name: 'BoxBlur',
+    data: [
+      0.111, 0.111, 0.111,
+      0.111, 0.111, 0.111,
+      0.111, 0.111, 0.111,
+    ]
+  },
+  {
+    name: 'Emboss',
+    data: [
+      -2, -1,  0,
+      -1,  1,  1,
+      0,  1,  2,
+    ]
+  }
+]
+let currentKernelIndex = 0
+initSelectWidget('#kernel', kernelSettings, [changeKernelIndex, render])
 
 function main () {
   // init textures
@@ -88,6 +128,9 @@ function render () {
   gl.useProgram(program)
   // bind the attribute/buffer we set
   gl.bindVertexArray(vao)
+
+  // init kernel
+  initKernel()
 
   // apply projection matrix
   applyUniformMatrix()
@@ -128,6 +171,19 @@ function initTexture () {
   }
 }
 
+function initKernel () {
+  let curKernel = new Float32Array(kernelSettings[currentKernelIndex].data)
+  let kernelWeight = computeKernelWeight(curKernel)
+  console.log(kernelWeight)
+
+  gl.uniform1fv(kernelUniformLocation, curKernel)
+  gl.uniform1f(kernelWeightUniformLocation, kernelWeight)
+}
+
+function changeKernelIndex (kernel, index) {
+  currentKernelIndex = index
+}
+
 function drawArray (count) {
   count = count || 0
   let primitiveType = gl.TRIANGLES
@@ -144,6 +200,13 @@ function resizeCanvas () {
 function clear () {
   gl.clearColor(0, 0, 0, 0)
   gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT)
+}
+
+function computeKernelWeight (kernel) {
+  let sum = kernel.reduce((prev, next) => {
+    return prev + next
+  })
+  return sum <= 0 ? 1 : sum
 }
 
 main()
