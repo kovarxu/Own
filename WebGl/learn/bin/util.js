@@ -198,6 +198,29 @@ function initRangeWidget () {
   }
 }
 
+// image import
+function importMultiImages (srcs, race, all) {
+  if (srcs && srcs.length) {
+    let num = srcs.length, imageElems = []
+    const imageLoadCb = function (index) {
+      num--
+      if (race) race.call(this, imageElems, index)
+      if (num === 0 && all) all.call(this, imageElems, index)
+    }
+    srcs.forEach((src, index) => {
+      imageElems[index] = importImage(src, index, imageLoadCb)
+    })
+  }
+}
+
+function importImage (src, index, cb) {
+  let image = new Image()
+  image.crossOrigin = 'anonymous'
+  image.src = src
+  image.onload = () => cb.call(null, index)
+  return image
+}
+
 function observe (obj, cbs) {
   if (!obj || typeof obj !== 'object') return
   if (!obj.__ob__) {

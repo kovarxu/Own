@@ -78,6 +78,7 @@ how does the shader know which texture to use for someTexture?
 const gl = {
   activeTextureUnit: 0,
   textureUnits: [
+    // null is not null itself, but a texture contains null data
     { TEXTURE_2D: null, TEXTURE_CUBE_MAP: null, TEXTURE_3D: null, TEXTURE_2D_ARRAY: null, },
     { TEXTURE_2D: null, TEXTURE_CUBE_MAP: null, TEXTURE_3D: null, TEXTURE_2D_ARRAY: null, },
     { TEXTURE_2D: null, TEXTURE_CUBE_MAP: null, TEXTURE_3D: null, TEXTURE_2D_ARRAY: null, },
@@ -88,7 +89,13 @@ const gl = {
     { TEXTURE_2D: null, TEXTURE_CUBE_MAP: null, TEXTURE_3D: null, TEXTURE_2D_ARRAY: null, },
     { TEXTURE_2D: null, TEXTURE_CUBE_MAP: null, TEXTURE_3D: null, TEXTURE_2D_ARRAY: null, },
     ...
-  ];
+  ],
+  activeTexture: function (index) {
+    this.activeTextureUnit = index - gl.TEXTURE0
+  },
+  bindTexture: function (target, texture) {
+    this.activeTextureUnit[target] = texture
+  }
 }
 /* pseudo code end */
 
