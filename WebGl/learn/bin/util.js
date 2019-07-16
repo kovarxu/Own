@@ -198,6 +198,24 @@ function initRangeWidget () {
   }
 }
 
+function initSelectWidget (sel, dataArray, cbs) {
+  let ele = document.querySelector(sel), val = 0
+  if (typeof cbs === 'function') cbs = [cbs]
+  if (ele && dataArray && dataArray.length) {
+    // init options
+    dataArray.forEach(item => {
+      let option = document.createElement('option')
+      option.value = val++
+      option.innerHTML = item.name
+      ele.appendChild(option)
+    })
+    ele.onchange = function (e) {
+      let value = e.target.value
+      cbs.forEach(cb => cb.call(this, dataArray[value], value))
+    }
+  }
+}
+
 function observe (obj, cbs) {
   if (!obj || typeof obj !== 'object') return
   if (!obj.__ob__) {
