@@ -12,6 +12,7 @@ let coordAttributeLocation = gl.getAttribLocation(program, 'a_textcoord')
 // unifiorm attribute u_matrix
 let matrixUniformLocation = gl.getUniformLocation(program, 'u_matrix')
 let samplerUniformLocation = gl.getUniformLocation(program, 'u_texture')
+let textureLocation = gl.getUniformLocation(program, 'u_texture')
 
 // create and bind buffer
 let positionBuffer = gl.createBuffer()
@@ -80,51 +81,51 @@ gl.bindBuffer(gl.ARRAY_BUFFER, colorBuffer)
 let textureCoord = new Float32Array([
   // A
   0, 0,
-  0, 0.5,
-  0.25, 0,
-  0, 0.5,
-  0.25, 0.5,
-  0.25, 0,
+  0, 1,
+  1, 0,
+  1, 0,
+  0, 1,
+  1, 1,
 
   // B
-  0.25, 0,
-  0.25, 0.5,
-  0.5, 0,
-  0.25, 0.5,
-  0.5, 0.5,
-  0.5, 0,
+  0, 0,
+  0, 1,
+  1, 0,
+  1, 0,
+  0, 1,
+  1, 1,
 
   // C
-  0.5, 0,
-  0.5, 0.5,
-  0.75, 0,
-  0.5, 0.5,
-  0.75, 0.5,
-  0.75, 0,
+  0, 0,
+  0, 1,
+  1, 0,
+  1, 0,
+  0, 1,
+  1, 1,
 
   // D
-  0.25, 0.5,
-  0, 0.5,
-  0.25, 1,
-  0.25, 1,
-  0, 0.5,
+  0, 0,
+  1, 0,
+  0, 1,
+  1, 0,
+  1, 1,
   0, 1,
 
   // E
-  0.5, 0.5,
-  0.25, 0.5,
-  0.5, 1,
-  0.5, 1,
-  0.25, 0.5,
-  0.25, 1,
+  0, 0,
+  1, 0,
+  0, 1,
+  1, 0,
+  1, 1,
+  0, 1,
 
   // F
-  0.75, 0.5,
-  0.5, 0.5,
-  0.75, 1,
-  0.75, 1,
-  0.5, 0.5,
-  0.5, 1,
+  0, 0,
+  1, 0,
+  0, 1,
+  1, 0,
+  1, 1,
+  0, 1,
 ])
 gl.bufferData(gl.ARRAY_BUFFER, textureCoord, gl.STATIC_DRAW)
 gl.enableVertexAttribArray(coordAttributeLocation)
@@ -137,6 +138,7 @@ gl.vertexAttribPointer(coordAttributeLocation, size, type, normalize, stride, of
 // animation global variables
 let then = 0, currot = 0
 const rotPerSecond = 40
+const targetWidth = targetHeight = 256
 
 // texture and frame buffer
 let texture, targetTexture, fb
@@ -152,20 +154,21 @@ function main () {
 
 function render (now) {
   const targetWidth = targetHeight = 256
+
+  // see only clockwise triangles
+  gl.enable(gl.CULL_FACE)
+
+  // depth test
+  gl.enable(gl.DEPTH_TEST)
+
   // draw frame buffer first
   {
     // activate 
-    gl.bindFrameBuffer(gl.FRAMEBUFFER, fb)
+    gl.bindFramebuffer(gl.FRAMEBUFFER, fb)
     gl.bindTexture(gl.TEXTURE_2D, texture)
 
     gl.viewport(0, 0, targetWidth, targetHeight)
     clear(gl)
-
-    // see only clockwise triangles
-    gl.enable(gl.CULL_FACE)
-
-    // depth test
-    gl.enable(gl.DEPTH_TEST)
 
     gl.useProgram(program)
     // bind the attribute/buffer we set
@@ -176,24 +179,25 @@ function render (now) {
 
   // draw main scene
   {
+    let width = gl.canvas.width, height = gl.canvas.height
+
+    gl.bindFramebuffer(gl.FRAMEBUFFER, null)
+    gl.bindTexture(gl.TEXTURE_2D, targetTexture)
+
     // make inner size the same as css size 
     resizeCanvas()
 
     // init window
-    gl.viewport(0, 0, gl.canvas.width, gl.canvas.height)
+    gl.viewport(0, 0, width, height)
+
+    // no need clear again
     clear(gl)
-
-    // see only clockwise triangles
-    gl.enable(gl.CULL_FACE)
-
-    // depth test
-    gl.enable(gl.DEPTH_TEST)
 
     gl.useProgram(program)
     // bind the attribute/buffer we set
     gl.bindVertexArray(vao)
 
-    drawObject(now)
+    drawObject(now, width, height) 
   }
   
   // we call requestAnimationFrame again to keep on animating
@@ -221,9 +225,11 @@ function drawObject (now, width, height) {
   /* ----------- animation ----------- */
 
   let rotationY = m4rotateY(toRad(currot))
-  let translation = m4translate(0, 30, 0)
+  let translation = m4translate(0, 0, 0)
   let matrix = m4mul(rotationY, translation, caMatrix, perspective)
   gl.uniformMatrix4fv(matrixUniformLocation, false, matrix)
+
+  gl.uniform1i(textureLocation, 0);
 
   // render
   let primitiveType = gl.TRIANGLES
@@ -237,7 +243,7 @@ function resizeCanvas () {
   if (ch !== sh) mc.height = sh
 }
 
-function initTextures (targetWidth, targetHeigt) {
+function initTextures () {
   /* ------- create and bind child texture stt ------- */
 
   texture = gl.createTexture()
@@ -257,6 +263,11 @@ function initTextures (targetWidth, targetHeigt) {
     ])
     gl.pixelStorei(gl.UNPACK_ALIGNMENT, 1) // webgl, as opengl, only support 2**n data texture width, so an alignment should be given to pad it.
     gl.texImage2D(gl.TEXTURE_2D, level, innerFormat, width, height, border, format, type, pixels)
+
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.NEAREST)
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.NEAREST)
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE)
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE)
   }
 
   /* ------- create and bind child texture end ------- */
@@ -277,15 +288,19 @@ function initTextures (targetWidth, targetHeigt) {
     const pixels = null
     gl.pixelStorei(gl.UNPACK_ALIGNMENT, 1) // webgl, as opengl, only support 2**n data texture width, so an alignment should be given to pad it.
     gl.texImage2D(gl.TEXTURE_2D, level, innerFormat, width, height, border, format, type, pixels)
+
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR)
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE)
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE)
   }
 
   /* ------- create and bind target texture end ------- */
 }
 
-function bindFrameBuffer (texture) {
+function bindFrameBuffer () {
   // create a frame buffer to render on
-  fb = gl.createFrameBuffer()
-  gl.bindFrameBuffer(gl.FRAMEBUFFER, fb)
+  fb = gl.createFramebuffer()
+  gl.bindFramebuffer(gl.FRAMEBUFFER, fb)
 
   // bind the frame buffer and our texture
   const attachmentPoint = gl.COLOR_ATTACHMENT0
