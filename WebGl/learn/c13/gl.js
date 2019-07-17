@@ -68,8 +68,8 @@ function main () {
   // init textures
   initTexture()
 
-  // draw first screen
-  render()
+  // no first screen, because texture uniform position should be given
+  // render()
 }
 
 function render () {
@@ -87,6 +87,10 @@ function render () {
   // apply projection matrix
   applyUniformMatrix()
 
+  // bind textures
+  gl.uniform1i(image0UniformLocation, 0)
+  gl.uniform1i(image1UniformLocation, 1)
+
   drawArray(6)
 }
 
@@ -101,10 +105,6 @@ function applyUniformMatrix () {
   ]
 
   gl.uniformMatrix3fv(matrixUniformLocation, false, matrix)
-  
-  // bind textures
-  gl.uniform1fv(image0UniformLocation, [0])
-  gl.uniform1fv(image1UniformLocation, [1])
 }
 
 function initTexture () {
