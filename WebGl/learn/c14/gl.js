@@ -1,24 +1,25 @@
 let mc = getMainCanvas()
 let gl = createWebGlContext(mc)
 
-let vts = createShader(gl, gl.VERTEX_SHADER, vt_shader)
-let fms = createShader(gl, gl.FRAGMENT_SHADER, fm_shader)
+// let vts = createShader(gl, gl.VERTEX_SHADER, vt_shader)
+// let fms = createShader(gl, gl.FRAGMENT_SHADER, fm_shader)
 
-let program = createProgram(gl, vts, fms)
+// let program = createProgram(gl, vts, fms)
 
 // found attribute and uniform
-let positionAttributeLocation = gl.getAttribLocation(program, 'a_position')
-let coordAttributeLocation = gl.getAttribLocation(program, 'a_textcoord')
+// let positionAttributeLocation = gl.getAttribLocation(program, 'a_position')
+// let coordAttributeLocation = gl.getAttribLocation(program, 'a_textcoord')
 // unifiorm attribute u_matrix
-let matrixUniformLocation = gl.getUniformLocation(program, 'u_matrix')
-let samplerUniformLocation = gl.getUniformLocation(program, 'u_texture')
-let textureLocation = gl.getUniformLocation(program, 'u_texture')
+// let matrixUniformLocation = gl.getUniformLocation(program, 'u_matrix')
+// let textureLocation = gl.getUniformLocation(program, 'u_texture')
+
+const programInfo = twgl.createProgramInfo(gl, [vt_shader, fm_shader]);
 
 // create and bind buffer
-let positionBuffer = gl.createBuffer()
-gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer)
+// let positionBuffer = gl.createBuffer()
+// gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer)
 // buffer data
-let positions = [
+const positionCoord = [
   -0.5, -0.5,  -0.5,
   -0.5,  0.5,  -0.5,
     0.5, -0.5,  -0.5,
@@ -61,19 +62,74 @@ let positions = [
     0.5,   0.5, -0.5,
     0.5,   0.5,  0.5,
 ].map(item => item * 150)
-gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(positions), gl.STATIC_DRAW)
+
+const textureCoord = new Float32Array([
+  0, 0,
+  0, 1,
+  1, 0,
+  0, 1,
+  1, 1,
+  1, 0,
+
+  0, 0,
+  0, 1,
+  1, 0,
+  1, 0,
+  0, 1,
+  1, 1,
+
+  0, 0,
+  0, 1,
+  1, 0,
+  0, 1,
+  1, 1,
+  1, 0,
+
+  0, 0,
+  0, 1,
+  1, 0,
+  1, 0,
+  0, 1,
+  1, 1,
+
+  0, 0,
+  0, 1,
+  1, 0,
+  0, 1,
+  1, 1,
+  1, 0,
+
+  0, 0,
+  0, 1,
+  1, 0,
+  1, 0,
+  0, 1,
+  1, 1,
+])
+// gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(positions), gl.STATIC_DRAW)
 
 // create and bind vao
-let vao = gl.createVertexArray()
-gl.bindVertexArray(vao)
+// let vao = gl.createVertexArray()
+// gl.bindVertexArray(vao)
 
 // activate point attribute
-gl.enableVertexAttribArray(positionAttributeLocation)
+// gl.enableVertexAttribArray(positionAttributeLocation)
 // bind the current ARRAY_BUFFER to attribute
-let size = 3, type = gl.FLOAT, normalize = false, stride = 0, offset = 0
-gl.vertexAttribPointer(positionAttributeLocation, size, type, normalize, stride, offset)
+// let size = 3, type = gl.FLOAT, normalize = false, stride = 0, offset = 0
+// gl.vertexAttribPointer(positionAttributeLocation, size, type, normalize, stride, offset)
+twgl.setAttributePrefix("a_")
 
-/* ----------- texture attribute ---------- */
+const arrays = {
+  position: positionCoord,
+  textcoord: textureCoord
+}
+
+const bufferInfo = twgl.createBufferInfoFromArrays(gl, arrays)
+console.log(programInfo)
+
+const vao = twgl.createVAOFromBufferInfo(gl, programInfo, bufferInfo);
+
+/* ----------- texture attribute ---------- 
 
 // activate color attribute
 let colorBuffer = gl.createBuffer()
@@ -165,11 +221,11 @@ function render (now) {
     gl.viewport(0, 0, targetWidth, targetHeight)
     clear(0, 0, 1, 1)
 
-    gl.useProgram(program)
+    gl.useProgram(programInfo.program)
     // bind the attribute/buffer we set
     gl.bindVertexArray(vao)
 
-    drawObject(now, targetWidth / targetHeight)
+    drawObject(now, targetWidth / targetHeight, texture)
   }
 
   // draw main scene
@@ -185,18 +241,18 @@ function render (now) {
     // clear with white, it should be different from the previous blue
     clear(1, 1, 1, 1)
 
-    gl.useProgram(program)
+    gl.useProgram(programInfo.program)
     // bind the attribute/buffer we set
     gl.bindVertexArray(vao)
 
-    drawObject(now, width / height) 
+    drawObject(now, width / height, targetTexture) 
   }
   
   // we call requestAnimationFrame again to keep on animating
   requestAnimationFrame(render)
 }
 
-function drawObject (now, ratio) {
+function drawObject (now, ratio, tx) {
   
   // inverse matrix of camera matrix
   let caPosition = [0, 0, 200], center = [0, 0, 0], up = [0, 1, 0]
@@ -220,14 +276,19 @@ function drawObject (now, ratio) {
   let rotationX = m4rotateX(-toRad(currot) / 2)
   let translation = m4translate(0, 0, 0)
   let matrix = m4mul(rotationY, rotationX, translation, caMatrix, perspective)
-  gl.uniformMatrix4fv(matrixUniformLocation, false, matrix)
+  // gl.uniformMatrix4fv(matrixUniformLocation, false, matrix)
+  // gl.uniform1i(textureLocation, 0);
 
-  gl.uniform1i(textureLocation, 0);
+  twgl.setUniforms(programInfo, {
+    u_matrix: matrix,
+    u_texture: tx
+  })
 
   // render
-  let primitiveType = gl.TRIANGLES
-  let offset = 0, count = 6 * 6
-  gl.drawArrays(primitiveType, offset, count)
+  // let primitiveType = gl.TRIANGLES
+  // let offset = 0, count = 6 * 6
+  // gl.drawArrays(primitiveType, offset, count)
+  twgl.drawBufferInfo(gl, bufferInfo)
 }
 
 function resizeCanvas () {
