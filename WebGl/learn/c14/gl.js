@@ -125,7 +125,7 @@ const arrays = {
 }
 
 const bufferInfo = twgl.createBufferInfoFromArrays(gl, arrays)
-console.log(programInfo)
+console.log(bufferInfo)
 
 const vao = twgl.createVAOFromBufferInfo(gl, programInfo, bufferInfo);
 
