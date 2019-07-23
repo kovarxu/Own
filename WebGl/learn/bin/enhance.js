@@ -1,5 +1,6 @@
 // enhance some addition functions
 
+// flattenedPrimitives, set random colors in bufferinfo
 (function() {
   "use strict";
 
@@ -51,3 +52,63 @@
   };
 
 }());
+
+// class node, some scene animation
+
+class Node {
+  constructor () {
+    this.worldMatrix = m4unit();
+    this.localMatrix = m4unit();
+    this.children = [];
+    this.parent = null;
+  }
+
+  setParent (parent) {
+    let previousParent = this.parent;
+    if (previousParent) {
+      previousParent._removeChild(this);
+      this.parent = null;
+    }
+    parent._addChild(this);
+    this.parent = parent;
+  }
+
+  _addChild (child) {
+    if (this.children.indexOf(child) < 0) {
+      this.children.push(child);
+    }
+  }
+
+  _removeChild (child) {
+    let id = this.children.indexOf(child);
+    if (id >= 0) {
+      this.children.splice(id, 1);
+    }
+  }
+
+  // calculate worldMatrix by wm = ... * grandparent * parent * local
+  calcWorldMatrix () {
+    if (this.parent) {
+      this.worldMatrix = m4mul(this.localMatrix, this.parent.worldMatrix);
+    } else {
+      // the root node
+      this.worldMatrix = m4mul(m4unit(), this.localMatrix);
+    }
+  }
+
+  // sync matrix info of all levels
+  updateWorldMatrixInfo () {
+    this.calcWorldMatrix();
+    this.children.forEach((child) => {
+      child.updateWorldMatrixInfo();
+    })
+  }
+
+  setLocalMatrix (mat) {
+    if (mat && mat.length === 16) {
+      this.localMatrix = mat;
+    } else {
+      console.warn('The mat parameter should be an array, the size of which is 16.');
+    }
+  }
+}
