@@ -1,5 +1,6 @@
-## from frustum to canonical view volume
-### normal perspective
+# from frustum to canonical view volume
+
+## normal perspective (lookAt)
 
 > previous version
 >> projection --- m4.projection: project a bastard space to a standard space (x, y, z in -1 to 1, respectively)
@@ -25,7 +26,7 @@ perspective: function(fieldOfViewInRadians, aspect, near, far) {
 
 this function is widely used in perspective
 
-### some attentions
+## some attentions
 
 at first, in our view, the positive of x is right, y is down, z is inner.
 
