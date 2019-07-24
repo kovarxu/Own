@@ -5,7 +5,7 @@ const programInfo = twgl.createProgramInfo(gl, [vt_shader, fm_shader]);
 
 twgl.setAttributePrefix("a_")
 
-let sphereBufferInfo = flattenedPrimitives.createSphereBufferInfo(gl, 30, 20, 20);
+let sphereBufferInfo = flattenedPrimitives.createSphereBufferInfo(gl, 10, 12, 6);
 
 const sphereVAO = twgl.createVAOFromBufferInfo(gl, programInfo, sphereBufferInfo);
 
@@ -20,17 +20,17 @@ earthNode.setParent(sunNode);
 // uniforms that are diffenert from each object
 const sunUniform = {
   u_matrix: m4unit(),
-  u_mulColor: new Float32Array([0.8, 0.5, 0.5, 1])
+  u_mulColor: new Float32Array([1, 0.65, 0.65, 1])
 }
 
 const earchUniform = {
-  u_matrix: m4mul(m4scale(0.5, 0.5, 0.5), m4translate(0, 150, 0)),
-  u_mulColor: new Float32Array([0.5, 0.5, 0.8, 1])
+  u_matrix: m4mul(m4scale(1,1,1), m4translate(0, 80, 0)),
+  u_mulColor: new Float32Array([0.65, 0.65, 1, 1])
 }
 
 const moonUniform = {
-  u_matrix: m4mul(m4scale(0.3, 0.3, 0.3), m4translate(0, 75, 0)),
-  u_mulColor: new Float32Array([0.5, 0.8, 0.5, 1])
+  u_matrix: m4mul(m4scale(0.3, 0.3, 0.3), m4translate(0, 30, 0)),
+  u_mulColor: new Float32Array([0.65, 1, 0.65, 1])
 }
 
 // init node local matrix
@@ -64,7 +64,7 @@ function render (now) {
   gl.viewport(0, 0, width, height)
 
   // clear with white, it should be different from the previous blue
-  clear(1, 1, 1, 1)
+  clear(0, 0, 0, 1)
 
   gl.useProgram(programInfo.program)
   // bind the attribute/buffer we set
@@ -79,7 +79,7 @@ function render (now) {
 function drawObjects (now, ratio) {
   
   // inverse matrix of camera matrix
-  let caPosition = [0, 0, -300], center = [0, 0, 0], up = [0, 1, 0]
+  let caPosition = [0, 0, -200], center = [0, 0, 0], up = [0, 1, 0]
 
   // be careful that this util handled invert by default, so we needn't do that by ourselves
   let caMatrix = m4.lookAt(m4unit(), caPosition, center, up)
@@ -103,8 +103,8 @@ function drawObjects (now, ratio) {
   /* ----------- animation ----------- */
 
   // set all matrix
-  let rotationY = m4rotateY(toRad(1));
-  let rotationZ = m4rotateZ(toRad(1));
+  let rotationY = m4rotateY(toRad(0.3));
+  let rotationZ = m4rotateZ(toRad(0.3));
 
   let sunMatrix = m4mul(sunNode.localMatrix, rotationZ);
   let earchMatrix = m4mul(earthNode.localMatrix, rotationZ);
