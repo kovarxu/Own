@@ -263,3 +263,18 @@ function observe (obj, cbs) {
   obj.__ob__ = true
 }
 
+// hack of twgl.js
+
+function addRandomColorBuffer (buffer) {
+  let numElements = buffer.numElements
+  let curand = 0
+  let array = Array.from({ length: numElements * 4 }, (x, i) => {
+    let j = i+1;
+    if (j && j % 4 === 0) return 1;
+    else if (j % 4 === 1) return curand = Math.random() * 0.3 + 0.7;
+    else return curand;
+  }) 
+  let arrays = { color: array }
+  let colorbuffer = twgl.createBufferInfoFromArrays(gl, arrays);
+  buffer.attribs.a_color = colorbuffer.attribs.a_color;
+}
