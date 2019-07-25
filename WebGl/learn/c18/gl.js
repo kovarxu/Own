@@ -274,14 +274,17 @@ const normalCoords = [
 
 twgl.setAttributePrefix("a_")
 
-const arrays = {
-  position: positionCoords,
-  normal: normalCoords
-}
+let sphereBufferInfo = flattenedPrimitives.createSphereBufferInfo(gl, 10, 12, 6);
+console.log(sphereBufferInfo)
 
-const bufferInfo = twgl.createBufferInfoFromArrays(gl, arrays)
+// const arrays = {
+//   position: positionCoords,
+//   normal: normalCoords
+// }
 
-const vao = twgl.createVAOFromBufferInfo(gl, programInfo, bufferInfo)
+// const bufferInfo = twgl.createBufferInfoFromArrays(gl, arrays)
+
+// const vao = twgl.createVAOFromBufferInfo(gl, programInfo, bufferInfo)
 
 // transform matrix data
 let pr = Object.create(null)
@@ -342,7 +345,7 @@ function initMatrix () {
 }
 
 function setUniforms () { 
-  initRangeWidget('pov', 'tx', 'ty', 'tz', 'rotx', 'roty', 'rotz', pr)
+  initRangeWidget('pov', 'tx', 'ty', 'tz', 'rotx', 'roty', 'rotz', 'sx', 'sy', 'sz', pr)
   observe(pr, render)
 }
 
