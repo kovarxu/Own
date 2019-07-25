@@ -3,25 +3,25 @@ let gl = createWebGlContext(mc)
 
 const programInfo = twgl.createProgramInfo(gl, [vt_shader, fm_shader]);
 
-const positionCoords = [
-  // left column front (clocewise)
-  0,   0,  0,
-  0, 150,  0,
-  30,   0,  0,
-  0, 150,  0,
-  30, 150,  0,
-  30,   0,  0,
-  
-  // top rung front (clockwise)
+const positionCoords = (function () {
+  var positions = new Float32Array([
+    // left column front
+    0,   0,  0,
+    0, 150,  0,
+    30,   0,  0,
+    0, 150,  0,
+    30, 150,  0,
+    30,   0,  0,
+
+    // top rung front
     30,   0,  0,
     30,  30,  0,
-  100,   0,  0,
-    
+    100,   0,  0,
     30,  30,  0,
-  100,  30,  0,
-  100,   0,  0,
+    100,  30,  0,
+    100,   0,  0,
 
-  // middle rung front
+    // middle rung front
     30,  60,  0,
     30,  90,  0,
     67,  60,  0,
@@ -29,110 +29,118 @@ const positionCoords = [
     67,  90,  0,
     67,  60,  0,
 
-  // left column back
-    0,   0,  30,
-    30,   0,  30,
-    0, 150,  30,
-    0, 150,  30,
-    30,   0,  30,
-    30, 150,  30,
+    // left column back
+      0,   0,  30,
+      30,   0,  30,
+      0, 150,  30,
+      0, 150,  30,
+      30,   0,  30,
+      30, 150,  30,
 
-  // top rung back
-    30,   0,  30,
-  100,   0,  30,
-    30,  30,  30,
-    30,  30,  30,
-  100,   0,  30,
-  100,  30,  30,
+    // top rung back
+      30,   0,  30,
+    100,   0,  30,
+      30,  30,  30,
+      30,  30,  30,
+    100,   0,  30,
+    100,  30,  30,
 
-  // middle rung back
-    30,  60,  30,
-    67,  60,  30,
-    30,  90,  30,
-    30,  90,  30,
-    67,  60,  30,
-    67,  90,  30,
+    // middle rung back
+      30,  60,  30,
+      67,  60,  30,
+      30,  90,  30,
+      30,  90,  30,
+      67,  60,  30,
+      67,  90,  30,
 
-  // top
+    // top
+      0,   0,   0,
+    100,   0,   0,
+    100,   0,  30,
+      0,   0,   0,
+    100,   0,  30,
+      0,   0,  30,
+
+    // top rung right
+    100,   0,   0,
+    100,  30,   0,
+    100,  30,  30,
+    100,   0,   0,
+    100,  30,  30,
+    100,   0,  30,
+
+    // under top rung
+    30,   30,   0,
+    30,   30,  30,
+    100,  30,  30,
+    30,   30,   0,
+    100,  30,  30,
+    100,  30,   0,
+
+    // between top rung and middle
+    30,   30,   0,
+    30,   60,  30,
+    30,   30,  30,
+    30,   30,   0,
+    30,   60,   0,
+    30,   60,  30,
+
+    // top of middle rung
+    30,   60,   0,
+    67,   60,  30,
+    30,   60,  30,
+    30,   60,   0,
+    67,   60,   0,
+    67,   60,  30,
+
+    // right of middle rung
+    67,   60,   0,
+    67,   90,  30,
+    67,   60,  30,
+    67,   60,   0,
+    67,   90,   0,
+    67,   90,  30,
+
+    // bottom of middle rung.
+    30,   90,   0,
+    30,   90,  30,
+    67,   90,  30,
+    30,   90,   0,
+    67,   90,  30,
+    67,   90,   0,
+
+    // right of bottom
+    30,   90,   0,
+    30,  150,  30,
+    30,   90,  30,
+    30,   90,   0,
+    30,  150,   0,
+    30,  150,  30,
+
+    // bottom
+    0,   150,   0,
+    0,   150,  30,
+    30,  150,  30,
+    0,   150,   0,
+    30,  150,  30,
+    30,  150,   0,
+
+    // left side
     0,   0,   0,
-  100,   0,   0,
-  100,   0,  30,
-    0,   0,   0,
-  100,   0,  30,
     0,   0,  30,
-
-  // top rung right
-  100,   0,   0,
-  100,  30,   0,
-  100,  30,  30,
-  100,   0,   0,
-  100,  30,  30,
-  100,   0,  30,
-
-  // under top rung
-  30,   30,   0,
-  30,   30,  30,
-  100,  30,  30,
-  30,   30,   0,
-  100,  30,  30,
-  100,  30,   0,
-
-  // between top rung and middle
-  30,   30,   0,
-  30,   60,  30,
-  30,   30,  30,
-  30,   30,   0,
-  30,   60,   0,
-  30,   60,  30,
-
-  // top of middle rung
-  30,   60,   0,
-  67,   60,  30,
-  30,   60,  30,
-  30,   60,   0,
-  67,   60,   0,
-  67,   60,  30,
-
-  // right of middle rung
-  67,   60,   0,
-  67,   90,  30,
-  67,   60,  30,
-  67,   60,   0,
-  67,   90,   0,
-  67,   90,  30,
-
-  // bottom of middle rung.
-  30,   90,   0,
-  30,   90,  30,
-  67,   90,  30,
-  30,   90,   0,
-  67,   90,  30,
-  67,   90,   0,
-
-  // right of bottom
-  30,   90,   0,
-  30,  150,  30,
-  30,   90,  30,
-  30,   90,   0,
-  30,  150,   0,
-  30,  150,  30,
-
-  // bottom
-  0,   150,   0,
-  0,   150,  30,
-  30,  150,  30,
-  0,   150,   0,
-  30,  150,  30,
-  30,  150,   0,
-
-  // left side
-  0,   0,   0,
-  0,   0,  30,
-  0, 150,  30,
-  0,   0,   0,
-  0, 150,  30,
-  0, 150,   0,
-]
+    0, 150,  30,
+    0,   0,   0,
+    0, 150,  30,
+    0, 150,   0,
+  ]);
+  for (var ii = 0; ii < positions.length; ii += 3) {
+    var vector = v4.transformMat4(vunit(4), [positions[ii + 0], positions[ii + 1], positions[ii + 2], 1], m4rotateX(Math.PI))
+    positions[ii + 0] = vector[0]
+    positions[ii + 1] = vector[1]
+    positions[ii + 2] = vector[2]
+  }
+  return positions
+})()
 
 const normalCoords = [
   // left column front
@@ -277,8 +285,9 @@ const vao = twgl.createVAOFromBufferInfo(gl, programInfo, bufferInfo)
 
 // transform matrix data
 let pr = Object.create(null)
-const reversedLightDirection = m3.normalize(m3unit(), [0.5, 0.7, 1.0])
-const surfaceLight = m3.normalize(m4unit(), [210, 70, 110])
+const reversedLightDirection = v3.normalize(vunit(3), [0.5, 0.2, 1.0])
+const surfaceColor = v3.normalize(vunit(3), [210, 70, 110])
+let worldMatrix = m4unit()
 
 function main () {
   // set uniform variables
@@ -301,7 +310,7 @@ function render () {
   // depth test
   gl.enable(gl.DEPTH_TEST)
 
-  gl.useProgram(program)
+  gl.useProgram(programInfo.program)
   // bind the attribute/buffer we set
   gl.bindVertexArray(vao)
 
@@ -310,7 +319,8 @@ function render () {
   twgl.setUniforms(programInfo, {
     u_matrix: pr.m,
     u_reversedLightDirection: reversedLightDirection,
-    u_surfaceColor: surfaceLight
+    u_surfaceColor: surfaceColor,
+    u_worldMatrix: worldMatrix
   })
 
   // render
@@ -322,7 +332,7 @@ function initMatrix () {
   pr.tx = -150
   pr.ty = 0
   pr.tz = -360
-  pr.rotx = 180
+  pr.rotx = 0
   pr.roty = 0
   pr.rotz = 0
   pr.sx = 100
@@ -386,6 +396,9 @@ function changeM (pr, base) {
   // perspective conversion
   let aspect = right / bottom, perspective = []
   m4.perspective(perspective, pov, aspect, 1, 2000)
+
+  // set the world matrix according to rotation
+  worldMatrix = m4mul(rotationZ, rotationY, rotationX)
 
   if (!base || typeof base !== 'object' || !base.length) {
     pr.m = m4mul( scale, rotationZ, rotationY, rotationX, translation, perspective )

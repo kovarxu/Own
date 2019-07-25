@@ -15,3 +15,11 @@ follow the following steps:
                            use (u_color.rgb *= dot_result) as the final color
 
 **Attention: we should always use normalized vector in lighting.**
+
+4. set a world matrix (the same as the object) for light, not including translation, because translation means nothing for vectors.
+
+## including scale
+
+the u_world matrix should be an invert transposed matrix of the world matrix, which in formula:
+
+<em>u_matrix</em> = (<strong>M</strong><sup>-1</sup>)<sup>T</sup>

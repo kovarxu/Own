@@ -67,6 +67,8 @@ function createProgram (gl, vertexShader, fragmentShader) {
   if (global.glMatrix) {
     const mat3 = global.m3 = global.glMatrix.mat3
     const mat4 = global.m4 = global.glMatrix.mat4
+    const v3 = global.v3 = global.glMatrix.vec3
+    const v4 = global.v4 = global.glMatrix.vec4
     const toRad = global.glMatrix.glMatrix.toRadian
     
     // 3d matrix multiply
@@ -120,6 +122,10 @@ function createProgram (gl, vertexShader, fragmentShader) {
         0, 0, 1, 0,
         0, 0, 0, 1
       ]
+    }
+
+    global.vunit = function (n) {
+      return Array(n).fill(1)
     }
 
     global.m4translate = function (tx, ty, tz) {
