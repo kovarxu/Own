@@ -23,3 +23,11 @@ follow the following steps:
 the u_world matrix should be an invert transposed matrix of the world matrix, which in formula:
 
 <em>u_matrix</em> = (<strong>M</strong><sup>-1</sup>)<sup>T</sup>
+
+`worldMatrix = m4mul(rotationZ, rotationY, rotationX)`
+
+![world matrix with pure orientation](./c01.JPG)
+
+`worldMatrix = m4.transpose(m4unit(), m4.invert(m4unit(), m4mul(scale, rotationZ, rotationY, rotationX)))`
+
+![world matrix converted from transpose after invert](./c02.JPG)
