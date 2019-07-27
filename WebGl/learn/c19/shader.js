@@ -13,12 +13,15 @@ out vec3 v_normal;
 out vec3 v_surfaceToLight;
 
 void main () {
-  vec3 surfaceToLight = mat3(u_lightMatrix) * (u_lightPosition - a_position.xyz);
-  vec3 changedNormal = mat3(u_normalMatrix) * a_normal;
   gl_Position = u_moveMatrix * a_position;
 
+  vec3 changedNormal = mat3(u_normalMatrix) * a_normal;
+  // vec3 surfaceToLight = mat3(u_lightMatrix) * (u_lightPosition - vec3(gl_Position));
+  vec3 surfaceWorldPosition = (u_lightMatrix * a_position).xyz;
+
   v_normal = changedNormal;
-  v_surfaceToLight = surfaceToLight;
+  // v_surfaceToLight = surfaceToLight;
+  v_surfaceToLight = u_lightPosition - surfaceWorldPosition;
 }
 `
 
