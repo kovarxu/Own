@@ -66,7 +66,8 @@ function render () {
     u_surfaceColor: surfaceColor,
     u_shiness: 100,
     u_lightDirection: lightPosition,
-    u_limit: Math.cos(toRad(pr.limit))
+    u_innerLimit: Math.cos(toRad(pr.ilimit)),
+    u_outerLimit: Math.cos(toRad(pr.olimit)),
   })
 
   // render
@@ -94,12 +95,13 @@ function initMatrix () {
   pr.sx = 100
   pr.sy = 100
   pr.sz = 100
-  pr.limit = 13
+  pr.ilimit = 10
+  pr.olimit = 15
   Object.defineProperty(pr, 'm', { writable: true, value: {} })
 }
 
 function setUniforms () { 
-  initRangeWidget('pov', 'tx', 'ty', 'tz', 'rotx', 'roty', 'rotz', 'limit', pr)
+  initRangeWidget('pov', 'tx', 'ty', 'tz', 'rotx', 'roty', 'rotz', 'ilimit', 'olimit', pr)
   observe(pr, render)
 }
 

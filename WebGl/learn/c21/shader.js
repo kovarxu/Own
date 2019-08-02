@@ -38,9 +38,9 @@ out vec4 outColor;
 uniform float u_shiness;
 uniform vec3 u_surfaceColor;
 uniform vec3 u_lightDirection;
-uniform float u_limit;
-// uniform float u_innerLimit;
-// uniform float u_outerLimit;
+// uniform float u_limit;
+uniform float u_innerLimit;
+uniform float u_outerLimit;
 
 void main () {
   vec3 normalizedStoL = normalize(v_surfaceToLight);
@@ -49,14 +49,17 @@ void main () {
 
   float light = 0.0;
   float specular = 0.0;
+  float factor = 1.0;
 
   float dotFromDirection = dot(normalizedStoL, -normalize(u_lightDirection));
 
-  if (dotFromDirection >= u_limit) {
-    light = dot(normalize(v_normal), normalizedStoL);
+  if (dotFromDirection >= u_outerLimit) {
+    factor = smoothstep(u_outerLimit, u_innerLimit, dotFromDirection);
+
+    light = factor * dot(normalize(v_normal), normalizedStoL);
 
     if (light > 0.0) {
-      specular = pow(dot(normalize(v_normal), normalize(centerOfLightAndCamera)), u_shiness);
+      specular = factor * pow(dot(normalize(v_normal), normalize(centerOfLightAndCamera)), u_shiness);
     }
   }
 
