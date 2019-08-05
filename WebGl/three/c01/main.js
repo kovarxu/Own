@@ -7,7 +7,7 @@ function main() {
   const renderer = new THREE.WebGLRenderer({ canvas });
 
   const fov = 75; // in degree
-  const aspect = 2;  // the canvas default
+  const aspect = 1.5;  // the canvas default
   const near = 0.1;
   const far = 5;
   const camera = new THREE.PerspectiveCamera(fov, aspect, near, far);
@@ -23,10 +23,19 @@ function main() {
   const cubes = [];  // just an array we can use to rotate the cubes
   const loader = new THREE.TextureLoader();
 
-  const material = new THREE.MeshBasicMaterial({
-    map: loader.load('http://127.0.0.1:8062/imgs/tbd/tbd02.jpg'),
-  });
-  const cube = new THREE.Mesh(geometry, material);
+  // const material = new THREE.MeshBasicMaterial({
+  //   map: loader.load('http://127.0.0.1:8062/imgs/greg/flower-1.jpg'),
+  // });
+  const materials = [
+    new THREE.MeshBasicMaterial({ map: loader.load('http://127.0.0.1:8062/imgs/greg/flower-1.jpg') }),
+    new THREE.MeshBasicMaterial({ map: loader.load('http://127.0.0.1:8062/imgs/greg/flower-2.jpg') }),
+    new THREE.MeshBasicMaterial({ map: loader.load('http://127.0.0.1:8062/imgs/greg/flower-3.jpg') }),
+    new THREE.MeshBasicMaterial({ map: loader.load('http://127.0.0.1:8062/imgs/greg/flower-4.jpg') }),
+    new THREE.MeshBasicMaterial({ map: loader.load('http://127.0.0.1:8062/imgs/greg/flower-5.jpg') }),
+    new THREE.MeshBasicMaterial({ map: loader.load('http://127.0.0.1:8062/imgs/greg/flower-6.jpg') }),
+  ]
+
+  const cube = new THREE.Mesh(geometry, materials);
   scene.add(cube);
   cubes.push(cube);  // add to our list of cubes to rotate
 
