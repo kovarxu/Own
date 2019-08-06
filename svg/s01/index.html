@@ -8,7 +8,99 @@
   <style>.hide{display: none;}</style>
   <link rel="stylesheet" href="../bin/dat.gui.css">
 </head>
-<body>
+<body class="hide">
+  <svg xmlns="http://www.w3.org/2000/svg" id="mask">
+    <linearGradient id="mask_lg">
+      <stop offset="0.0" stop-color="#333" />
+      <stop offset="0.5" stop-color="#fff" />
+      <stop offset="1.0" stop-color="#333" />
+    </linearGradient>
+
+    <mask id="mask_ma">
+      <rect x="110" y="110" width="500" height="300" fill="url(#mask_lg)" />
+    </mask>
+
+    <text x="150" y="150" font-family="century" font-size="50" mask="url(#mask_ma)" fill="#f88">
+      Some Text Is Hear
+    </text>
+  </svg>
+
+  <!-- nonzero: 从一点往外画射线，如果穿过路径的方向总和抵消，则不在路径内部 -->
+  <!-- evenodd: 从一点往外画射线，如果穿过路径的个数总和为偶，则不在路径内部 -->
+  <svg viewBox="-10 -10 320 120" xmlns="http://www.w3.org/2000/svg" id="fill-rule">
+    <path fill-rule="nonzero" stroke="red"
+          d="M110,0  h90 v90 h-90 z
+              M130,20 h50 v50 h-50 z"/>
+              
+    <path fill-rule="nonzero" stroke="red"
+          d="M210,0  h90 v90 h-90 z
+              M230,20 v50 h50 v-50 z"/>
+  </svg>
+
+  <svg xmlns="http://www.w3.org/2000/svg" id="clippath">
+    <clipPath id="ST">
+      <path d="M 204 247 24 189 135 343 135 152 24 306 z" />
+    </clipPath>
+
+    <clipPath id="RT" clip-path="url(#ST)">
+      <rect x="0" y="200" width="200" height="100" />
+    </clipPath>
+
+    <!-- <rect x="0" y="200" width="200" height="200" clip-path="url(#ST)" fill="#c00" opacity="0.7" clip-rule="evenodd" /> -->
+    <image x="0" y="200" width="200" height="200" xlink:href="tbd01.jpg" clip-path="url(#RT)" />
+  </svg>
+
+  <svg xmlns="http://www.w3.org/2000/svg" id="pattern">
+    <defs>
+      <pattern id="pat_ov" patternUnits="userSpaceOnUse" width="22" height="15">
+        <!-- <use xlink:href="#pat_oval3" /> -->
+        <g id="pat_oval3" stroke-width="1" stroke="#ccc" fill="#835" opacity="0.5">
+          <ellipse cx="16" cy="8" rx="4" ry="2" />
+          <ellipse cx="8" cy="3" rx="4" ry="2" />
+          <ellipse cx="5" cy="11" rx="4" ry="2" />
+        </g>
+      </pattern>
+    </defs>
+
+    <ellipse fill="#7ac" cx="250" cy="250" rx="200" ry="140" />
+    <ellipse fill="url(#pat_ov)" cx="250" cy="250" rx="200" ry="140" />
+  </svg>
+
+  <!-- 45是对角线，注意 -->
+  <svg xmlns="http://www.w3.org/2000/svg" id="linear-gradient">
+    <linearGradient id="gl_l" gradientTransform="rotate(45, 0.5, 0.5)">
+      <stop offset="0" stop-color="#fff" />
+      <stop offset="0.25" stop-color="#965" />
+      <stop offset="0.5" stop-color="#ac8" />
+      <stop offset="1" stop-color="#f66" />
+    </linearGradient>
+    
+    <rect x="50" y="50" width="200" height="100" fill="url(#gl_l)" />
+  </svg>
+
+  <svg xmlns="http://www.w3.org/2000/svg" id="radial-gradient">
+    <radialGradient fx="0.26" fy="0.36" id="gr_r">
+      <stop offset="0.1" stop-color="#f88"/>
+      <stop offset="0.3" stop-color="#f22"/>
+      <stop offset="0.5" stop-color="#f88"/>
+      <stop offset="0.7" stop-color="#f22"/>
+      <stop offset="1" stop-color="#f88"/>
+    </radialGradient>
+
+    <ellipse cx="200" cy="100" rx="160" ry="80" fill="url(#gr_r)" />
+  </svg>
+
+  <svg xmlns="http://www.w3.org/2000/svg" id="g">
+    <g fill="#6495ed">
+      <g id="gg">
+        <rect x="100" y="100" width="120" height="30" fill="inherit" />
+        <rect x="100" y="160" width="100" height="30" fill="inherit" />
+        <rect x="100" y="100" width="30" height="160" fill="inherit" />
+      </g>
+      <use xlink:href="#gg" transform="translate(150,0)" fill="#f88" opacity="0.5" />
+    </g>
+  </svg>
+
   <svg xmlns="http://www.w3.org/2000/svg" id="line">
     <path fill="orange" stroke="purple" stroke-width="3" d="M 10,215 210,215 110,42 z M 10,100 210,100 110,273 z" />
   </svg>
@@ -16,10 +108,6 @@
   <!-- bezier-curve -->
   <svg xmlns="http://www.w3.org/2000/svg" id="bezier">
     <path stroke="black" stroke-width="3" d="M 20 400 C 80 320 246 120 300 410" fill="transparent" />
-  </svg>
-  
-  <svg xmlns="http://www.w3.org/2000/svg" id="xys">
-    <path stroke="" />
   </svg>
 
   <script src="../bin/dat.gui.js"></script>

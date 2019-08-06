@@ -18,7 +18,6 @@ function main () {
   gui.remember(text)
 
   gui.add(text, 'pattern', idList).onChange(value => {
-    console.log(value)
     let ele = document.getElementById(value)
     if (ele) {
       svgs.forEach((svg) => {
@@ -27,6 +26,8 @@ function main () {
       })
     }
   })
+
+  document.body.classList.remove('hide')
 }
 
 const MainText = function () {
