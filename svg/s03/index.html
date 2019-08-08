@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>s03</title>
+  <link rel="stylesheet" href="../bin/dat.gui.css">
+  <link rel="stylesheet" href="main.css">
+</head>
+<body class="hide">
+  <!-- steps:
+
+  1. we need an feImage element
+  2. desaturate background to gray
+  3. blur the result of 1
+  4. use feDisplaymentMap to distort the source text. After this step, the bg will be invisible
+  5. we still need the bg so redefine the bg again
+  6. use feColorMatrix to decrease alpha of the result of 3
+  7. use feBlend + multiply mode to blend result of step4 and step5
+  8. merge the result of step 4 and step 7 
+
+  -->
+
+  <!-- <svg id="displacementFilter" viewBox="0 0 600 300">
+    <filter id="df" x="-50%" y="-50%" width="200%" height="200%">
+      <feImage x="0" y="0" width="100%" height="100%" xlink:href="http://127.0.0.1:8062/imgs/tbd/dm.jpg" preserveAspectRatio="none"></feImage>
+      <feColorMatrix type="saturate" values="0" result="SIMAGE"></feColorMatrix>
+      <feGaussianBlur in="SIMAGE" stdDeviation="0.75" result="GMAP"></feGaussianBlur>
+      <feDisplacementMap in="SourceGraphic" in2="GMAP" scale="15" xChannelSelector="R" yChannelSelector="R" result="FETEXTURE"></feDisplacementMap>
+
+      <feImage x="0" y="0" width="100%" height="100%" xlink:href="http://127.0.0.1:8062/imgs/tbd/dm.jpg" result="BG" preserveAspectRatio="none" />
+      <feColorMatrix in="FETEXTURE" type="matrix" values="
+        1 0 0 0 0
+        0 1 0 0 0
+        0 0 1 0 0
+        0 0 0 .9 0
+      " result="OTEXT" />
+      <feBlend in="BG" in2="OTEXT" mode="multiply" result="BTEXT" />
+
+      <feMerge>
+        <feMergeNode in="BG" />
+        <feMergeNode in="BTEXT" />
+      </feMerge>
+    </filter>
+
+    <text x="110" y="150" font-size="5em" font-weight="700" fill="#00826C" filter="url(#df)">Immortal</text>
+  </!--> -->
+
+  <div class="content">
+    <svg viewBox="0 0 600 330" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+      <filter id="conform" x="-50%" y="-50%" width="200%" height="200%">
+        <feImage xlink:href="./dm.jpg" x="0" y="0" width="100%" height="100%" preserveAspectRatio="none"></feImage>
+        <!-- desaturate the image -->
+        <feColorMatrix type="saturate" values="0" result="IMAGE"></feColorMatrix>
+        <!-- decrease level of details so the effect on text is more realistic -->
+        <feGaussianBlur in="IMAGE" stdDeviation="0.25" result="MAP"></feGaussianBlur>
+        <!-- use the displacement map to distort the text -->
+        <feDisplacementMap in="SourceGraphic" in2="MAP" scale="15" xChannelSelector="R" yChannelSelector="R" result="TEXTURED_TEXT"></feDisplacementMap>
+        <!-- add the image as a background behind the text again -->
+        <feImage xlink:href="./dm.jpg" x="0" y="0" width="100%" height="100%" preserveAspectRatio="none" result="BG"></feImage>
+        <feColorMatrix in="TEXTURED_TEXT" result="TEXTURED_TEXT_2" type="matrix" values="1 0 0 0 0 
+             0 1 0 0 0 
+             0 0 1 0 0 
+             0 0 0 .9 0"></feColorMatrix>
+        <!--  blend the text with the background image -->
+        <feBlend in="BG" in2="TEXTURED_TEXT_2" mode="multiply" result="BLENDED_TEXT"></feBlend>
+        <!-- layer the text on top of the background image -->
+        <feMerge>
+          <feMergeNode in="BG"></feMergeNode>
+          <feMergeNode in="BLENDED_TEXT"></feMergeNode>
+        </feMerge>
+      </filter>
+      <text dx="60" dy="200" font-size="10em" filter="url(#conform)" fill="#00826C">organic</text>
+      <!-- <g filter="url(#conform)">
+            <text dx="60" dy="200" font-size="10em" transform="translate(0 30) rotate(-5)" fill="#00826C">organic</text>
+          </g> -->
+    </svg>
+  </div>
+
+  <script src="../bin/dat.gui.js"></script>
+  <script src="main.js"></script>
+</body>
+</html>
+
