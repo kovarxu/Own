@@ -13,3 +13,7 @@ steps:
 7. use feBlend + multiply mode to blend result of step4 and step5
 8. merge the result of step 4 and step 7
 
+something different between browsers:
+
+1. chrome and firefox must get page from the Internet, not local files
+2. MSEdge can take local files as source
