@@ -1,4 +1,4 @@
-### apply texture
+# apply texture
 
 we apply textures in these steps: 
 
@@ -35,14 +35,14 @@ function initTexture () {
 }
 ```
 
-### image cors
+## image cors
 
 we should set `Access-Control-Allow-Origin: "*"` in the back end.
 
 we need specify `image.crossOrigin = 'anonymous'`, or a DOMException may raise.
 (we not only take this image for watch, but we need its pixel information, that need crossorigin)
 
-### generateMipmap
+## generateMipmap
 
 when we take a 16\*16 image and draw on 2\*2 plain, what photoshop do is average the 4 equalent zone in the original image, but it's very slow in GPU, so what the GPU does is it uses a mipmap
 
@@ -51,11 +51,11 @@ A mipmap is a collection of progressively smaller images, each one 1/4th the siz
 `gl.generateMipmap(gl.TEXTURE_2D)` we gen bitmap for the texture, that need 1/3 more memory space (it create 1*1, 2*2, 4*4, 8*8, ..., sqrt(a)*sqrt(a))
 
 
-### texture atalas
+## texture atalas
 
 we merge some small pictures in a big image, and can get then through texture coordinate.
 
-### texture settings
+## texture settings
 
 ```javascript
 // repeat in x axis, such as REPEAT, CLAMP_TO_EDGE, MIRROR_REPEAT
@@ -69,7 +69,7 @@ gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
 
 `TEXTURE_MIN_FILTER` is the setting used when the size you are drawing is smaller than the largest mip. TEXTURE_MAG_FILTER is the setting used when the size you are drawing is larger than the largest mip. For `TEXTURE_MAG_FILTER` only NEAREST and LINEAR are valid settings.
 
-### texture units
+## texture units
 
 how does the shader know which texture to use for someTexture?
 
@@ -117,3 +117,17 @@ gl.getParameter(gl.AX_COMBINED_TEXTURE_IMAGE_UNITS); // 32
 gl.getParameter(gl.MAX_VERTEX_TEXTURE_IMAGE_UNITS); // 16
 gl.getParameter(gl.MAX_TEXTURE_IMAGE_UNITS); // 16
 ```
+
+## data texture --- inner format and type
+
+This map is just a format-type information:
+
+![./without_inner_format.png](./without_inner_format.png)
+
+We can see more detail here, with bit and channel information
+
+![./format_bit_info.png](./format_bit_info.png)
+
+And then, then `inner type` -- `type` -- `javascript data type` map
+
+![./inner_type.png](./inner_type.png)
