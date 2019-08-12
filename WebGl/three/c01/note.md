@@ -4,14 +4,14 @@
 
 steps to draw:
 
-1. get canvas and **renderer**
+1.get canvas and **renderer**
 
 ```javascript
 const canvas = getMainCanvas();
 const renderer = new THREE.WebGLRenderer({ canvas });
 ```
 
-2. create a camera
+2.create a camera
 
 ```javascript
 const fov = 75; // in degree
@@ -22,7 +22,7 @@ const camera = new THREE.PerspectiveCamera(fov, aspect, near, far);
 camera.position.z = 2;
 ```
 
-3. create a scene, an object(includeing mesh) and put it into the scene
+3.create a scene, an object(includeing mesh) and put it into the scene
 
 ```javascript
 const scene = new THREE.Scene();
@@ -45,7 +45,7 @@ cubes.push(cube);  // add to our list of cubes to rotate
 
 ```
 
-4. change view size
+4.change view size
 
 ```javascript
 function resizeRendererToDisplaySize(renderer) {
@@ -68,7 +68,7 @@ if (resizeRendererToDisplaySize(renderer)) {
 ...
 ```
 
-5. render
+5.render
 
 `renderer.render(scene, camera);`
 
