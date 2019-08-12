@@ -2,3 +2,7 @@
 
 ## convert_imgs_to_base64
 
+## open_image_by_drag
+
+not only images, texts can also displayed by drag
+

@@ -24,19 +24,10 @@
     fileSelector.onchange = function () {
       const files = fileSelector.files;
       [].slice.call(files).forEach((imgEle) => {
-
-        // file is a blob, not image element, so this way can't work
-        // let canvas = document.createElement('canvas');
-        // let ctx = canvas.getContext('2d');
-        // canvas.width = imgEle.naturalWidth;
-        // canvas.height = imgEle.naturalHeight;
-        // ctx.drawImage(imgEle, 0, 0);
-        // let base64Result = canvas.toDataURL('image/jpeg', 0.8);
-
         let reader = new FileReader;
         reader.readAsDataURL(imgEle);
         reader.onloadend = function () {
-          base64Result = reader.result;
+          let base64Result = reader.result;
 
           let newImage = document.createElement('img');
           newImage.classList.add('mip-image');
