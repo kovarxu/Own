@@ -10,6 +10,8 @@ function SfxrP() {
 	}
 }
 
+let testFlag = 0
+
 function sy() {
 	this._p = new SfxrP;
 	var a, b, c, d, e, f, g, h, i, j, k, l;
@@ -684,6 +686,7 @@ drawCube = function (obj) {
 		case "player":
 			//J'ai besoin de centrer le centrer de gravité pour les rotations
 			var geometry = getCube(height);
+			// testFlag < 1 && ++testFlag && console.log(geometry)
 			for (var i = 0; i < geometry.length; i += 3) {
 				geometry[i + 2]--;
 			}
@@ -1060,6 +1063,7 @@ function drawScene() {
 		var p = players[i];
 		var t = level[p.tile.x][p.tile.y];
 	}*/
+	// testFlag < 3 && ++testFlag && console.log(level, players)
 
 	for (var i = 0; i < players.length; i++) {
 		var p = players[i];
@@ -1081,6 +1085,7 @@ function drawScene() {
 			if (p.inMoveZ == 0) {
 				p.inMoveZ = 0.1;
 			}
+			// console.log(p.z, hauteurSol)
 			p.z -= p.inMoveZ;
 			p.inMoveZ *= 1.1;
 
@@ -1649,6 +1654,13 @@ function webGLStart() {
 		iD.data[i + 3] = 255;
 	}
 	ctx2.putImageData(iD, 0, 0);
+	{
+		// test, this is the lateral color of the cubes
+		// let d = canvas2.toDataURL();
+		// let i = new Image();
+		// i.src = d;
+		// document.body.appendChild(i);
+	}
 	handleLoadedTextureFromCanvas("mur", canvas2);
 
 	//Create trigger texture
@@ -1668,6 +1680,13 @@ function webGLStart() {
 		iD.data[i + 3] = 255;
 	}
 	ctx2.putImageData(iD, 0, 0);
+	{
+		// test again, it's has yellow border, and blue border, and yellow circle in the center
+		// let d = canvas2.toDataURL();
+		// let i = new Image();
+		// i.src = d;
+		// document.body.appendChild(i);
+	}
 	handleLoadedTextureFromCanvas("red", canvas2);
 
 	//Create trigger2 texture
@@ -1685,6 +1704,13 @@ function webGLStart() {
 		iD.data[i + 3] = 255;
 	}
 	ctx2.putImageData(iD, 0, 0);
+	{
+		// test again, it's has orange border, then blur border and orange squere in the center
+		// let d = canvas2.toDataURL();
+		// let i = new Image();
+		// i.src = d;
+		// document.body.appendChild(i);
+	}
 	handleLoadedTextureFromCanvas("blue", canvas2);
 
 	//Create multiple texture for tiles
@@ -1736,6 +1762,13 @@ function webGLStart() {
 			iD.data[i + 3] = 255;
 		}
 		ctx2.putImageData(iD, 0, 0);
+		// {
+		// 	// test again
+		// 	let d = canvas2.toDataURL();
+		// 	let i = new Image();
+		// 	i.src = d;
+		// 	document.body.appendChild(i);
+		// }
 		handleLoadedTextureFromCanvasTiles(j, canvas2);
 	}
 
@@ -1756,6 +1789,13 @@ function webGLStart() {
 		iD.data[i + 3] = Math.floor(Math.random() * 255);
 	}
 	ctx2.putImageData(iD, 0, 0);
+	{
+		// random noise
+		// let d = canvas2.toDataURL();
+		// let i = new Image();
+		// i.src = d;
+		// document.body.appendChild(i);
+	}
 	handleLoadedTextureFromCanvas("sphereTexture", canvas2);
 
 	initLevels();
