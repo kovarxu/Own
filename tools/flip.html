@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Flip Animation</title>
+  <style>
+    :root {--main-color: rgba(251,232,226)}
+    body {color: #333; max-width: 800px; margin:auto;}
+    .container {position: relative; padding: 10px; margin: 10px; height: 450px; background: rgba(233, 0, 0, 0.3); border-radius: 4px;}
+    .pl-obj {width: 100px; height: 100px; background: #5eb5c6; border-radius: 3px;}
+    .final {position: absolute;}
+    .animate-on-transforms {transition: all 1s;}
+  </style>
+</head>
+<body>
+  <h2>Flip stands for <em>First</em>, <em>Last</em>, <em>Invert</em> and <em>Play</em></h2>
+  <ol>
+    <li>
+      <h3>First</h3>
+      <p>the initial state of the elements involved in the transition</p>
+    </li>
+
+    <li>
+      <h3>Last</h3>
+      <p>the final state of the elements</p>
+    </li>
+
+    <li>
+      <h3>Invert</h3>
+      <p>First: add a class on the target, put it to the destination. Second: add invert or reverse style on the target, make it bake to the original place.</p>
+    </li>
+
+    <li>
+      <h3>Play</h3>
+      <p>add transtion to the target, and delete the inline styles, go!</p>
+    </li>
+  </ol>
+
+  <div class="container">
+    <div class="pl-obj"></div>
+  </div>
+
+  <script>
+    let animIsStart = false;
+    function select (selector) {
+      return document.querySelector(selector);
+    }
+
+    const container = select('.container');
+    let paddingBottom = getComputedStyle(container)['padding-bottom'];
+
+    const plObj = select('.pl-obj');
+    let first = plObj.getBoundingClientRect();
+
+    plObj.classList.add('final');
+    plObj.style.bottom = paddingBottom;
+    let last = plObj.getBoundingClientRect();
+
+    let invert = first.top - last.top;
+
+    plObj.style.transform = `translateY(${invert}px)`;
+    plObj.style['-webkit-transform'] = `translateY(${invert}px)`;
+
+    requestAnimationFrame(() => {
+      plObj.classList.add('animate-on-transforms');
+      plObj.style.transform = '';
+      plObj.style['-webkit-transform'] = '';
+    })
+  </script>
+</body>
+</html>
+

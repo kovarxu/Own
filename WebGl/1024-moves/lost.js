@@ -712,6 +712,9 @@ drawCube = function (obj) {
 		cam.z += decal.z;
 	}
 
+	testFlag < 3 && ++testFlag && console.log(camera.rotation)
+
+	// why no invert ??
 	mat4.identity(mvMatrix);
 	mat4.rotate(mvMatrix, degToRad(camera.rotation.z), [1, 0, 0]);
 	mat4.rotate(mvMatrix, degToRad(camera.rotation.y), [0, 1, 0]);
