@@ -869,37 +869,43 @@ move = function (x, y, p) {
 		return;
 	}
 	var oldT = level[p.tile.x][p.tile.y];
+	// tile doesn't exist
 	if (!level[p.tile.x + x] || !level[p.tile.x + x][p.tile.y + y]) {
 		return false;
 	}
 	var t = level[p.tile.x + x][p.tile.y + y];
 	var t2 = false;
 	var can = 0;
-	var hauteur = (t.h * 2);
+	var hauteur = (t.h * 2); // t.h is half of the total height
 	for (var i = 0; i < players.length; i++) {
 		if ((players[i].tile.x == p.tile.x + x) && (players[i].tile.y == p.tile.y + y)) {
 			hauteur++;
 		}
 	}
 	//if (t.o)
-	if (hauteur > p.z) { //C'est un mur
+	if (hauteur > p.z) { //C'est un mur (A wall, can't move)
 		can = 0;
 	} else {
+		// two players overlap, the lower can't move
 		if (oldT.p.length > 1 && oldT.p[oldT.p.length - 1].z > players[selectedPlayer].z) {
 			return 0;
 		}
 
 		//En tout cas, ce n'est pas un mur qui me bloque
 		hauteur += t.o.length * 2;
+		// if two or more object overlap, the player can't put either down
 		if (hauteur - p.z > 2) {
 			can = 0;
 		} else {
 			if (hauteur > p.z) {
-				if (hauteur == p.z + 2) { //Il y a un seul bloc
+				// encounter something
+				if (hauteur == p.z + 2) { //Il y a un seul bloc (only one object is encounted)
+					// object type == 2 ??
 					if (t.o[0].type == 2 && t.o.length == 1) { //Ok c'est un bloc grimpable
 						can = 1;
 					}
 				}
+				// objects may be shorter than the player
 				if (!can) {
 					//Il y a un object
 					//Je regarde si je peux le pousser
@@ -908,27 +914,32 @@ move = function (x, y, p) {
 						return false;
 					}
 					var t2 = level[p.tile.x + x + x][p.tile.y + y + y];
-
+					
+					// p - o - x,  the height of x is greater than p, can't push
 					if (t2.h * 2 + t2.o.length * 2 > p.z) {
 						can = 0;
 					} else {
 						//Bon la caisse peut y aller
+						// can push the object
 						can = 1;
 						t2.o.push(t.o[t.o.length - 1]);
 						t.o.pop();
+						// can't move to the destination immediately, it should be move sync to the player 
 						t2.o[t2.o.length - 1].inMoveX = x * vitesseRotation;
 						t2.o[t2.o.length - 1].inMoveY = y * vitesseRotation;
 					}
 				}
 			} else {
+				// not encounter anything
 				can = 1;
 			}
 		}
 	}
 
 	if (can) {
+		// move the player
 		level[p.tile.x][p.tile.y].p.pop();
-		p.inMoveX = x * vitesseRotation + (x ? (x > 0 ? 1 : -1) : 0);
+		p.inMoveX = x * vitesseRotation + (x ? (x > 0 ? 1 : -1) : 0); // (1, 11) (0, 0) (-1, -11)
 		p.inMoveY = y * vitesseRotation + (y ? (y > 0 ? 1 : -1) : 0);
 		p.tile.x += x;
 		p.tile.y += y;
@@ -959,7 +970,8 @@ actionTrigger = function (t, state) {
 		t.action();
 	}
 	switch (t.type) {
-		case 1:
+		case 1: 
+			// triggered only when in
 			if (!state) {
 				return;
 			}
@@ -970,12 +982,14 @@ actionTrigger = function (t, state) {
 					if (state === false && level[tl[0]][tl[1]].nb > 0) {
 						continue;
 					}
+					// if t.length is more than 1, switchTileHeight can only be implemented at the last time
 					switchTileHeight(tl[0], tl[1], tl[2], tl[3], state);
 				}
 				break;
 			case 3:
 				for (var i = 0; i < t.on.length; i++) {
 					var tl = t.on[i]
+					// switchTileHeight executed each time
 					switchTileHeight(tl[0], tl[1], state ? tl[2] : -tl[2], null, state);
 				}
 				break;
@@ -1068,11 +1082,13 @@ function drawScene() {
 	}*/
 	// testFlag < 3 && ++testFlag && console.log(level, players)
 
+	// draw players
 	for (var i = 0; i < players.length; i++) {
 		var p = players[i];
 		var t = level[p.tile.x][p.tile.y];
 		var hauteurSol = (t.h + t.o.length) * 2;
 
+		// for overlapped players
 		for (var j = 0; j < t.p.length; j++) {
 			if (t.p[j] == players[i]) {
 				break;
@@ -1081,10 +1097,11 @@ function drawScene() {
 			}
 		}
 
+		// fall into hole
 		if (!t.h) {
 			hauteurSol = -1000;
 		}
-		if (p.z > hauteurSol) {
+		if (p.z > hauteurSol) { // player is higher than the surface below, drop down
 			if (p.inMoveZ == 0) {
 				p.inMoveZ = 0.1;
 			}
@@ -1092,19 +1109,20 @@ function drawScene() {
 			p.z -= p.inMoveZ;
 			p.inMoveZ *= 1.1;
 
-			if (p.z == 0) {
+			if (p.z == 0) { // drop end
 				gameOver();
 			}
-			if (p.z <= hauteurSol) { //Je suis descendu un peu trop
+			if (p.z <= hauteurSol) { //Je suis descendu un peu trop (drop on the surface below)
 				p.z = hauteurSol;
 				p.inMoveZ = 0;
 			}
 		} else {
+			// for robust
 			if (hauteurSol == -1000) {
 				gameOver();
 			}
 			if (hauteurSol > p.z) {
-				p.z = hauteurSol + (t.inMoveZ / vitesseRotation);
+				p.z = hauteurSol + (t.inMoveZ / vitesseRotation); // player below the surface, elevate it
 			} else {
 				p.inMoveZ = 0;
 				p.z = hauteurSol;
@@ -1120,6 +1138,8 @@ function drawScene() {
 			selectedPlayer: i == selectedPlayer
 		});
 	}
+
+	// draw tiles and objects
 	for (var x = 0; x < levels[levelEnCours].width; x++) {
 		for (var y = 0; y < levels[levelEnCours].height; y++) {
 			var t = level[x][y];
@@ -1136,6 +1156,7 @@ function drawScene() {
 						y: 0,
 						z: 0
 					};
+					// stategy of animation: decrease a para (inMoveX or inMoveY) per frame, and recalc the position
 					if (o.inMoveX > 0) {
 						decal.x = -(--o.inMoveX) / vitesseRotation * 2;
 					}
@@ -1149,7 +1170,7 @@ function drawScene() {
 						decal.y = (++o.inMoveY) / vitesseRotation * 2;
 					}
 
-					if (h < o.z + o.inMoveZ) { //Il doit tomber
+					if (h < o.z + o.inMoveZ) { // object on the surface, drop it
 						if (o.speedZ == 0) {
 							o.speedZ = 0.1;
 							o.inMoveZ = (o.z - h) * 2;
@@ -1164,6 +1185,8 @@ function drawScene() {
 
 						o.inMoveZ -= o.speedZ;
 						decal.z = o.inMoveZ;
+
+						// move excessively
 						if (h > o.z + o.inMoveZ) {
 							if (o.inMoveZ > -0.1) {
 								decal.z = 0;
