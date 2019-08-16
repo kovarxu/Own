@@ -971,8 +971,7 @@ actionTrigger = function (t, state) {
 	}
 	switch (t.type) {
 		case 1: 
-			// triggered only when in
-			if (!state) {
+			if (!state) { // triggered only when in
 				return;
 			}
 			case 2:
@@ -1139,7 +1138,7 @@ function drawScene() {
 		});
 	}
 
-	// draw tiles and objects
+	// draw each tile
 	for (var x = 0; x < levels[levelEnCours].width; x++) {
 		for (var y = 0; y < levels[levelEnCours].height; y++) {
 			var t = level[x][y];
@@ -1147,6 +1146,8 @@ function drawScene() {
 			if (!t.h) {
 				h = -10;
 			}
+
+			// including objects and triggers on it, notice that object has decal
 			if (t.o.length) {
 				for (var i = 0; i < t.o.length; i++) {
 					var o = t.o[i];
@@ -1156,7 +1157,7 @@ function drawScene() {
 						y: 0,
 						z: 0
 					};
-					// stategy of animation: decrease a para (inMoveX or inMoveY) per frame, and recalc the position
+					// stategy of animation: decal decrease a para (inMoveX or inMoveY) per frame, and recalc the position
 					if (o.inMoveX > 0) {
 						decal.x = -(--o.inMoveX) / vitesseRotation * 2;
 					}
@@ -1224,6 +1225,8 @@ function drawScene() {
 					})
 				}
 			}
+
+			// h = 0 ==> a hole
 			var h = t.h;
 			if (!h) {
 				continue;
@@ -1239,11 +1242,11 @@ function drawScene() {
 				y: 0,
 				z: 0
 			};
-			if (levelExplode) {
-				if (levelExplodeSince == 0) {
+			if (levelExplode) { // if level is exploding, then level tiles have decal, speed and rotationSpeed, see the function explodeLevel
+				if (levelExplodeSince == 0) { // levelExplodeSince decrease from 200 to 0 -- the end of explode animation
 					nextLevel();
 					return;
-				}
+				} 
 				blocksInMove = true;
 				t.inMoveZ += t.speedZ;
 				decal.z = t.inMoveZ / vitesseRotation;
@@ -1262,7 +1265,7 @@ function drawScene() {
 				t.rotation.y += t.rotationSpeed.y;
 				t.rotation.z += t.rotationSpeed.z;
 				rotation = t.rotation;
-			} else {
+			} else { // if exceed, modify the differences softly
 				if (t.inMoveZ) {
 					blocksInMove = true;
 					if (t.inMoveZ > 0) {
@@ -1319,7 +1322,7 @@ function drawScene() {
 				//triggered:t.triggered,
 				//face:face
 			})
-			if (t.t && !t.finish) {
+			if (t.t && !t.finish) { // trigger on the objects
 				drawCube({
 					x: x * 2,
 					y: -y * 2,
@@ -1333,7 +1336,7 @@ function drawScene() {
 		}
 	}
 
-	if (levelDrawing && !blocksInMove) {
+	if (levelDrawing && !blocksInMove) { // if all initial works are done, then start the notes in the beginning of the level
 		levelDrawing = false;
 		startTuto();
 		vitesseRotation = 10;
@@ -1351,6 +1354,7 @@ function drawScene() {
 		}
 	}
 
+	// draw the end point ball
 	var l = levels[levelEnCours];
 	drawCube({
 		x: l.end.x * 2,
@@ -1409,10 +1413,10 @@ explodeLevel = function () {
 
 	for (var x = 0; x < l.width; x++) {
 		for (var y = 0; y < l.height; y++) {
-			level[x][y].speedZ = Math.random() * 3;
+			level[x][y].speedZ = Math.random() * 3; // [0, 3)
 			level[x][y].o = [];
 
-			f = x > l.width / 2 ? 1 : (x < l.width / 2 ? -1 : 0);
+			f = x > l.width / 2 ? 1 : (x < l.width / 2 ? -1 : 0); // left: -1; center: 0; right: 1
 			level[x][y].speedX = Math.random() * f;
 
 			f = y > l.height / 2 ? -1 : (y < l.height / 2 ? 1 : 0);
@@ -1521,8 +1525,8 @@ initGame = function () {
 				p: [],
 				t: false,
 				z: 0,
-				inMoveZ: -Math.round(Math.random() * 50),
-				nb: 0
+				inMoveZ: -Math.round(Math.random() * 50), // this is the drop-down speed when level explode, the value is between -50 and 0
+				nb: 0 // something related to trigger type
 			};
 		}
 	}
@@ -1597,12 +1601,12 @@ startTuto = function () {
 
 nextTuto = function () {
 	tutoNumber++;
-	if (tuto[levelEnCours][tutoNumber]) {
+	if (tuto[levelEnCours][tutoNumber]) { // show level notes
 		var t = tuto[levelEnCours][tutoNumber];
 		zoomOn = t[0];
 		tutoText = t[1];
 		setTimeout(nextTuto, t[2]);
-	} else {
+	} else { // after showing notes, can add player control
 		zoomOn = false;
 		tutoNumber = false;
 		tutoText = false;
