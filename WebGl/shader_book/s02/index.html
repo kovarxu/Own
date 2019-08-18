@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>glslEditor</title>
+  <link rel="stylesheet" href="../bin/glslEditor.css">
+</head>
+<body>
+  <div id="glsl_editor"></div>
+
+  <script src="../bin/glslEditor.js"></script>
+  <script type="text/javascript">
+    const glslEditor = new GlslEditor('#glsl_editor', { 
+      canvas_size: 500,
+      canvas_draggable: true,
+      theme: 'monokai',
+      multipleBuffers: true,
+      watchHash: true,
+      fileDrops: true,
+      menu: true
+    });
+  </script>
+</body>
+</html>
