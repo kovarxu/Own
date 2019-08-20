@@ -348,3 +348,45 @@ function getP (x, y, d) {
 function getCube(d) {
 	return getP(2, 2, d);
 }
+
+var UVW = {};
+function getUVW(type, h) {
+	if (UVW[type] && UVW[type][h]) {
+		return UVW[type][h];
+	} else if (!UVW[type]) {
+		UVW[type] = [];
+	}
+	var data = [
+		0, 0,
+		1, 0,
+		1, 1,
+		0, 1,
+
+		0, 1,
+		0, 0,
+		1, 0,
+		1, 1,
+
+		0, h,
+		0, 0,
+		1, 0,
+		1, h,
+
+		0, 0,
+		1, 0,
+		1, h,
+		0, h,
+
+		0, 0,
+		1, 0,
+		1, h,
+		0, h,
+
+		1, 0,
+		1, h,
+		0, h,
+		0, 0,
+	];
+	UVW[type][h] = data;
+	return data;
+}

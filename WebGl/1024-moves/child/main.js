@@ -6,6 +6,8 @@ var textureSrcs = [], textures = [];
 var cubeVertexIndexBuffer = null;
 var waitingKeyStart = true;
 var soundSwitch = 1;
+var tutoText = '';
+var totalMoves = 0;
 var currentLevel = 1, levels = {}, level = [];
 
 var camera = {};
@@ -13,6 +15,7 @@ var fov = 45;
 var pMatrix = mat4.create(), mvMatrix = mat4.create();
 var zoomOn = null;
 
+var coordBuffer = {}, UVWBuffer = {};
 
 var currentPlayer = 0, players = [];
 var vitesseRotation = 0;
@@ -63,8 +66,11 @@ function initShaders() {
   gl.useProgram(s);
   s.vertexPositionAttribute = gl.getAttribLocation(s, "a_position");
   gl.enableVertexAttribArray(s.vertexPositionAttribute);
-  // s.it = gl.getUniformLocation(s, "it");
-  // s.res = gl.getUniformLocation(s, "res");
+  s.textureCoordAttribute = gl.getAttribLocation(s, 'a_texture');
+  gl.enableVertexAttribArray(s.textureCoordAttribute);
+  s.pMatrixUniform = gl.getUniformLocation(s, "u_pmatrix");
+  s.vMatrixUniform = gl.getUniformLocation(s, "u_vmatrix");
+  
   glProgram = s;
 
   function getShader(gl, id) {
@@ -260,14 +266,173 @@ function drawScene() {
   }
 
   // draw players
+  for (var i=0; i < players.length; i++) {
+    var p = players[i];
+		var t = level[p.tile.x][p.tile.y];
+    var tHeight = (t.h + t.o.length) * 2;
+    
+    drawCube({
+      x: players[i].x,
+      y: players[i].y,
+      z: players[i].z,
+			h: 1,
+			type: "player",
+			player: p,
+			currentPlayer: i == currentPlayer
+    })
+  }
 
   // draw tiles
+
+  //light
 
   // put the end point ball
 }
 
-function drawHUD() {
+function drawCube(obj) {
+  var x = obj.x;
+	var y = obj.y;
+	var z = obj.z;
+	var height = obj.h;
+	var type = obj.type;
+	var decal = obj.decal;
+	var rotation = obj.rotation;
+	var p = obj.player;
+	var currentPlayer = obj.currentPlayer; // true or flase
+	// var trigger = obj.trigger;
+  // var triggered = obj.triggered;
+  
+  switch (type) {
+		case "player":
+			var geometry = getCube(height);
+			for (var i = 0; i < geometry.length; i += 3) {
+				geometry[i + 2]--;
+			}
+			break;
+		default:
+			var geometry = getCube(height);
+			break;
+  }
+  
+	//move and rotate accordinaly to the camera
+  cam = {
+		x: x + camera.x,
+		y: y + camera.y,
+		z: z + -1.2 - camera.z
+	}
+	if (decal) {
+		cam.x += decal.x;
+		cam.y += decal.y;
+		cam.z += decal.z;
+  }
+  
+  //cal the transform matrix
+  mat4.identity(mvMatrix);
+	mat4.rotate(mvMatrix, degToRad(camera.rotation.z - 90), [1, 0, 0]);
+	mat4.rotate(mvMatrix, degToRad(camera.rotation.y), [0, 1, 0]);
+  mat4.translate(mvMatrix, [cam.x, cam.y, cam.z]);
+  
+  //rotate player 
+	if (type === "player") {
+		mat4.translate(mvMatrix, [0, 0, 1]);
+		// if (p.inMoveY > 0) {
+		// 	p.rotation.x += degToRad(90 / vitesseRotation);
+		// } else if (p.inMoveY < 0) {
+		// 	p.rotation.x -= degToRad(90 / vitesseRotation);
+		// }
 
+		// if (p.inMoveX > 0) {
+		// 	p.rotation.y += degToRad(90 / vitesseRotation);
+		// } else if (p.inMoveX < 0) {
+		// 	p.rotation.y -= degToRad(90 / vitesseRotation);
+		// }
+
+		mat4.rotate(mvMatrix, p.rotation.x, [1, 0, 0]);
+		switch (p.rotation.xD) {
+			case 0:
+				mat4.rotate(mvMatrix, p.rotation.y, [0, 1, 0]);
+				break;
+			case 1:
+				mat4.rotate(mvMatrix, -p.rotation.y, [0, 0, 1]);
+				break;
+			case 2:
+				mat4.rotate(mvMatrix, -p.rotation.y, [0, 1, 0]);
+				break;
+			case 3:
+				mat4.rotate(mvMatrix, p.rotation.y, [0, 0, 1]);
+				break;
+		}
+  }
+  
+	if (rotation) {
+		mat4.rotate(mvMatrix, rotation.x, [1, 0, 0]);
+		mat4.rotate(mvMatrix, rotation.y, [0, 1, 0]);
+		mat4.rotate(mvMatrix, rotation.z, [0, 0, 1]);
+  }
+  
+  gl.useProgram(glProgram);
+
+  // set geometry
+  buffer = getCoord(type, height, geometry);
+	gl.bindBuffer(gl.ARRAY_BUFFER, buffer);
+  gl.vertexAttribPointer(glProgram.vertexPositionAttribute, buffer.itemSize, gl.FLOAT, false, 0, 0);
+  
+  // set uvw(texture) infos
+  var buffer = getUVWBuffer(type, height);
+  gl.bindBuffer(gl.ARRAY_BUFFER, buffer);
+	gl.vertexAttribPointer(glProgram.textureCoordAttribute, buffer.itemSize, gl.FLOAT, false, 0, 0);
+  
+  // set uniforms
+  if (type === "player") {
+    gl.uniformMatrix4fv(glProgram.pMatrixUniform, false, pMatrix);
+	  gl.uniformMatrix4fv(glProgram.vMatrixUniform, false, mvMatrix);
+    gl.drawElements(gl.TRIANGLES, 36, gl.UNSIGNED_SHORT, 0);
+  }
+}
+
+function drawHUD() {
+  ctxHUD.clearRect(0, 0, window.innerWidth, window.innerHeight);
+	if (tutoText) {
+		drawText((window.innerWidth / 2) - (12 * 3 / 2) * (tutoText.length / 2), (window.innerHeight / 2) + 144, tutoText.toUpperCase(), 3);
+	} else {
+		drawText(10, 10, totalMoves + " MOVE" + (totalMoves > 1 ? "S" : ""), 3);
+		var t = "STAGE " + currentLevel;
+		drawText((window.innerWidth / 2) - 27 * (t.length / 2), 20, t, 4.5);
+		drawText(10, 100, "M - MUTE&R - RETRY", 3);
+	}
+}
+
+function degToRad(d) {
+  return Math.PI / 180 * d
+}
+
+function getCoord(type, height, cube) {
+  if (!coordBuffer[type]) {
+		coordBuffer[type] = [];
+	}
+	if (!coordBuffer[type][height]) {
+		coordBuffer[type][height] = gl.createBuffer();
+		gl.bindBuffer(gl.ARRAY_BUFFER, coordBuffer[type][height]);
+		gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(cube), gl.STATIC_DRAW);
+		coordBuffer[type][height].itemSize = 3;
+		coordBuffer[type][height].numItems = cube.length / 3;
+	}
+	return coordBuffer[type][height];
+}
+
+function getUVWBuffer(type, height) {
+	if (!UVWBuffer[type]) {
+		UVWBuffer[type] = [];
+	}
+	if (!UVWBuffer[type][height]) {
+		var data = new Float32Array(getUVW(type, height));
+		UVWBuffer[type][height] = gl.createBuffer();
+		gl.bindBuffer(gl.ARRAY_BUFFER, UVWBuffer[type][height]);
+		gl.bufferData(gl.ARRAY_BUFFER, data, gl.STATIC_DRAW);
+		UVWBuffer[type][height].itemSize = 2;
+		UVWBuffer[type][height].numItems = data.length / 2;
+	}
+	return UVWBuffer[type][height];
 }
 
 // add handler
