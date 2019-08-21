@@ -857,7 +857,7 @@ drawCube = function (obj) {
 		}
 		gl.drawElements(gl.TRIANGLES, 30, gl.UNSIGNED_SHORT, 12); //Le dessous, je m'en tape
 		gl.uniform1i(shader.cubeFace, 5);
-		gl.drawElements(gl.TRIANGLES, 6, gl.UNSIGNED_SHORT, 36); //Face avant
+		// gl.drawElements(gl.TRIANGLES, 6, gl.UNSIGNED_SHORT, 36); //Face avant
 		gl.uniform1i(shader.cubeFace, 6);
 		gl.drawElements(gl.TRIANGLES, 6, gl.UNSIGNED_SHORT, 36 + 12); //Droite
 	}

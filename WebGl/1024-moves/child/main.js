@@ -22,6 +22,7 @@ var vitesseRotation = 0;
 var levelDrawing = false;
 var moveB, moveF, moveL, moveR;
 var glProgram = null;
+var levelExplode = false;
 
 body.onload = WebGLInit();
 
@@ -153,9 +154,9 @@ function resize() {
 
 function initGame() {
   camera = {
-		x: -8,
-		y: 16,
-		z: 23,
+		x: -2,
+		y: 18,
+		z: 24,
 		rotation: {
 			x: -1.3,
 			y: 0,
@@ -188,7 +189,7 @@ function initGame() {
 		players[i] = {
 			x: l.starts[i].x * 2,
 			y: -l.starts[i].y * 2,
-			z: 22,
+			z: 4,
 			rotation: {
 				x: 0,
 				y: 0,
@@ -205,26 +206,6 @@ function initGame() {
 			haveControl: false
 		};
 		level[l.starts[i].x][l.starts[i].y].p = [players[i]];
-  }
-}
-
-function initLevels() {
-  levels = {
-    1: {
-      "width": 14,
-			"height": 8,
-			"starts": [{
-				"x": 1,
-				"y": 4
-			}],
-			"end": {
-				"x": 11,
-				"y": 4
-			},
-			"data": ["00000000000000", "33333333333300", "32222222222300", "32222220222300", "32222200222200", "32222220222300", "32222222222300", "33333333333300"],
-			"objects": [],
-			"triggers": []
-    }
   }
 }
 
@@ -282,7 +263,67 @@ function drawScene() {
     })
   }
 
-  // draw tiles
+	// draw tiles
+	for (var x = 0; x < levels[currentLevel].width; x++) {
+		for (var y = 0; y < levels[currentLevel].height; y++) {
+			var t = level[x][y];
+			var h = t.h + t.o.length;
+			if (!t.h) {
+				h = -10;
+			}
+
+			if (t.o.length) {
+
+			}
+
+			// a hole
+			var h = t.h;
+			if (!h) {
+				continue;
+			}
+
+			var decal = {
+				x: 0,
+				y: 0,
+				z: 0
+			};
+			var rotation = {
+				x: 0,
+				y: 0,
+				z: 0
+			};
+
+			if (levelExplode) {
+
+			} else {
+
+			}
+
+			// two layers
+			drawCube({
+				x: x * 2,
+				y: -y * 2,
+				z: 0,
+				h: h - 0.2,
+				type: "normal",
+				trigger: t.t,
+				decal: decal,
+				rotation: rotation,
+				triggered: t.triggered,
+			})
+
+			drawCube({
+				x: x * 2,
+				y: -y * 2,
+				z: (h * 2) - 0.4,
+				h: 0.2,
+				type: "normal2",
+				trigger: t.t,
+				decal: decal,
+				rotation: rotation
+			})
+		}
+	}
 
   //light
 
@@ -383,11 +424,15 @@ function drawCube(obj) {
 	gl.vertexAttribPointer(glProgram.textureCoordAttribute, buffer.itemSize, gl.FLOAT, false, 0, 0);
   
   // set uniforms
+	gl.uniformMatrix4fv(glProgram.pMatrixUniform, false, pMatrix);
+	gl.uniformMatrix4fv(glProgram.vMatrixUniform, false, mvMatrix);
   if (type === "player") {
-    gl.uniformMatrix4fv(glProgram.pMatrixUniform, false, pMatrix);
-	  gl.uniformMatrix4fv(glProgram.vMatrixUniform, false, mvMatrix);
     gl.drawElements(gl.TRIANGLES, 36, gl.UNSIGNED_SHORT, 0);
-  }
+	} else if (type === "normal2") {
+		gl.drawElements(gl.TRIANGLES, 30, gl.UNSIGNED_SHORT, 12);
+	} else {
+		gl.drawElements(gl.TRIANGLES, 30, gl.UNSIGNED_SHORT, 12);
+	}
 }
 
 function drawHUD() {
@@ -500,4 +545,24 @@ document.onkeyup = function (e) {
 		default:
 			break;
 	}
+}
+
+function initLevels() {
+  levels = {
+    1: {
+      "width": 14,
+			"height": 8,
+			"starts": [{
+				"x": 1,
+				"y": 4
+			}],
+			"end": {
+				"x": 11,
+				"y": 4
+			},
+			"data": ["00000000000000", "33333333333300", "32222222222300", "32222220222300", "32222200222200", "32222220222300", "32222222222300", "33333333333300"],
+			"objects": [],
+			"triggers": []
+    }
+  }
 }
