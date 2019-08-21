@@ -857,7 +857,7 @@ drawCube = function (obj) {
 		}
 		gl.drawElements(gl.TRIANGLES, 30, gl.UNSIGNED_SHORT, 12); //Le dessous, je m'en tape
 		gl.uniform1i(shader.cubeFace, 5);
-		// gl.drawElements(gl.TRIANGLES, 6, gl.UNSIGNED_SHORT, 36); //Face avant
+		gl.drawElements(gl.TRIANGLES, 6, gl.UNSIGNED_SHORT, 36); //Face avant
 		gl.uniform1i(shader.cubeFace, 6);
 		gl.drawElements(gl.TRIANGLES, 6, gl.UNSIGNED_SHORT, 36 + 12); //Droite
 	}
@@ -1686,10 +1686,10 @@ function webGLStart() {
 	ctx2.putImageData(iD, 0, 0);
 	{
 		// test, this is the lateral color of the cubes
-		// let d = canvas2.toDataURL();
-		// let i = new Image();
-		// i.src = d;
-		// document.body.appendChild(i);
+		let d = canvas2.toDataURL();
+		let i = new Image();
+		i.src = d;
+		document.body.appendChild(i);
 	}
 	handleLoadedTextureFromCanvas("mur", canvas2);
 
@@ -1792,13 +1792,13 @@ function webGLStart() {
 			iD.data[i + 3] = 255;
 		}
 		ctx2.putImageData(iD, 0, 0);
-		// {
-		// 	// test again
-		// 	let d = canvas2.toDataURL();
-		// 	let i = new Image();
-		// 	i.src = d;
-		// 	document.body.appendChild(i);
-		// }
+		{
+			// test again
+			// let d = canvas2.toDataURL();
+			// let i = new Image();
+			// i.src = d;
+			// document.body.appendChild(i);
+		}
 		handleLoadedTextureFromCanvasTiles(j, canvas2);
 	}
 

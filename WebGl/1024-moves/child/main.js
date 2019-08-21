@@ -3,6 +3,7 @@ var frame = 0;
 var ctxHUD, canvasHUD;
 var gl;
 var textureSrcs = [], textures = [];
+var cTextures = {length: 0};
 var cubeVertexIndexBuffer = null;
 var waitingKeyStart = true;
 var soundSwitch = 1;
@@ -48,7 +49,7 @@ function WebGLInit() {
 	gl.enable(gl.BLEND);
   gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA);
 
-  // createTextures();
+  createTextures();
   
   initLevels();
 	initGame();
@@ -62,7 +63,14 @@ function initShaders() {
   var s = gl.createProgram();
   gl.attachShader(s, vs);
   gl.attachShader(s, fs);
-  gl.linkProgram(s);
+	gl.linkProgram(s);
+	
+	// handle link errors
+	if ( !gl.getProgramParameter( s, gl.LINK_STATUS) ) {
+		var info = gl.getProgramInfoLog(s);
+		alert('Could not compile WebGL program. \n\n' + info);
+		throw new Error();
+	}
 
   gl.useProgram(s);
   s.vertexPositionAttribute = gl.getAttribLocation(s, "a_position");
@@ -70,7 +78,9 @@ function initShaders() {
   s.textureCoordAttribute = gl.getAttribLocation(s, 'a_texture');
   gl.enableVertexAttribArray(s.textureCoordAttribute);
   s.pMatrixUniform = gl.getUniformLocation(s, "u_pmatrix");
-  s.vMatrixUniform = gl.getUniformLocation(s, "u_vmatrix");
+	s.vMatrixUniform = gl.getUniformLocation(s, "u_vmatrix");
+	s.uCameraPosition = gl.getUniformLocation(s, 'u_cameraPosition');
+	s.uSampler = gl.getUniformLocation(s, 'u_u_sampler');
   
   glProgram = s;
 
@@ -118,10 +128,8 @@ function initBuffers() {
 }
 
 function initTexture() {
-  textureSrcs.forEach(getTexture);
-  
-  function getTexture(src) {
-    var tex = gl.createTexture();
+  textureSrcs.forEach(function(src) {
+		var tex = gl.createTexture();
     tex.image = new Image();
     tex.image.crossOrigin = 'anonymous';
     tex.image.src = src;
@@ -129,14 +137,97 @@ function initTexture() {
     tex.image.onload = function () {
       gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, true);
       gl.bindTexture(gl.TEXTURE_2D, tex);
-      
-      var texImg = tex.image;
-      gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, texImg);
-      gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
-      gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR_MIPMAP_NEAREST);
-      gl.generateMipmap(gl.TEXTURE_2D);
+			setTextureParams(tex.image);
     }
-  }
+	})
+}
+
+function handleLoadedTextureFromCanvas(name, textureCanvas) {
+	texture = gl.createTexture();
+	gl.bindTexture(gl.TEXTURE_2D, texture);
+	setTextureParams(textureCanvas);
+	cTextures[name] = texture;
+	if (/\d+/.test(name)) {
+		cTextures.length++;
+	}
+}
+
+function setTextureParams(texture) {
+	gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, texture);
+	gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
+	gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR_MIPMAP_NEAREST);
+	gl.generateMipmap(gl.TEXTURE_2D);
+}
+
+function createTextures() {
+	var canvas2 = document.createElement('canvas');
+	canvas2.width = canvas2.height = 512;
+	var ctx2 = canvas2.getContext('2d');
+	var iD = ctx2.getImageData(0, 0, canvas2.width, canvas2.height);
+	ctx2.clearRect(0, 0, canvas2.width, canvas2.height);
+
+	// tiles bottom wall
+	for (var i=0; i < iD.length; i+=4) {
+		var c = Math.floor(Math.random() * 255);
+		iD.data[i] = 193 - c / 1000;
+		iD.data[i+1] = 171 - c / 1100;
+		iD.data[i+2] = 146 - c / 900;
+		iD.data[i+3] = 255;
+	}
+
+	ctx2.putImageData(iD, 0, 0);
+	handleLoadedTextureFromCanvas('bottomWall', canvas2);
+
+	for (var j = 0; j < 23; j++) {
+		var offset = 10 + Math.random() * 3;
+		var c = Math.random();
+		var color = {
+			r: 27 - c * 60,
+			g: 165 - c * 10,
+			b: 211 - c * 7.5
+		}
+		delta = {
+			r: 0,
+			g: 0,
+			b: 0
+		};
+		ctx2.clearRect(0, 0, 512, 512);
+		for (var i = 0; i < iD.data.length; i += 4) {
+			var x = (i / 4) % 512;
+			var y = Math.floor(i / 2048);
+			tileBorder = j == 21 ? 30 : offset;
+			if (j == 22) {
+				tileBorder = 30;
+				var isBordure = (y < tileBorder || y > 512 - tileBorder || x < tileBorder || x > 512 - tileBorder);
+
+				x2 = Math.abs(x - 256);
+				y2 = Math.abs(y - 256);
+				if (Math.hypot(x2, y2) < 128 || Math.hypot(128 - x2, 128 - y2) < 64 || Math.hypot(192 - x2, 192 - y2) < 32) {
+					isBordure = true
+				}
+
+				if (isBordure) {
+					delta.r = delta.g = delta.b = Math.hypot(256 - x, 256 - y) > 32 ? Math.hypot(256 - x, 256 - y) : 255;
+				} else {
+					delta = {
+						r: 0,
+						g: 0,
+						b: 0
+					}
+				}
+
+			} else {
+				var isBordure = (y < tileBorder || y > 512 - tileBorder || x < tileBorder || x > 512 - tileBorder);
+			}
+
+			iD.data[i + 0] = isBordure ? color.r / 2 + delta.r : color.r;
+			iD.data[i + 1] = isBordure ? color.g / 2 + delta.g : color.g;
+			iD.data[i + 2] = isBordure ? color.b / 2 + delta.b : color.b;
+			iD.data[i + 3] = 255;
+		}
+		ctx2.putImageData(iD, 0, 0);
+		handleLoadedTextureFromCanvas(j, canvas2);
+	}
 }
 
 function resize() {
@@ -154,9 +245,9 @@ function resize() {
 
 function initGame() {
   camera = {
-		x: -2,
-		y: 18,
-		z: 24,
+		x: -2.0,
+		y: 18.0,
+		z: 24.0,
 		rotation: {
 			x: -1.3,
 			y: 0,
@@ -426,6 +517,8 @@ function drawCube(obj) {
   // set uniforms
 	gl.uniformMatrix4fv(glProgram.pMatrixUniform, false, pMatrix);
 	gl.uniformMatrix4fv(glProgram.vMatrixUniform, false, mvMatrix);
+	gl.uniform3fv(glProgram.uCameraPosition, [camera.x, camera.y, camera.z]);
+	gl.uniform1i(glProgram.uSampler, 0);
   if (type === "player") {
     gl.drawElements(gl.TRIANGLES, 36, gl.UNSIGNED_SHORT, 0);
 	} else if (type === "normal2") {
