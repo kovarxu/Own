@@ -167,16 +167,24 @@ function createTextures() {
 	ctx2.clearRect(0, 0, canvas2.width, canvas2.height);
 
 	// tiles bottom wall
-	for (var i=0; i < iD.length; i+=4) {
+	for (var i=0; i < iD.data.length; i+=4) {
 		var c = Math.floor(Math.random() * 255);
-		iD.data[i] = 193 - c / 1000;
-		iD.data[i+1] = 171 - c / 1100;
-		iD.data[i+2] = 146 - c / 900;
+		iD.data[i+0] = 193 - c / 1500;
+		iD.data[i+1] = 171 - c / 1700;
+		iD.data[i+2] = 146 - c / 1900;
 		iD.data[i+3] = 255;
 	}
 
 	ctx2.putImageData(iD, 0, 0);
 	handleLoadedTextureFromCanvas('bottomWall', canvas2);
+
+	{
+		// test again, it's has orange border, then blur border and orange squere in the center
+		let d = canvas2.toDataURL();
+		let i = new Image();
+		i.src = d;
+		document.body.appendChild(i);
+	}
 
 	for (var j = 0; j < 23; j++) {
 		var offset = 10 + Math.random() * 3;
@@ -505,7 +513,7 @@ function drawCube(obj) {
   gl.useProgram(glProgram);
 
   // set geometry
-  buffer = getCoord(type, height, geometry);
+  var buffer = getCoord(type, height, geometry);
 	gl.bindBuffer(gl.ARRAY_BUFFER, buffer);
   gl.vertexAttribPointer(glProgram.vertexPositionAttribute, buffer.itemSize, gl.FLOAT, false, 0, 0);
   
@@ -522,8 +530,11 @@ function drawCube(obj) {
   if (type === "player") {
     gl.drawElements(gl.TRIANGLES, 36, gl.UNSIGNED_SHORT, 0);
 	} else if (type === "normal2") {
+		var tileIndex = (x / 2 + (-y / 2 * 10)) % 21
+		gl.bindTexture(gl.TEXTURE_2D, cTextures[tileIndex]);
 		gl.drawElements(gl.TRIANGLES, 30, gl.UNSIGNED_SHORT, 12);
 	} else {
+		gl.bindTexture(gl.TEXTURE_2D, cTextures['bottomWall'])
 		gl.drawElements(gl.TRIANGLES, 30, gl.UNSIGNED_SHORT, 12);
 	}
 }
