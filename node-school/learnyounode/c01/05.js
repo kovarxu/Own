@@ -13,14 +13,25 @@ var raws = {
 Object.keys(raws).forEach(key => {
   getDestContent(raws[key].url).then(raw => {
     raws[key].content = raw
-    if (checkRaws(raws)) printRaws(raws)
+    if (checkFinish(raws)) printRaws(raws)
   }, err => {
     console.log(err)
   })
 })
 
-function checkRaws () {
+function checkFinish (raws) {
+  let flag = false
   Object.keys(raws).forEach(key => {
+    if (!raws[key].content) {
+      flag = true
+    }
+  })
+  return !flag
+}
+
+function printRaws (raws) {
+  Object.keys(raws).forEach(key => {
+    console.log(raws[key].content)
   })
 }
 
