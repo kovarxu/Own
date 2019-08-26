@@ -1,3 +1,5 @@
+// read dir files, filter them by extname
+
 var showExtInDir = require('./rfd')
 
 var argvs = process.argv

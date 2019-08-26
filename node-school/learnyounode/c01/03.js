@@ -1,3 +1,5 @@
+// Get the lines number of a file
+
 var http = require('http')
 
 var argvs = process.argv
