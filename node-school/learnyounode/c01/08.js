@@ -8,7 +8,7 @@ var url = require('url')
 const TEXTEXT = ['text', 'css', 'js', 'html', 'json', 'md']
 const pathDict = {}
 const cmdParams = process.argv.slice(2)
-const ENABLECORS = false
+let ENABLECORS = false
 
 if (cmdParams.includes('--cors')) {
   ENABLECORS = true
@@ -50,13 +50,9 @@ function readDir (dirname) {
 }
 
 var server = http.createServer((req, res) => {
-  let body = ''
-
-  req.setEncoding('utf-8')
 
   // OK, this part is NECESSARY, or req.onend will not be exceuted
   req.on('data', chunk => { 
-    body += chunk
   })
 
   req.on('end', () => {
@@ -67,27 +63,21 @@ var server = http.createServer((req, res) => {
       let fullPath = './static' + pathname
       if (Object.keys(pathDict).includes(fullPath)) {
         try {
+          if (ENABLECORS) { // the header must be set before the contents, or nothing will be received by the client
+            res.writeHead(200, {'Access-Control-Allow-Origin': '*'})
+          }
+
           if (TEXTEXT.includes(path.extname(fullPath))) {
             res.write(pathDict[fullPath].toString())
           } else {
             res.write(pathDict[fullPath])
           }
 
-          if (ENABLECORS) {
-            res.setHeader('Access-Control-Allow-Origin', '*')
-          }
-
           res.end()
         } catch (e) {
           res.statusCode = 400
-          return res.write('error: ' + e.message)
+          return res.end('error: ' + e.message)
         }
-
-        if (ENABLECORS) {
-          res.setHeader('Access-Control-Allow-Origin', '*')
-        }
-
-        res.end()
       } else {
         res.statusCode = 404
         res.end(`the parsed source: ${fullPath} doesn't exist!`)
