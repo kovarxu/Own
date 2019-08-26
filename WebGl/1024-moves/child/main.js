@@ -529,13 +529,17 @@ function drawCube(obj) {
 	gl.uniform1i(glProgram.uSampler, 0);
   if (type === "player") {
     gl.drawElements(gl.TRIANGLES, 36, gl.UNSIGNED_SHORT, 0);
-	} else if (type === "normal2") {
+	} else {
 		var tileIndex = (x / 2 + (-y / 2 * 10)) % 21
 		gl.bindTexture(gl.TEXTURE_2D, cTextures[tileIndex]);
-		gl.drawElements(gl.TRIANGLES, 30, gl.UNSIGNED_SHORT, 12);
-	} else {
-		gl.bindTexture(gl.TEXTURE_2D, cTextures['bottomWall'])
-		gl.drawElements(gl.TRIANGLES, 30, gl.UNSIGNED_SHORT, 12);
+		gl.drawElements(gl.TRIANGLES, 6, gl.UNSIGNED_SHORT, 0);
+		
+		if (type === "normal2") {
+			gl.drawElements(gl.TRIANGLES, 30, gl.UNSIGNED_SHORT, 12);
+		}else {
+			gl.bindTexture(gl.TEXTURE_2D, cTextures['bottomWall']);
+			gl.drawElements(gl.TRIANGLES, 30, gl.UNSIGNED_SHORT, 12);
+		}
 	}
 }
 

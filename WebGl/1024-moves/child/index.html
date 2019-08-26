@@ -58,7 +58,7 @@ void main() {
   float depth = v_worldPosition.z / 15.0 + v_worldPosition.x / 50.0;
   vec3 totalLight = vec3(0.0, 0.0, 0.0);
 
-  outColor = vec4(textureColor.rgb * v_lightWeighting * 1.0, textureColor.a) + vec4(totalLight, textureColor.a);
+  outColor = vec4(textureColor.rgb * v_lightWeighting, textureColor.a) + vec4(totalLight, textureColor.a);
 }
 </script>
 
