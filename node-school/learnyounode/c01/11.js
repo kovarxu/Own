@@ -14,11 +14,14 @@ var sv = http.createServer((req, res) => {
     req.on('readable', () => {
       let chunk = req.read()
       if (chunk) {
+        console.log('chunk: ' + chunk)
         let tx = chunk.toString().toUpperCase()
-        console.log(tx)
-        let re = /^([\w]+)$|=\"(\w+)\"/mg, result
-        while (result = re.exec(tx)) {
-          res.write(result[1] + '\r\n')
+        let re = /^\w+$|(?<==\")\w+(?=\")/mg
+        let result = tx.match(re)
+        if (result) {
+          result.forEach((item) => {
+            res.write(item + '\r\n')
+          })
         }
       } else {
         res.end()

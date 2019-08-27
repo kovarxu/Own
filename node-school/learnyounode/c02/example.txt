@@ -4,4 +4,13 @@ From Wikipedia, the free encyclopedia
 
 Jump to navigationJump to search
 
-For other uses, see Lunar lander 
+For other uses, see Lunar lander (disambiguation).
+
+This article is missing information about the science and engineering required to land a spacecraft on the Moon, along with examples of how they are approached in various lander projects. Please expand the article to include this information. Further details may exist on the talk page. (September 2018)
+
+Apollo 11 Lunar Module Eagle
+A Lunar lander or Moon lander is a kind of lander (spacecraft) designed to conduct a Moon landing, the most well known example being the Apollo program's Apollo Lunar Module.
+
+The design requirements for these landers depend on factors imposed by the payload characteristics and purpose, flight rate, propulsive requirements, and configuration constraints.[1] Other important design factors include overall energy requirements, mission duration, the type of mission operations on the lunar surface, and life support system if crewed. The relatively high gravity and lack of lunar atmosphere negates the use of aerobraking, so a lander must use propulsion to decelerate and achieve a soft landing.
+
+Several studies indicate the potential for both scientific and technological benefits from sustained lunar surface exploration that would culminate in the utilization of lunar resources, or in the development of the necessary technology to land payloads on other planets in the Solar System.[2]美国
