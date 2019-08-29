@@ -1,0 +1,3 @@
+.container{ position: relative; min-height: 100%; background-color: #f0f0f0; padding-bottom: 2rem; }
+.indexlist{ margin: 0 1.3rem 0; padding-top: 1rem; font-size: 1.3rem; color: #333333; }
+.index_li{ margin-bottom: 1px; padding: 1rem 1.4rem; background-color: #fff; }
