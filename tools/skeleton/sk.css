@@ -1,0 +1,275 @@
+.skeleton {
+  /* display: none; */
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+  background: #fff;
+}
+
+.skeleton .blured-content {
+  color: #f8f8f8;
+  background: #f8f8f8;
+  border-radius: .3rem;
+  box-shadow: 0 0 2px 1px #f2f2f2;
+}
+
+.skeleton .heavy-blured-content {
+  color: #f2f2f2;
+  background: #f2f2f2;
+  border-radius: .3rem;
+  box-shadow: 0 0 2px 1px #f2f2f2;
+}
+
+.skeleton.list .container {
+  padding-top: 0.5rem;
+}
+
+.skeleton.list .tab {
+  line-height: 4.5rem;
+  overflow: hidden;
+  border-bottom: 1px solid #f6f6f6;
+}
+
+.skeleton.list .tab li {
+  float: left;
+  position: relative;
+  width: 50%;
+  text-align: center;
+}
+
+.skeleton.list .order {
+  margin: 1rem 1.2rem 1.8rem;
+  padding: 1.8rem 1.2rem;
+  position: relative;
+  border-radius: 1rem;
+}
+
+.skeleton.list .order_tit {
+  font-size: 1.6rem;
+  margin-bottom: 0.8rem;
+}
+
+.skeleton.list .order_info {
+  margin-bottom: 1.5rem;
+}
+
+.skeleton.list .order_item {
+  font-size: 1.2rem;
+  margin-bottom: .5rem;
+}
+
+.skeleton.list .order_opt {
+  text-align: right;
+  overflow: hidden;
+}
+
+.skeleton.list .order_btn {
+  float: right;
+  min-width: 9rem;
+  line-height: 3.0rem;
+  margin-left: 0.8rem;
+  border-radius: 0.4rem;
+}
+
+.skeleton.detail .process {
+  height: 4.3rem;
+  border-radius: none;
+  position: relative;
+  padding: 1.4rem;
+  padding-bottom: 3.5rem;
+}
+
+.skeleton.detail .process-tit {
+  font-size: 1.8rem;
+  margin-bottom: .4rem;
+}
+
+.skeleton.detail .process-des {
+  font-size: 1.1rem;
+}
+
+.skeleton.detail .flow .process_detail {
+  padding-left: 1.45rem;
+  padding-top: 1rem;
+}
+
+.skeleton.detail .flow .text {
+  font-size: 1.1rem;
+  margin-bottom: .4rem;
+}
+
+.skeleton.detail .flow {
+  padding: 2rem 1.3rem;
+  padding-top: 5.3rem;
+  margin-bottom: 1.05rem;
+}
+
+.skeleton .flash {
+  height: 5.1rem;
+  padding: 0.95rem 1.5rem;
+  margin-bottom: 1.25rem;
+  display: flex;
+  align-items: center;
+}
+
+.skeleton .flash-left {
+  width: 4rem;
+  height: 5rem;
+  border-radius: .5rem;
+}
+
+.skeleton .flash-right {
+  padding-left: 1.9rem;
+  flex: 1;
+} 
+
+.skeleton .flash-right .text {
+  font-size: 1.1rem;
+  margin-bottom: .4rem;
+}
+
+.skeleton.detail .loglist {
+  position: relative;
+  height: 9rem;
+  margin-bottom: 1rem;
+}
+
+.skeleton.detail .loglist .more_btn {
+  position: absolute;
+  width: 2.6rem;
+  height: 2.6rem;
+  border-radius: 1.3rem;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.skeleton.detail .revisit {
+  overflow: hidden;
+  padding: 0 1.45rem;
+  margin-top: 1.75rem;
+  border-radius: 1.2rem;
+}
+
+.skeleton.detail .revisit .revisit-hd {
+  padding-top: 1.2rem;
+}
+
+.skeleton.detail .revisit-tit {
+  font-size: 1.6rem;
+  margin-bottom: .6rem;
+}
+
+.skeleton.detail .revisit-describe {
+  font-size: 1.2rem;
+}
+
+.skeleton.detail .revisit-container {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1.45rem 0;
+}
+
+.skeleton.detail .revisit-img {
+  width: 8.2rem;
+  height: 8.2rem;
+  border-radius: 1rem;
+}
+
+.skeleton.detail .revisit-info {
+  -webkit-flex: 1;
+  flex: 1;
+}
+
+.skeleton.detail .revisit-list {
+  padding-left: 1.45rem;
+}
+
+.skeleton.detail .revisit-list li {
+  font-size: 1.2rem;
+  margin-bottom: .4rem;
+}
+
+.skeleton.detail .bank {
+  clear: both;
+  padding: 1.17rem 1.7rem;
+}
+
+.skeleton.detail .bank_tit {
+  font-size: 1.7rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 1px solid #e3e3e3;
+}
+
+.skeleton.detail .bank_item {
+  line-height: 3.5rem;
+}
+
+.skeleton.create .process .process-background {
+  height: 5.25rem;
+  background: url(background.png) top left/100% 100% no-repeat;
+}
+
+.skeleton.create .process .ball-box {
+  display: flex;
+  justify-content: space-around;
+  padding: 0 7.6rem;
+  -webkit-transform: translateY(-33%);
+  transform: translateY(-33%);
+}
+
+.skeleton.create .process .process-ball {
+  position: relative;
+  text-align: center;
+}
+
+.skeleton.create .process .ball-wrap {
+  position: relative;
+  border-radius: 50%;
+  margin: auto;
+  height: 3.5rem;
+  width: 3.5rem;
+}
+
+.skeleton.create .process .ball-text {
+  font-size: 1.1rem;
+}
+
+.skeleton.create .claimsinfo {
+  margin-top: -1.1rem;
+}
+
+.skeleton.create .box {
+  height: 1.7rem;
+  margin: 1.5rem 1.5rem 2.55rem;
+  overflow: hidden;
+}
+
+.skeleton.create .long {
+  height: 5rem;
+}
+
+.skeleton.create .input-name {
+  float: left;
+  height: 1.7rem;
+  font-size: 1.5rem;
+}
+
+.skeleton.create .input-box {
+  float: right;
+  height: 1.7rem;
+  font-size: 1.5rem;
+}
+
+.skeleton.create .userinfo {
+  padding-left: 1.5rem;
+  padding-right: 1.5rem;
+}
+
+.skeleton.create .userinfo h3 {
+  font-size: 1.4rem;
+  padding-bottom: 1.5rem;
+  border-bottom: solid 1px #e6e6e6;
+}
