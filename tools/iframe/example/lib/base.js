@@ -1,3 +1,7 @@
+const editor = CodeMirror(document.querySelector('#text-content'), {
+  lineNumbers: true,
+});
+
 let curEdit = ''
 const htmlButton = document.querySelector('#html-btn')
 const cssButton = document.querySelector('#css-btn')
@@ -12,33 +16,40 @@ const textContent = document.querySelector('#text-content')
 window.onload = function () {
   htmlButton.addEventListener('click', function() {
     curEdit = 'html'
-    let ct = htmlCon.innerHTML
-    textContent.innerHTML = ct.replace(/([<>])/g, $1 => {
-      if ($1 === '<') return '&lt;'
-      else if ($1 === '>') return '&gt;'
-    })
+    let ct = svgCode
+    editor.setValue(ct)
   }, false)
 
   cssButton.addEventListener('click', function() {
     curEdit = 'css'
     let ct = cssCon.innerHTML
-    textContent.innerHTML = ct
+    editor.setValue(ct)
   }, false)
 
   jsButton.addEventListener('click', function() {
     curEdit = 'js'
     let ct = jsCon.innerHTML
-    textContent.innerHTML = ct
+    editor.setValue(ct)
   }, false)
 
-  jsButton.click()
+  document.addEventListener('click', function(e) {
+    let target = e.target
+    let allKids = [].slice.call(target.parentNode.children)
+    allKids.forEach(kid => {
+      kid.classList && kid.classList.remove('active')
+    })
+    target.classList.add('active')
+  })
+
+  htmlButton.click()
+  htmlCon.innerHTML = svgCode
 }
 
 window.addEventListener('keydown', function(e) {
   if (e.key === 's' && e.ctrlKey) {
     e.preventDefault()
     if (curEdit === 'html') {
-      htmlCon.innerHTML = textContent.innerHTML.replace(/(&gt;|&lt;)/g, $1 => {
+      htmlCon.innerHTML = svgCode = editor.getValue().replace(/(&gt;|&lt;)/g, $1 => {
         if ($1 === '&gt;') return '>'
         else if ($1 === '&lt;') return '<'
       })
