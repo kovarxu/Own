@@ -17,7 +17,7 @@ window.onload = function () {
   htmlButton.addEventListener('click', function() {
     curEdit = 'html'
     let ct = svgCode
-    editor.setValue(ct)
+    editor.setValue(ct.replace(/\n/, '')) // 消除第一个换行符
   }, false)
 
   cssButton.addEventListener('click', function() {

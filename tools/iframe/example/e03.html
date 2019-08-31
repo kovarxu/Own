@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>e03</title>
+  <link rel="stylesheet" href="lib/codemirror.css">
+  <link rel="stylesheet" href="lib/base.css" id="css-con">
+</head>
+<body>
+  <div class="con">
+    <div class="code-con">
+      <div class="buttons">
+        <button id="html-btn">HTML</button>
+        <button id="css-btn">CSS</button>
+        <button id="js-btn">JS</button>
+      </div>
+      <div id="text-content" contenteditable="true"></div>
+    </div>
+
+    <div class="view-con" id="html-con">
+      
+    </div>
+  </div>
+
+  <script id="js-con">
+  </script>
+
+  <script>
+  var svgCode = `
+  <svg width="400" height="400">
+    <rect x="62" y="25" height="50" width="160"
+      fill="rgb(100%,50%,50%)" stroke="black"
+      stroke-width="2"
+    />
+
+    <circle cx="60" cy="160" r="40"/>
+    <circle cx="150" cy="160" r="40" stroke="#f00" 
+      stroke-width="2"/>
+      
+    <circle cx="240" cy="160" r="40" stroke="#f00" 
+      stroke-width="2" fill="#6495ed"/>
+
+    <ellipse cx="150" cy="300" rx="105" ry="55" fill="#538"/>
+  </svg>
+  `
+  </script>
+
+  <script src="lib/codemirror.js"></script>
+  <script src="lib/base.js"></script>
+</body>
+</html>

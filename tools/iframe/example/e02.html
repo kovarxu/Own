@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>e02</title>
+  <link rel="stylesheet" href="lib/codemirror.css">
+  <link rel="stylesheet" href="lib/base.css" id="css-con">
+</head>
+<body>
+  <div class="con">
+    <div class="code-con">
+      <div class="buttons">
+        <button id="html-btn">HTML</button>
+        <button id="css-btn">CSS</button>
+        <button id="js-btn">JS</button>
+      </div>
+      <div id="text-content" contenteditable="true"></div>
+    </div>
+
+    <div class="view-con" id="html-con">
+      
+    </div>
+  </div>
+
+  <script id="js-con">
+  </script>
+
+  <script>
+  var svgCode = `
+  <svg>
+    <line x1="25" y1="30" x2="200" y2="50" stroke-width="1" stroke="red"/>
+
+    <line x1="25" y1="50" x2="200" y2="70" stroke-width="2.5" stroke="red"/>
+
+    <line x1="25" y1="70" x2="200" y2="90" stroke-width="4" stroke="blue"/>
+
+    <line x1="25" y1="90" x2="200" y2="110" stroke-width="5" 
+      stroke="#f00" stroke-dasharray="5 5"/>
+
+    <line x1="25" y1="110" x2="200" y2="130" stroke-width="5" 
+      stroke="#f00" stroke-dasharray="5 5 10 5"/>
+  </svg>
+  `
+  </script>
+
+  <script src="lib/codemirror.js"></script>
+  <script src="lib/base.js"></script>
+</body>
+</html>
