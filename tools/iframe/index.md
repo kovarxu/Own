@@ -1,8 +1,9 @@
 # SVG图形简介
 
 <details>
-  <summary>SVG的起源和发展</summary>
-  <summary>基本绘图命令</summary>
+  <summary>SVG的发展和特征</summary>
+  <summary>图形绘制</summary>
+  <summary>复用和合成</summary>
   <summary>图形切割</summary>
   <summary>动画制作</summary>
   <summary>应用方法</summary>
@@ -36,7 +37,7 @@ SVG规范是自1999年以来由万维网联盟（W3C）开发的开放标准。
 
 ### 优势
 
-1. 可以无限缩放，而不影响图像质量，而且相比png, jpg等图像体积小得多。
+1. 可以随意缩放，而不影响图像质量，而且相比png, jpg等图像体积小得多。
 2. 可以使用CSS和Javascript进行交互。
 3. 简单地实现动画效果。
 
@@ -48,9 +49,14 @@ svg SMIL动画兼容性
 
 svg滤镜兼容性
 
-## 基本绘图
+## 图元绘制
 
 ------------------
+
+### 命名空间
+
+1. 在html中内嵌时不需要写namespace，浏览器会自动识别
+2. 作为单独文件时，一般加上版本号和namespace声明，`version="1.1" xmlns="http://www.w3.org/2000/svg"`
 
 ### 功能表
 
@@ -70,13 +76,13 @@ svg滤镜兼容性
 
 ### 基本图形
 
-<!-- 矩形，圆形，椭圆 -->
-
 <!-- 画线，填充 -->
 
-<!-- 曲线，圆弧，贝塞尔曲线 -->
+<!-- 矩形，圆形，椭圆 -->
 
 <!-- 路径 -->
+
+<!-- 曲线，圆弧，贝塞尔曲线 -->
 
 <!-- 文字 -->
 

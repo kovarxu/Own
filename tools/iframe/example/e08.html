@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
-  <title>e03</title>
+  <title>e08</title>
   <link rel="stylesheet" href="lib/codemirror.css">
   <link rel="stylesheet" href="lib/base.css" id="css-con">
 </head>
@@ -35,22 +35,20 @@
   </script>
 
   <script>
+  // 变换和分组
   var svgCode = `
-  <svg width="400" height="400">
-    <desc>基本图形</desc>
-    <rect x="62" y="25" height="50" width="160"
-      fill="rgb(100%,50%,50%)" stroke="black"
-      stroke-width="2"
-    />
+  <svg width="600" height="400">
+    <desc>图形变换</desc>
+    <rect x="50" y="50" width="200" height="100"
+      fill="lightgreen" stroke="gray" stroke-width="2"
+      transform="rotate(15)"
+    ></rect>
 
-    <circle cx="60" cy="160" r="40"/>
-    <circle cx="150" cy="160" r="40" stroke="#f00" 
-      stroke-width="2"/>
-      
-    <circle cx="240" cy="160" r="40" stroke="#f00" 
-      stroke-width="2" fill="#6495ed"/>
-
-    <ellipse cx="150" cy="300" rx="105" ry="55" fill="#538"/>
+    <g fill="#c77" transform="translate(300,50),rotate(15),scale(.5)">
+      <rect x="0" y="0" width="260" height="80"></rect>
+      <rect x="0" y="0" width="80" height="400"></rect>
+      <rect x="0" y="160" width="210" height="80"></rect>
+    </g>
   </svg>
   `
   </script>

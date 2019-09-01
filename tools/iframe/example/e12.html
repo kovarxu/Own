@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
-  <title>e03</title>
+  <title>e12</title>
   <link rel="stylesheet" href="lib/codemirror.css">
   <link rel="stylesheet" href="lib/base.css" id="css-con">
 </head>
@@ -36,21 +36,19 @@
 
   <script>
   var svgCode = `
-  <svg width="400" height="400">
-    <desc>基本图形</desc>
-    <rect x="62" y="25" height="50" width="160"
-      fill="rgb(100%,50%,50%)" stroke="black"
-      stroke-width="2"
-    />
+  <svg width="600" height="400">
+    <desc>独立的可重用元素</desc>
+    <symbol id="I" width="150" height="75">
+      <image href="img/e01.jpg" />
+    </symbol>
 
-    <circle cx="60" cy="160" r="40"/>
-    <circle cx="150" cy="160" r="40" stroke="#f00" 
-      stroke-width="2"/>
-      
-    <circle cx="240" cy="160" r="40" stroke="#f00" 
-      stroke-width="2" fill="#6495ed"/>
+    <use href="#I" x="100" y="50" />
 
-    <ellipse cx="150" cy="300" rx="105" ry="55" fill="#538"/>
+    <symbol id="C" width="200" height="100">
+      <ellipse cx="0" cy="0" rx="200" ry="100" fill="#369" />
+    </symbol>
+    
+    <use href="#C" x="100" y="200"/>
   </svg>
   `
   </script>
