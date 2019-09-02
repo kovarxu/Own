@@ -37,18 +37,18 @@
   <script>
   var svgCode = `
   <svg width="600" height="400">
-    <desc>蒙层</desc>
-    <defs>
-      <path id="curve" d="M 10 100 C 200 30 300 250 350 50 C 390 20 425 65 500 200"
-        stroke="black" />
-    </defs>
+    <desc>蒙版</desc>
+    <linearGradient id="mask_lg">
+      <stop offset="0.0" stop-color="#222" />
+      <stop offset="1" stop-color="#eee" />
+    </linearGradient>
 
-    <text id="T" style="font-family:ariel;font-size:24"
-    	transform="translate(30, 50)"
-    >
-      <textPath href="#curve" style="letter-spacing: 5px;" fill="#f00">
-        Hello, here is some text-lying along a bezier curve.
-      </textPath>
+    <mask id="mask_ma">
+      <rect x="110" y="110" width="500" height="300" fill="url(#mask_lg)" />
+    </mask>
+
+    <text x="150" y="150" font-family="century" font-size="50" mask="url(#mask_ma)" fill="#f22">
+      这里有一些文本
     </text>
   </svg>
   `

@@ -38,18 +38,23 @@
   var svgCode = `
   <svg width="600" height="400">
     <desc>颜色滤镜</desc>
-    <defs>
-      <path id="curve" d="M 10 100 C 200 30 300 250 350 50 C 390 20 425 65 500 200"
-        stroke="black" />
-    </defs>
+    <filter id="color_f">
+      <!-- <feColorMatrix type="saturate" values="1.3" /> -->
+      <feColorMatrix in="SourceGraphic"
+        type="matrix"
+        values="1 0 0 0 -0.5
+                0 0 0 0 0
+                0 0 0 0 0
+                0 0 0 1 0" />
+    </filter>
 
-    <text id="T" style="font-family:ariel;font-size:24"
-    	transform="translate(30, 50)"
-    >
-      <textPath href="#curve" style="letter-spacing: 5px;" fill="#f00">
-        Hello, here is some text-lying along a bezier curve.
-      </textPath>
-    </text>
+    <image x="30" y="30" width="150" height="150" href="img/flower-1.jpg" />
+    <image x="210" y="30" width="150" height="150" href="img/flower-2.jpg" />
+    <image x="390" y="30" width="150" height="150" href="img/flower-3.jpg" />
+
+    <image x="30" y="210" width="150" height="150" href="img/flower-1.jpg" filter="url(#color_f)" />
+    <image x="210" y="210" width="150" height="150" href="img/flower-2.jpg" filter="url(#color_f)" />
+    <image x="390" y="210" width="150" height="150" href="img/flower-3.jpg" filter="url(#color_f)" />
   </svg>
   `
   </script>

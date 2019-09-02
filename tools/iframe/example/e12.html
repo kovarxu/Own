@@ -38,8 +38,9 @@
   var svgCode = `
   <svg width="600" height="400">
     <desc>独立的可重用元素</desc>
+    <desc>symbol是SVG2标准定义的元素，目前存在兼容性问题</desc>
     <symbol id="I" width="150" height="75">
-      <image href="img/e01.jpg" />
+      <image href="img/e01.jpg" width="150" height="150" />
     </symbol>
 
     <use href="#I" x="100" y="50" />

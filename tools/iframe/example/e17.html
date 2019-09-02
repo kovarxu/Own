@@ -38,18 +38,22 @@
   var svgCode = `
   <svg width="600" height="400">
     <desc>高斯滤镜</desc>
-    <defs>
-      <path id="curve" d="M 10 100 C 200 30 300 250 350 50 C 390 20 425 65 500 200"
-        stroke="black" />
-    </defs>
+    <filter id="gauss_f">
+      <feGaussianBlur stdDeviation="1" />
+    </filter>
 
-    <text id="T" style="font-family:ariel;font-size:24"
-    	transform="translate(30, 50)"
-    >
-      <textPath href="#curve" style="letter-spacing: 5px;" fill="#f00">
-        Hello, here is some text-lying along a bezier curve.
-      </textPath>
-    </text>
+    <image x="30" y="100" width="200" height="200" xlink:href="img/e01.jpg" filter="url(#gauss_f)" />
+
+    <filter id="dropShadow">
+      <feGaussianBlur in="SourceAlpha" stdDeviation="3" />
+      <feOffset dx="2" dy="4" />
+      <feMerge>
+        <feMergeNode />
+        <feMergeNode in="SourceGraphic" />
+      </feMerge>
+    </filter>
+
+    <image x="260" y="100" width="200" height="200" xlink:href="img/e01.jpg" filter="url(#dropShadow)" />
   </svg>
   `
   </script>

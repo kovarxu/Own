@@ -37,19 +37,23 @@
   <script>
   var svgCode = `
   <svg width="600" height="400">
-    <desc>剪贴</desc>
-    <defs>
-      <path id="curve" d="M 10 100 C 200 30 300 250 350 50 C 390 20 425 65 500 200"
-        stroke="black" />
-    </defs>
+    <desc>图形剪贴</desc>
+    <symbol>
+      <clipPath id="curve">
+        <path transform="translate(0,50),scale(0.8)"
+          d="m8,138c15,52 162,33 262,33c100,0 145,14 161,-32c16,-46 -111,-68 -111,-68c0,0 -41,-65 -137,-68c-96,-3 -115,69 -115,69c-42,17 -75,14 -60,66z"
+          stroke="black" />
+      </clipPath>
+      <clipPath id="star">
+        <path d="M 19.1 94.1 L 50 0 L 80.9 94.1 L 0 36.3 L 100 36.3 z" />
+      </clipPath>
+      <image id="I" href="img/e01.jpg" width="400" height="300"
+        preserveAspectRatio="none"/>
+    </symbol>
+    
+    <use clip-path="url(#curve)" href="#I" />
 
-    <text id="T" style="font-family:ariel;font-size:24"
-    	transform="translate(30, 50)"
-    >
-      <textPath href="#curve" style="letter-spacing: 5px;" fill="#f00">
-        Hello, here is some text-lying along a bezier curve.
-      </textPath>
-    </text>
+    <use clip-path="url(#star)" href="#I" />
   </svg>
   `
   </script>
