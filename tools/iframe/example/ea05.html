@@ -4,11 +4,25 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
-  <title>e05</title>
+  <title>ea05</title>
   <link rel="stylesheet" href="lib/codemirror.css">
-  <link rel="stylesheet" href="lib/base.css" id="css-con">
+  <link rel="stylesheet" href="lib/base.css">
 </head>
 <body>
+  <style id="css-con">
+    .path {
+      stroke-dasharray: 100;
+      stroke-dashoffset: 0;
+      animation: dash 5s linear forwards;
+    }
+
+    @keyframes dash {
+      to {
+        stroke-dashoffset: 1000;
+      }
+    }
+  </style>
+
   <div class="con">
     <div class="code-con">
       <div class="controls">
@@ -36,9 +50,11 @@
 
   <script>
   var svgCode = `
-  <svg width="400" height="400">
-    <desc>椭圆弧</desc>
-    <path d="M 100,100 A 100,100 0 0 0 250,200" fill="none" stroke="" stroke-width="3" />
+  <svg width="600" height="400">
+    <desc>路径动画</desc>
+    <path class="path" d="m14,73c24,-51 89,-63 160,-69c71,-6 179,51 235,102c56,51 -108,153 -176,169c-68,16 -178,-72 -201,-89c-23,-17 -42,-62 -18,-113z"
+      fill="none" stroke="#333" stroke-width="3"
+    />
   </svg>
   `
   </script>

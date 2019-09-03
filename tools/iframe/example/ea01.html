@@ -4,11 +4,25 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
-  <title>e05</title>
+  <title>ea01</title>
   <link rel="stylesheet" href="lib/codemirror.css">
-  <link rel="stylesheet" href="lib/base.css" id="css-con">
+  <link rel="stylesheet" href="lib/base.css">
 </head>
 <body>
+  <style id="css-con">
+    /* duration | timing-function | delay | */
+    /* iteration-count | direction | fill-mode | play-state | name */
+    .anim {
+      animation: 2s linear infinite forwards color;
+    }
+
+    @keyframes color {
+      to {
+        fill: #fee;
+      }
+    }
+  </style>
+
   <div class="con">
     <div class="code-con">
       <div class="controls">
@@ -36,9 +50,24 @@
 
   <script>
   var svgCode = `
-  <svg width="400" height="400">
-    <desc>椭圆弧</desc>
-    <path d="M 100,100 A 100,100 0 0 0 250,200" fill="none" stroke="" stroke-width="3" />
+  <svg width="600" height="400">
+    <desc>动画</desc>
+    <rect x="50" y="50" width="220" height="160"
+      class="anim"
+      fill="#f00"
+    ></rect>
+
+    <rect x="310" y="50" width="220" height="160" fill="#f00">
+      <animate 
+        attributeName="fill"
+        from="#f00"
+        to="#fee"
+        dur="2s"
+        begin="0s"
+        repeatCount="indefinite"
+        fill="freeze"
+      />
+    </rect>
   </svg>
   `
   </script>

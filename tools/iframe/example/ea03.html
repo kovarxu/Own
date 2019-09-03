@@ -4,11 +4,15 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
-  <title>e05</title>
+  <title>ea03</title>
   <link rel="stylesheet" href="lib/codemirror.css">
-  <link rel="stylesheet" href="lib/base.css" id="css-con">
+  <link rel="stylesheet" href="lib/base.css">
 </head>
 <body>
+  <style id="css-con">
+    
+  </style>
+
   <div class="con">
     <div class="code-con">
       <div class="controls">
@@ -31,19 +35,35 @@
     </div>
   </div>
 
-  <script id="js-con">
-  </script>
-
   <script>
   var svgCode = `
-  <svg width="400" height="400">
-    <desc>椭圆弧</desc>
-    <path d="M 100,100 A 100,100 0 0 0 250,200" fill="none" stroke="" stroke-width="3" />
+  <svg width="600" height="400">
+    <desc>路径动画</desc>
+
+    <g id="F" fill="#c77" transform="translate(50, 50) scale(.2)">
+      <rect x="0" y="0" width="260" height="80"></rect>
+      <rect x="0" y="0" width="80" height="400"></rect>
+      <rect x="0" y="160" width="210" height="80"></rect>
+    </g>
+
+    <path d="M 0,0 l 210,120 l 100 200 z" id="p" fill="none" stroke="#777" stroke-width="2" />
+
+    <animateMotion href="#F"
+      dur="5s" 
+      begin="click" 
+      fill="freeze"
+    >
+      <mpath href="#p" />
+    </animateMotion>
   </svg>
   `
   </script>
 
   <script src="lib/codemirror.js"></script>
   <script src="lib/base.js"></script>
+
+  <script id="js-con">
+    
+  </script>
 </body>
 </html>

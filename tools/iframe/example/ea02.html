@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>ea02</title>
+  <link rel="stylesheet" href="lib/codemirror.css">
+  <link rel="stylesheet" href="lib/base.css">
+</head>
+<body>
+  <style id="css-con">
+    .shake-anim { 
+      animation: shake 320ms 2; 
+    }
+    @keyframes shake { 
+      0% {transform: translateX(0%)} 
+      25% {transform: translateX(-1.5%)} 
+      50% {transform: translateX(0%)} 
+      75% {transform: translateX(1.5%)} 
+      100% {transform: translateX(0%)} 
+    }
+  </style>
+
+  <div class="con">
+    <div class="code-con">
+      <div class="controls">
+        <div class="buttons">
+          <button id="html-btn">HTML</button>
+          <button id="css-btn">CSS</button>
+          <button id="js-btn">JS</button>
+        </div>
+        <div class="checks">
+          <label for="grid">Grid</label>
+          <input type="checkbox" name="grid" id="grid">
+        </div>
+      </div>
+      
+      <div id="text-content" contenteditable="true"></div>
+    </div>
+
+    <div class="view-con" id="html-con">
+      
+    </div>
+  </div>
+
+  <script>
+  var svgCode = `
+  <svg width="600" height="400">
+    <desc>动画</desc>
+    <rect id="bt" x="50" y="50" width="240" height="60"
+      fill="#6598ce" stroke-width="2" stroke="#555">
+    </rect>
+
+    <rect x="50" y="140" width="240" height="60"
+      fill="orange" stroke-width="2" stroke="#555"
+    >
+      <animate 
+        attributeName="x"
+        additive="sum"
+        dur="320ms"
+        begin="click"
+        repeatCount="2"
+        keyTimes="0;0.25;0.5;0.75;1"
+        values="0;-1.5%;0%;1.5%;0%"
+      />
+    </rect>
+  </svg>
+  `
+  </script>
+
+  <script src="lib/codemirror.js"></script>
+  <script src="lib/base.js"></script>
+
+  <script id="js-con">
+    window.addEventListener('load', function() {
+      let svg = htmlCon.querySelector('svg')
+      svg.querySelector('#bt').addEventListener('click', function() {
+        let that = this
+        that.setAttribute('class', 'shake-anim')
+        setTimeout(function() {
+          that.setAttribute('class', '')
+        }, 660)
+      })
+    }, false)
+  </script>
+</body>
+</html>

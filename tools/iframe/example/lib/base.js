@@ -4,35 +4,37 @@ const editor = CodeMirror(document.querySelector('#text-content'), {
 let mesh = null
 
 let curEdit = ''
-const htmlButton = document.querySelector('#html-btn')
-const cssButton = document.querySelector('#css-btn')
-const jsButton = document.querySelector('#js-btn')
+var htmlButton, cssButton, jsButton, htmlCon, cssCon, jsCon, grid, textContent
 
-const htmlCon = document.querySelector('#html-con')
-const cssCon = document.querySelector('#css-con')
-const jsCon = document.querySelector('#js-con')
+window.addEventListener('load', function () {
+  htmlButton = document.querySelector('#html-btn')
+  cssButton = document.querySelector('#css-btn')
+  jsButton = document.querySelector('#js-btn')
 
-const grid = document.querySelector('#grid')
+  htmlCon = document.querySelector('#html-con')
+  cssCon = document.querySelector('#css-con')
+  jsCon = document.querySelector('#js-con')
 
-const textContent = document.querySelector('#text-content')
+  grid = document.querySelector('#grid')
 
-window.onload = function () {
+  textContent = document.querySelector('#text-content')
+
   htmlButton.addEventListener('click', function() {
     curEdit = 'html'
     let ct = svgCode
-    editor.setValue(ct.replace(/\n/, '')) // 消除第一个换行符
+    editor.setValue(ct.replace(/^\n/, '')) // 消除第一个换行符
   }, false)
 
   cssButton.addEventListener('click', function() {
     curEdit = 'css'
     let ct = cssCon.innerHTML
-    editor.setValue(ct)
+    editor.setValue(ct.replace(/^\n/, ''))
   }, false)
 
   jsButton.addEventListener('click', function() {
     curEdit = 'js'
     let ct = jsCon.innerHTML
-    editor.setValue(ct)
+    editor.setValue(ct.replace(/^\n/, ''))
   }, false)
 
   grid.addEventListener('change', function(e) {
@@ -60,7 +62,7 @@ window.onload = function () {
   htmlCon.innerHTML = svgCode
 
   generateMesh()
-}
+}, false)
 
 window.addEventListener('keydown', function(e) {
   if (e.key === 's' && e.ctrlKey) {
@@ -70,16 +72,19 @@ window.addEventListener('keydown', function(e) {
         if ($1 === '&gt;') return '>'
         else if ($1 === '&lt;') return '<'
       })
+    } else if (curEdit === 'css') {
+      cssCon.innerHTML = editor.getValue()
+      htmlCon.innerHTML = svgCode
     }
   }
-})
+}, false)
 
 function generateMesh () {
   let svgEle = htmlCon.querySelector('svg')
   let width = svgEle.clientWidth, height = svgEle.clientHeight 
   if (width && height) {
     let canvas = document.createElement('canvas')
-    console.log(width, height)
+    // console.log(width, height)
     canvas.width = width
     canvas.height = height
     let ctx = canvas.getContext('2d')

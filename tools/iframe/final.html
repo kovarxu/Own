@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="zh">
+
+<head>
+  <meta charset="utf-8" />
+  <title></title>
+  <link rel="stylesheet" href="editor.min.css" />
+  <style>.all-container{width: 800px; margin: auto; border-left: 3px solid #ccc; border-right: 3px solid #ccc;overflow:unset!important;}
+  iframe{width: 1300px; height: 436px; margin-left: -300px; margin-top: 10px; margin-bottom: 20px; padding: 15px 10px; border-radius: 8px; background: #eee;}
+  </style>
+</head>
+
+<body class="markdown-body editormd-preview-container" >
+<div class="all-container markdown-body editormd-preview-container">
+  <h1 id="h1-svg-"><a name="SVG图形简介" class="reference-link"></a><span
+      class="header-link octicon octicon-link"></span>SVG图形简介</h1>
+  <details open=""><br>
+    <summary>SVG的发展和特征</summary><br>
+    <summary>应用方法</summary><br>
+    <summary>图形绘制</summary><br>
+    <summary>复用和合成</summary><br>
+    <summary>图形效果</summary><br>
+    <summary>与Javascript交互</summary><br>
+    <summary>SVG和Canvas</summary><br>
+  </details>
+    <h2 id="h2-svg-"><a name="SVG的发展和特征" class="reference-link"></a><span
+        class="header-link octicon octicon-link"></span>SVG的发展和特征</h2>
+    <hr>
+    <p>可缩放矢量图形（SVG，Scalable Vector Graphics）是一种基于XML的矢量图像格式，用于二维绘图，支持交互性和动画。</p>
+    <p>SVG规范是自1999年以来由万维网联盟（W3C）开发的开放标准。</p>
+    <h3 id="h3-u7248u672C"><a name="版本" class="reference-link"></a><span
+        class="header-link octicon octicon-link"></span>版本</h3>
+    <ol>
+      <li>svg1.0，2001-09-04成为W3C推荐标准</li>
+      <li>svg1.1，第一版于2003-01-14成为W3C推荐标准，除了允许模块化之外，与svg1.0基本相同</li>
+      <li>svg Tiny 1.2，2008-12-22成为W3C推荐标准</li>
+      <li>svg1.1，第二版于2011-8-16发布，作为现行版本</li>
+      <li>svg2，未来版本，将包含“Mobile SVG Profiles”和“SVG Tiny and SVG
+        Basic”两个版本，后者作为移动端设备的标准，减少了计算和显示能力。该提案已于2016-09-15列入了W3C候选提案。</li>
+    </ol>
+    <h3 id="h3-u7279u5F81"><a name="特征" class="reference-link"></a><span
+        class="header-link octicon octicon-link"></span>特征</h3>
+    <ol>
+      <li>SVG图像及其行为在XML文本文件中定义。作为XML文件，可以使用任何文本编辑器以及绘图软件创建和编辑SVG图像。</li>
+      <li>支持三种基本图形元素：矢量图形、位图、文本。</li>
+      <li>支持嵌套、剪切路径、蒙版、滤镜效果。</li>
+      <li>SVG完美契合CSS和Javascript。内部元素以纯文本形式出现在SVG DOM中，增强了SVG图形的可访问性，可通过修改DOM的方式改变它的显示效果。</li>
+      <li>使用SMIL或JS实现动画效果，前者是W3C推荐的标准。</li>
+      <li>可以被gzip等算法压缩，压缩后文件的后缀为.svgz。</li>
+    </ol>
+    <h3 id="h3-u4F18u52BF"><a name="优势" class="reference-link"></a><span
+        class="header-link octicon octicon-link"></span>优势</h3>
+    <ol>
+      <li>随意缩放，而不影响图像质量，而且相比png, jpg等图像体积小得多。</li>
+      <li>使用CSS和Javascript进行交互。</li>
+      <li>简单地实现动画效果。</li>
+    </ol>
+    <h3 id="h3-u517Cu5BB9u6027"><a name="兼容性" class="reference-link"></a><span
+        class="header-link octicon octicon-link"></span>兼容性</h3>
+    <p>svg基本功能兼容性</p>
+    <p>svg SMIL动画兼容性</p>
+    <p>svg滤镜兼容性</p>
+    <h2 id="h2-u5E94u7528u65B9u6CD5"><a name="应用方法" class="reference-link"></a><span
+        class="header-link octicon octicon-link"></span>应用方法</h2>
+    <h3 id="h3--svg-dom-"><a name="使用svg标签嵌入DOM使用" class="reference-link"></a><span
+        class="header-link octicon octicon-link"></span>使用svg标签嵌入DOM使用</h3>
+    <pre class="prettyprint linenums prettyprinted"
+      style=""><ol class="linenums"><li class="L0"><code class="lang-html"><span class="tag">&lt;svg&gt;</span></code></li><li class="L1"><code class="lang-html"><span class="pln"> </span><span class="tag">&lt;rect</span><span class="pln"> </span><span class="atn">x</span><span class="pun">=</span><span class="atv">"0"</span><span class="pln"> </span><span class="atn">y</span><span class="pun">=</span><span class="atv">"0"</span><span class="pln"> </span><span class="atn">width</span><span class="pun">=</span><span class="atv">"100"</span><span class="pln"> </span><span class="atn">height</span><span class="pun">=</span><span class="atv">"100"</span><span class="pln"> </span><span class="atn">fill</span><span class="pun">=</span><span class="atv">"blue"</span><span class="tag">&gt;&lt;/rect&gt;</span></code></li><li class="L2"><code class="lang-html"><span class="tag">&lt;/svg&gt;</span></code></li></ol></pre>
+    <h3 id="h3-u4F5Cu4E3Au5355u72ECu7684u6587u4EF6u5F15u5165"><a name="作为单独的文件引入" class="reference-link"></a><span
+        class="header-link octicon octicon-link"></span>作为单独的文件引入</h3>
+    <pre class="prettyprint linenums prettyprinted"
+      style=""><ol class="linenums"><li class="L0"><code class="lang-html"><span class="tag">&lt;img</span><span class="pln"> </span><span class="atn">src</span><span class="pun">=</span><span class="atv">"bg.svg"</span><span class="pln"> </span><span class="tag">/&gt;</span></code></li><li class="L1"><code class="lang-html"><span class="tag">&lt;div</span><span class="pln"> </span><span class="atn">style</span><span class="pun">=</span><span class="atv">"</span><span class="pln">background</span><span class="pun">-</span><span class="pln">image</span><span class="pun">:</span><span class="pln"> bg</span><span class="pun">.</span><span class="pln">svg</span><span class="atv">"</span><span class="tag">&gt;</span></code></li></ol></pre>
+    <h3 id="h3-u547Du540Du7A7Au95F4"><a name="命名空间" class="reference-link"></a><span
+        class="header-link octicon octicon-link"></span>命名空间</h3>
+    <ol>
+      <li>在html中内嵌时不需要写namespace，浏览器会自动识别</li>
+      <li>作为单独文件时，一般加上版本号和namespace声明，<code>version="1.1" xmlns="http://www.w3.org/2000/svg"</code></li>
+    </ol>
+    <h2 id="h2-u56FEu5F62u7ED8u5236"><a name="图形绘制" class="reference-link"></a><span
+        class="header-link octicon octicon-link"></span>图形绘制</h2>
+    <hr>
+    
+    <iframe src="./example/e01.html" frameborder="0"></iframe>
+
+    <h3>画线</h3>
+    <iframe src="./example/e02.html" frameborder="0"></iframe>
+    
+    <h3 id="h3-u57FAu672Cu56FEu5F62"><a name="基本图形" class="reference-link"></a><span
+        class="header-link octicon octicon-link"></span>基本图形</h3>
+
+    <!-- 矩形，圆形，椭圆 -->
+    <table>
+      <thead>
+        <tr>
+          <th style="text-align:center">标签</th>
+          <th style="text-align:center">功能</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td style="text-align:center">rect</td>
+          <td style="text-align:center">矩形</td>
+        </tr>
+        <tr>
+          <td style="text-align:center">circle</td>
+          <td style="text-align:center">圆</td>
+        </tr>
+        <tr>
+          <td style="text-align:center">ellipse</td>
+          <td style="text-align:center">椭圆</td>
+        </tr>
+      </tbody>
+    </table> <!-- 路径 -->
+
+    <iframe src="./example/e03.html" frameborder="0"></iframe>
+
+    <h3>路径</h3>
+    <table>
+      <thead>
+        <tr>
+          <th style="text-align:center">命令</th>
+          <th style="text-align:center">功能</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td style="text-align:center">M/m</td>
+          <td style="text-align:center">起始点，所有的路径一定从M开始 <code>M 0,0</code></td>
+        </tr>
+        <tr>
+          <td style="text-align:center">H/h</td>
+          <td style="text-align:center">平行线，大写为绝对位置 <code>H 50</code></td>
+        </tr>
+        <tr>
+          <td style="text-align:center">V/v</td>
+          <td style="text-align:center">垂直线， <code>V 50</code></td>
+        </tr>
+        <tr>
+          <td style="text-align:center">L/l</td>
+          <td style="text-align:center">画线直到某个点， <code>L 100 50</code></td>
+        </tr>
+        <tr>
+          <td style="text-align:center">C/c</td>
+          <td style="text-align:center">三次贝塞尔曲线，有两个控制点和一个结束点 <code>c 20,21 40,45 100,33</code></td>
+        </tr>
+        <tr>
+          <td style="text-align:center">Q/q</td>
+          <td style="text-align:center">二次贝塞尔曲线，只有一个控制点 <code>q 30,45 100,12</code></td>
+        </tr>
+        <tr>
+          <td style="text-align:center">A/a</td>
+          <td style="text-align:center">椭圆弧，前两个参数代表圆弧半径和三个控制参数，最后是结束点 <code>A 100,100 0 1 0 250,150</code></td>
+        </tr>
+        <tr>
+          <td style="text-align:center">Z/z</td>
+          <td style="text-align:center">闭合路径</td>
+        </tr>
+      </tbody>
+    </table> <!-- 文字 -->
+
+    <h4>直线路径</h4>
+    <iframe src="./example/e04.html" frameborder="0"></iframe>
+
+    <h4>贝塞尔曲线</h4>
+    <iframe src="./example/c01.html" frameborder="0"></iframe>
+    
+    <h4>椭圆弧</h4>
+    <iframe src="./example/e05.html" frameborder="0"></iframe>
+
+    <h3>图片</h3>
+    <iframe src="./example/e06.html" frameborder="0"></iframe>
+
+    <h3>文字</h3>
+    <iframe src="./example/e07.html" frameborder="0"></iframe>
+
+
+    <h2 id="h2-u590Du7528u548Cu5408u6210"><a name="复用和合成" class="reference-link"></a><span
+        class="header-link octicon octicon-link"></span>复用和合成</h2>
+    <hr>
+
+    <h3>变换和分组</h3>
+    <iframe src="./example/e08.html" frameborder="0"></iframe>
+
+    <h3>定义可重用的元素</h3>
+    <iframe src="./example/e09.html" frameborder="0"></iframe>
+
+    <h3>文字路径</h3>
+    <iframe src="./example/e10.html" frameborder="0"></iframe>
+
+    <h3>坐标系统</h3>
+    <iframe src="./example/e11.html" frameborder="0"></iframe>
+
+    <h3>独立的可重用元素</h3>
+    <iframe src="./example/e12.html" frameborder="0"></iframe>
+
+    <h2 id="h2-u56FEu5F62u6548u679C"><a name="图形效果" class="reference-link"></a><span
+        class="header-link octicon octicon-link"></span>图形效果</h2>
+    <hr>
+    
+    <h3>渐变</h3>
+    <iframe src="./example/e13.html" frameborder="0"></iframe>
+
+    <h3>图案填充</h3>
+    <iframe src="./example/e14.html" frameborder="0"></iframe>
+
+    <h3>图形剪贴</h3>
+    <iframe src="./example/e15.html" frameborder="0"></iframe>
+
+    <h3>蒙版</h3>
+    <iframe src="./example/e16.html" frameborder="0"></iframe>
+
+    <h3>*滤镜-高斯滤镜</h3>
+    <iframe src="./example/e17.html" frameborder="0"></iframe>
+
+    <h3>*滤镜-颜色滤镜</h3>
+    <iframe src="./example/e18.html" frameborder="0"></iframe>
+
+    <h2 id="h2-svg-canvas"><span class="header-link octicon octicon-link">动画</span></h2>
+    <hr>
+    
+    <h3>渐变动画</h3>
+    <iframe src="./example/ea01.html" frameborder="0"></iframe>
+
+    <h3>帧动画</h3>
+    <iframe src="./example/ea02.html" frameborder="0"></iframe>
+
+    <h3>路径动画</h3>
+    <iframe src="./example/ea03.html" frameborder="0"></iframe>
+
+    <h3>路径动画</h3>
+    <iframe src="./example/ea05.html" frameborder="0"></iframe>
+    
+    <h2 id="h2-svg-canvas"><span class="header-link octicon octicon-link">SVG和Canvas</span></h2>
+    <hr>
+    
+    <h3 id="h3-canvas"><a name="Canvas" class="reference-link"></a><span
+        class="header-link octicon octicon-link"></span>Canvas</h3>
+    <ul>
+      <li>依赖分辨率</li>
+      <li>不支持事件处理器</li>
+      <li>弱的文本渲染能力</li>
+      <li>能够以 .png 或 .jpg 格式保存结果图像</li>
+      <li>最适合图像密集型的游戏，其中的许多对象会被频繁重绘</li>
+    </ul>
+    <h3 id="h3-svg"><a name="SVG" class="reference-link"></a><span class="header-link octicon octicon-link"></span>SVG
+    </h3>
+    <ul>
+      <li>不依赖分辨率</li>
+      <li>支持事件处理器</li>
+      <li>最适合带有大型渲染区域的应用程序（比如谷歌地图）</li>
+      <li>复杂度高会减慢渲染速度（任何过度使用 DOM 的应用都不快）</li>
+      <li>不适合游戏应用</li>
+    </ul>
+</div>
+</body>
+
+</html>
