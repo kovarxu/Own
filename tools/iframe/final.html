@@ -5,7 +5,9 @@
   <meta charset="utf-8" />
   <title></title>
   <link rel="stylesheet" href="editor.min.css" />
-  <style>.all-container{width: 800px; margin: auto; border-left: 3px solid #ccc; border-right: 3px solid #ccc;overflow:unset!important;}
+  <style>.all-container{width: 800px; margin: auto; border-left: 3px solid #ccc; border-right: 3px solid #ccc; overflow:unset!important;}
+  summary {font-size: 20px; font-weight: 600; margin-bottom: 8px;}
+  details p{font-size: 16px; font-weight: 600; line-height: 1; margin-left: 20px;}
   iframe{width: 1300px; height: 436px; margin-left: -300px; margin-top: 10px; margin-bottom: 20px; padding: 15px 10px; border-radius: 8px; background: #eee;}
   </style>
 </head>
@@ -14,32 +16,34 @@
 <div class="all-container markdown-body editormd-preview-container">
   <h1 id="h1-svg-"><a name="SVG图形简介" class="reference-link"></a><span
       class="header-link octicon octicon-link"></span>SVG图形简介</h1>
-  <details open=""><br>
-    <summary>SVG的发展和特征</summary><br>
-    <summary>应用方法</summary><br>
-    <summary>图形绘制</summary><br>
-    <summary>复用和合成</summary><br>
-    <summary>图形效果</summary><br>
-    <summary>与Javascript交互</summary><br>
-    <summary>SVG和Canvas</summary><br>
+  <details open="false">
+    <summary>目录</summary>
+    <p><a href="#svg-development">SVG的发展和特征</a></p>
+    <p><a href="#svg-usage">应用方法</a></p>
+    <p><a href="#svg-draw">图形绘制</a></p>
+    <p><a href="#svg-compond">复用和合成</a></p>
+    <p><a href="#svg-effect">图形效果</a></p>
+    <p><a href="#svg-animation">动画</a></p>
+    <p><a href="#references">工具和参考</a></p>
   </details>
-    <h2 id="h2-svg-"><a name="SVG的发展和特征" class="reference-link"></a><span
+    <h2 id="svg-development"><a name="SVG的发展和特征" class="reference-link"></a><span
         class="header-link octicon octicon-link"></span>SVG的发展和特征</h2>
     <hr>
     <p>可缩放矢量图形（SVG，Scalable Vector Graphics）是一种基于XML的矢量图像格式，用于二维绘图，支持交互性和动画。</p>
     <p>SVG规范是自1999年以来由万维网联盟（W3C）开发的开放标准。</p>
     <h3 id="h3-u7248u672C"><a name="版本" class="reference-link"></a><span
-        class="header-link octicon octicon-link"></span>版本</h3>
-    <ol>
-      <li>svg1.0，2001-09-04成为W3C推荐标准</li>
-      <li>svg1.1，第一版于2003-01-14成为W3C推荐标准，除了允许模块化之外，与svg1.0基本相同</li>
-      <li>svg Tiny 1.2，2008-12-22成为W3C推荐标准</li>
-      <li>svg1.1，第二版于2011-8-16发布，作为现行版本</li>
-      <li>svg2，未来版本，将包含“Mobile SVG Profiles”和“SVG Tiny and SVG
-        Basic”两个版本，后者作为移动端设备的标准，减少了计算和显示能力。该提案已于2016-09-15列入了W3C候选提案。</li>
+      class="header-link octicon octicon-link"></span>版本</h3>
+      <ol>
+        <li>svg1.0，2001-09-04成为W3C推荐标准</li>
+        <li>svg1.1，第一版于2003-01-14成为W3C推荐标准，除了允许模块化之外，与svg1.0基本相同</li>
+        <li>svg Tiny 1.2，2008-12-22成为W3C推荐标准</li>
+        <li>svg1.1，第二版于2011-8-16发布，作为现行版本</li>
+        <li>svg2，未来版本，将包含“Mobile SVG Profiles”和“SVG Tiny and SVG
+          Basic”两个版本，后者作为移动端设备的标准，减少了计算和显示能力。该提案已于2016-09-15列入了W3C候选提案。</li>
     </ol>
     <h3 id="h3-u7279u5F81"><a name="特征" class="reference-link"></a><span
-        class="header-link octicon octicon-link"></span>特征</h3>
+      class="header-link octicon octicon-link"></span>特征</h3>
+    <img src="./300px-Bitmap_VS_SVG.svg.png" width="300" />
     <ol>
       <li>SVG图像及其行为在XML文本文件中定义。作为XML文件，可以使用任何文本编辑器以及绘图软件创建和编辑SVG图像。</li>
       <li>支持三种基本图形元素：矢量图形、位图、文本。</li>
@@ -55,12 +59,37 @@
       <li>使用CSS和Javascript进行交互。</li>
       <li>简单地实现动画效果。</li>
     </ol>
+
+    <h3 id="h2-svg-canvas">SVG和Canvas</h3>
+    <h4 id="h3-canvas"><a name="Canvas" class="reference-link"></a><span
+        class="header-link octicon octicon-link"></span>Canvas</h4>
+    <ul>
+      <li>依赖设备分辨率</li>
+      <li>不支持事件处理器</li>
+      <li>弱的文本渲染能力</li>
+      <li>能够以 .png 或 .jpg 格式保存结果图像</li>
+      <li>最适合图像密集型的游戏，其中的许多对象会被频繁重绘</li>
+    </ul>
+    <h4 id="h3-svg"><a name="SVG" class="reference-link"></a><span class="header-link octicon octicon-link"></span>SVG
+    </h4>
+    <ul>
+      <li>不依赖分辨率</li>
+      <li>支持事件处理器，处理事件更高效</li>
+      <li>复杂度高会减慢渲染速度（任何过度使用DOM的应用都不快）</li>
+      <li>不适合游戏应用</li>
+    </ul>
     <h3 id="h3-u517Cu5BB9u6027"><a name="兼容性" class="reference-link"></a><span
         class="header-link octicon octicon-link"></span>兼容性</h3>
     <p>svg基本功能兼容性</p>
+    <img src="./compatity.PNG" alt="" style="margin-bottom: 20px;">
+    
     <p>svg SMIL动画兼容性</p>
+    <img src="./compatity-smil.PNG" alt="" style="margin-bottom: 20px;">
+
     <p>svg滤镜兼容性</p>
-    <h2 id="h2-u5E94u7528u65B9u6CD5"><a name="应用方法" class="reference-link"></a><span
+    <img src="./compatity-filter.PNG" alt="" style="margin-bottom: 20px;">
+
+    <h2 id="svg-usage"><a name="应用方法" class="reference-link"></a><span
         class="header-link octicon octicon-link"></span>应用方法</h2>
     <h3 id="h3--svg-dom-"><a name="使用svg标签嵌入DOM使用" class="reference-link"></a><span
         class="header-link octicon octicon-link"></span>使用svg标签嵌入DOM使用</h3>
@@ -76,7 +105,7 @@
       <li>在html中内嵌时不需要写namespace，浏览器会自动识别</li>
       <li>作为单独文件时，一般加上版本号和namespace声明，<code>version="1.1" xmlns="http://www.w3.org/2000/svg"</code></li>
     </ol>
-    <h2 id="h2-u56FEu5F62u7ED8u5236"><a name="图形绘制" class="reference-link"></a><span
+    <h2 id="svg-draw"><a name="图形绘制" class="reference-link"></a><span
         class="header-link octicon octicon-link"></span>图形绘制</h2>
     <hr>
     
@@ -162,7 +191,7 @@
     <iframe src="./example/e04.html" frameborder="0"></iframe>
 
     <h4>贝塞尔曲线</h4>
-    <iframe src="./example/c01.html" frameborder="0"></iframe>
+    <iframe src="./example/c01.html" frameborder="0" style="height: 500px;"></iframe>
     
     <h4>椭圆弧</h4>
     <iframe src="./example/e05.html" frameborder="0"></iframe>
@@ -174,7 +203,7 @@
     <iframe src="./example/e07.html" frameborder="0"></iframe>
 
 
-    <h2 id="h2-u590Du7528u548Cu5408u6210"><a name="复用和合成" class="reference-link"></a><span
+    <h2 id="svg-compond"><a name="复用和合成" class="reference-link"></a><span
         class="header-link octicon octicon-link"></span>复用和合成</h2>
     <hr>
 
@@ -193,7 +222,7 @@
     <h3>独立的可重用元素</h3>
     <iframe src="./example/e12.html" frameborder="0"></iframe>
 
-    <h2 id="h2-u56FEu5F62u6548u679C"><a name="图形效果" class="reference-link"></a><span
+    <h2 id="svg-effect"><a name="图形效果" class="reference-link"></a><span
         class="header-link octicon octicon-link"></span>图形效果</h2>
     <hr>
     
@@ -215,7 +244,7 @@
     <h3>*滤镜-颜色滤镜</h3>
     <iframe src="./example/e18.html" frameborder="0"></iframe>
 
-    <h2 id="h2-svg-canvas"><span class="header-link octicon octicon-link">动画</span></h2>
+    <h2 id="svg-animation">动画</h2>
     <hr>
     
     <h3>渐变动画</h3>
@@ -229,28 +258,28 @@
 
     <h3>路径动画</h3>
     <iframe src="./example/ea05.html" frameborder="0"></iframe>
-    
-    <h2 id="h2-svg-canvas"><span class="header-link octicon octicon-link">SVG和Canvas</span></h2>
+
+    <h3 id="references"><a name="参考" class="reference-link"></a><span
+      class="header-link octicon octicon-link"></span>工具和参考</h3>
     <hr>
-    
-    <h3 id="h3-canvas"><a name="Canvas" class="reference-link"></a><span
-        class="header-link octicon octicon-link"></span>Canvas</h3>
+
+    <h4>实用工具</h4>
     <ul>
-      <li>依赖分辨率</li>
-      <li>不支持事件处理器</li>
-      <li>弱的文本渲染能力</li>
-      <li>能够以 .png 或 .jpg 格式保存结果图像</li>
-      <li>最适合图像密集型的游戏，其中的许多对象会被频繁重绘</li>
+      <li><a href="https://www.zhangxinxu.com/sp/svg/">在线svg编辑工具</a></li>
+      <li><a href="https://svgjs.com/docs/2.7/">svg.js</a></li>
+      <li><a href="http://snapsvg.io/">snap.svg</a></li>
+      <li><a href="https://modernizr.com/">modernizr</a></li>
     </ul>
-    <h3 id="h3-svg"><a name="SVG" class="reference-link"></a><span class="header-link octicon octicon-link"></span>SVG
-    </h3>
-    <ul>
-      <li>不依赖分辨率</li>
-      <li>支持事件处理器</li>
-      <li>最适合带有大型渲染区域的应用程序（比如谷歌地图）</li>
-      <li>复杂度高会减慢渲染速度（任何过度使用 DOM 的应用都不快）</li>
-      <li>不适合游戏应用</li>
-    </ul>
+
+    <h4>参考资料</h4>
+    <ol>
+      <li>https://www.w3.org/Graphics/SVG/IG/resources/svgprimer.html</li>
+      <li>https://flaviocopes.com/svg/</li>
+      <li>https://css-tricks.com/guide-svg-animations-smil/</li>
+      <li>https://flaviocopes.com/svg/</li>
+      <li>https://www.oxxostudio.tw/articles/201406/svg-05-path-2.html</li>
+      <li>https://en.wikipedia.org/wiki/Scalable_Vector_Graphics#targetText=Scalable%20Vector%20Graphics%20(SVG)%20is,defined%20in%20XML%20text%20files.</li>
+    </ol>
 </div>
 </body>
 

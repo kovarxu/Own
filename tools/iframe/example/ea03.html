@@ -40,17 +40,20 @@
   <svg width="600" height="400">
     <desc>路径动画</desc>
 
-    <g id="F" fill="#c77" transform="translate(50, 50) scale(.2)">
+    <g id="F" fill="#c77" transform="translate(0,0) scale(.2)">
       <rect x="0" y="0" width="260" height="80"></rect>
       <rect x="0" y="0" width="80" height="400"></rect>
       <rect x="0" y="160" width="210" height="80"></rect>
     </g>
 
-    <path d="M 0,0 l 210,120 l 100 200 z" id="p" fill="none" stroke="#777" stroke-width="2" />
+    <path d="m49,14c0,0 46,-38 79,38c33,76 164,-5 225,36c61,41 56,120 16,140c-40,20 -122,106 -183,107c-61,1 -137,-133 -137,-133c0,0 -41,-104 -41,-104c0,0 -22,-56 41,-84z"
+      id="p" fill="none" stroke="#777" stroke-width="2"
+    />
 
     <animateMotion href="#F"
       dur="5s" 
-      begin="click" 
+      begin="0s" 
+      repeatCount="indefinite"
       fill="freeze"
     >
       <mpath href="#p" />
