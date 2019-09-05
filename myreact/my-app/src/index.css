@@ -43,6 +43,7 @@ ol, ul {
 .game {
   display: flex;
   flex-direction: row;
+  flex-wrap: wrap;
 }
 
 .game-info {
