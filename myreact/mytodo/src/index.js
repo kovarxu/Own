@@ -1,77 +1,83 @@
-import React from 'react';
-import ReactDOM from 'react-dom';
-import './index.css';
-// import App from './app.js';
+import React from 'react'
+import ReactDOM from 'react-dom'
+import './index.css'
 
-// const EL = function (props) {
-//   return (
-//     <div>
-//       {props.name}
-//     </div>
-//   )
-// }
-
-// class EL extends React.Component {
-//   constructor() {
-//     this.name = 'name';
-//   }
-//   render () {
-//     return (
-//       <div>
-//         {this.props.name}
-//       </div>
-//     )
-//   }
-// }
-
-// function App () {
-//   return (
-//     <div>
-//       <EL name="sora"></EL>
-//       <EL name="lili"></EL>
-//       <EL name="jone"></EL>
-//     </div>
-//   )
-// }
-
-// function Clock (props) {
-//   return (
-//     <div>{props.date}</div>
-//   )
-// }
-
-class Clock extends React.Component {
-  constructor (props) {
-    super(props);
-    this.state = {
-      date: new Date().toLocaleTimeString(),
-    }
-  }
-
-  componentDidMount () {
-    this.timer = setInterval(() => this.tick(), 1000);
-  }
-
-  componentWillUnmount () {
-    this.timer = null;
-  }
-
-  tick () {
-    this.setState({
-      date: new Date().toLocaleTimeString(),
-    })
-  }
-
-  render () {
+class TodoItem extends React.Component {
+  render() {
     return (
-      <div>{this.state.date}</div>
+      <div className="todo-item">
+        {this.props.content}
+        <button className="del-btn" onClick={() => this.props.delItem(this.props.index)}>X</button>
+      </div>
     )
   }
 }
 
-function tick () {
-  return ReactDOM.render(<Clock />, document.getElementById('root'));
+class Todo extends React.Component {
+  constructor () {
+    super()
+    this.state = {
+      todolist: [],
+      curtext: ''
+    }
+
+    this.addTodo = this.addTodo.bind(this)
+    this.onInputChange = this.onInputChange.bind(this)
+    this.ondelItem = this.ondelItem.bind(this)
+  }
+
+  render() {
+    return (
+      <div className="todo-container">
+        <input className="add-input" value={this.state.curtext} placeholder="please input contents" onChange={e => this.onInputChange(e)} />
+        <button className="add-btn" onClick={this.addTodo}>Add</button>
+        {this.renderTodoItems()}
+      </div>
+    );
+  }
+
+  renderTodoItems () {
+    if (this.state.todolist.length) {
+      return this.state.todolist.map((item,index) => (
+        <TodoItem content={item} index={index} delItem={this.ondelItem} key={getUniqueKey()} />
+      ))
+    }
+  }
+
+  addTodo() {
+    const todolist = this.state.todolist
+
+    if (this.state.curtext) {
+      todolist.push(this.state.curtext)
+      this.setState({
+        todolist,
+        curtext: ''
+      })
+    }
+  }
+
+  onInputChange(e) {
+    this.setState({
+      curtext: e.target.value
+    })
+  }
+
+  ondelItem(index) {
+    const todolist = this.state.todolist
+    todolist.splice(index, 1)
+    this.setState({
+      todolist
+    })
+  }
 }
 
-setInterval(tick, 1000);
-// ReactDOM.render(<App />, document.getElementById('root'));
+ReactDOM.render(
+  <Todo />,
+  document.getElementById('root')
+)
+
+function getUniqueKey() {
+  return ++getUniqueKey.curIndex
+}
+
+getUniqueKey.curIndex = 43
