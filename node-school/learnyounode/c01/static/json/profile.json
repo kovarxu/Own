@@ -1,0 +1,21 @@
+{
+  "ret": 0,
+  "errmsg": "",
+  "data": {
+    "name": "tink",
+    "age": 36,
+    "sex": "male",
+    "parents": [
+      {
+        "name": "jolt",
+        "age": 62,
+        "sex": "male"
+      },
+      {
+        "name": "mook",
+        "age": 64,
+        "sex": "femail"
+      }
+    ]
+  }
+}

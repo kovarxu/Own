@@ -11,16 +11,17 @@
 <body>
   <style id="css-con">
     .path {
-      stroke-dasharray: 100;
+      stroke-dasharray: 50 1000;
       stroke-dashoffset: 0;
-      animation: dash 5s linear infinite forwards;
+      animation: dash 3s linear infinite forwards;
     }
 
     @keyframes dash {
       to {
-        stroke-dashoffset: 1000;
+        stroke-dashoffset: -500;
       }
     }
+  
   </style>
 
   <div class="con">
@@ -52,7 +53,7 @@
   var svgCode = `
   <svg width="600" height="400">
     <desc>路径动画</desc>
-    <path class="path" d="m14,73c24,-51 89,-63 160,-69c71,-6 179,51 235,102c56,51 -108,153 -176,169c-68,16 -178,-72 -201,-89c-23,-17 -42,-62 -18,-113z"
+    <path class="path" d="m5,39c0,0 13,-35 37,-36c24,-1 29,36 29,36c0,0 15,-35 36,-35c21,0 25,36 25,36c0,0 8,-37 31,-37c23,0 22,36 22,36c0,0 17,-33 34,-32c17,1 19,34 19,34c0,0 18,-34 38,-33c20,1 23,32 21,33"
       fill="none" stroke="#333" stroke-width="3"
     />
   </svg>

@@ -9,9 +9,15 @@ const TEXTEXT = ['text', 'css', 'js', 'html', 'json', 'md']
 const pathDict = {}
 const cmdParams = process.argv.slice(2)
 let ENABLECORS = false
+let port = 8004
 
 if (cmdParams.includes('--cors')) {
   ENABLECORS = true
+}
+
+let pIndex = cmdParams.indexOf('-p')
+if (pIndex >= 0) {
+  port = cmdParams[++pIndex]
 }
 
 readDir('./static')
@@ -87,4 +93,4 @@ var server = http.createServer((req, res) => {
   })
 })
 
-server.listen(1337)
+server.listen(parseInt(port))
