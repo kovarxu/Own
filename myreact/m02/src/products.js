@@ -1,6 +1,6 @@
 import React from "react";
 import { connect } from "react-redux";
-import { getProducts } from "/action";
+import { getProducts } from "./store/action";
 
 class ProductList extends React.Component {
   componentDidMount() {

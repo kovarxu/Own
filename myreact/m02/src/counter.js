@@ -1,7 +1,7 @@
 import React from 'react';
 import {connect} from 'react-redux'
 
-import {increment, decrement, reset, getProducts} from './action'
+import {increment, decrement, reset} from './store/action'
 
 class Counter extends React.Component {
   // state = { count: 0 }
@@ -42,15 +42,14 @@ class Counter extends React.Component {
 
 function mapStateToProps (state) {
   return {
-    count: state.count
+    count: state.count.count
   }
 }
 
 const mapDispatchToProps = {
   increment,
   decrement,
-  reset,
-  getProducts
+  reset
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(Counter);

@@ -6,7 +6,7 @@ const initialState = {
 
 // never returns undefined from a reducer
 // Reducers must be pure functions.
-export function reducer(state=initialState, action) {
+export default function reducer(state=initialState, action) {
   console.log('reducer ', state, action)
   switch(action.type) {
     case INCREMENT:
