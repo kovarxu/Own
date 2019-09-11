@@ -24,10 +24,6 @@ class Counter extends React.Component {
     this.props.reset()
   }
 
-  componentDidMount () {
-    this.props.getProducts()
-  }
-
   render() {
     return (
       <div className="counter">
