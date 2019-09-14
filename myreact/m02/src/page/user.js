@@ -1,36 +1,33 @@
-import React from "react"
+import React, {useEffect} from "react"
 import { connect } from "react-redux"
-import { getUsers } from "./store/action"
+import { getUsers } from "../store/action"
 
 const User = (attr) => (Comp) => {
-  return class _U extends React.Component {
-    startTimer = 0
-    endTimer = 0
+  return function (props) {
+    useEffect(
+      () => {
+        props.dispatch(getUsers())
+      }, []
+    )
 
-    componentDidMount() {
-      this.props.dispatch(getUsers())
-    }
+    console.log(attr, props[attr])
+    if (isEmpty(props[attr])) {
+      return <div>Now Loading...</div>
+    } else {
+      return (
+        <React.Fragment>
+          <h4>Hear is a bunch of users' information</h4>
 
-    render() {
-      console.log(attr, this.props[attr])
-      if (isEmpty(this.props[attr])) {
-        return <div>Now Loading...</div>
-      } else {
-        return (
-          <React.Fragment>
-            <h4>Hear is a bunch of users' information</h4>
-
-            {this.props[attr].map(user => 
-              <Comp data={user} key={user.cell} />  
-            )}
-            
-            <div>
-              <p>---------------</p>
-              <p>the total comsumed time is: {this.props.endTimer - this.props.startTimer} ms.</p>
-            </div>
-          </React.Fragment>
-        )
-      }
+          {props[attr].map(user => 
+            <Comp data={user} key={user.cell} />  
+          )}
+          
+          <div>
+            <p>---------------</p>
+            <p>the total comsumed time is: {props.endTimer - props.startTimer} ms.</p>
+          </div>
+        </React.Fragment>
+      )
     }
   }
 }

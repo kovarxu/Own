@@ -1,4 +1,7 @@
 import React from 'react';
+import Rack from './rack'
+import Dustbin from './dustbin'
+import { Switch, Route } from "react-router-dom";
 
 const cardInfo = {
   i: {
@@ -59,16 +62,28 @@ function Floor() {
   )
 }
 
-export default class House extends React.Component {
-  render() {
-    return (
-       <div>
-        <Ceil />
-        <Furniture />
-        <MyContext.Provider value={cardInfo.j}>
-          <Floor />
-        </MyContext.Provider>
-      </div>
-    )
-  }
+function N404 () {
+  return (
+    <div className="N404">
+      <p>Ouch! This page doesn't exist!</p>
+    </div>
+  )
+}
+
+export default function House ({match}) {
+  return (
+    <div>
+      <Ceil />
+      <Furniture />
+      <MyContext.Provider value={cardInfo.j}>
+        <Floor />
+      </MyContext.Provider>
+
+      <Switch>
+        <Route path={`${match.path}/dustbin`} component={Dustbin} />
+        <Route path={`${match.path}/rack`} component={Rack} />
+        <Route component={N404} />
+      </Switch>
+    </div>
+  )
 }
