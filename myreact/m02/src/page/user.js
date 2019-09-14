@@ -15,7 +15,7 @@ const User = (attr) => (Comp) => {
       return <div>Now Loading...</div>
     } else {
       return (
-        <React.Fragment>
+        <div className="box">
           <h4>Hear is a bunch of users' information</h4>
 
           {props[attr].map(user => 
@@ -26,7 +26,7 @@ const User = (attr) => (Comp) => {
             <p>---------------</p>
             <p>the total comsumed time is: {props.endTimer - props.startTimer} ms.</p>
           </div>
-        </React.Fragment>
+        </div>
       )
     }
   }

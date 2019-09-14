@@ -1,4 +1,8 @@
 import React from 'react'
+import {
+  S_Want,
+  S_TopParagraph
+} from './want_style'
 
 const NOTICEINFOS = [
   'The price should be less than $50, and detail should be less than 200 words.',
@@ -24,9 +28,18 @@ class AddtionInfo extends React.Component {
   render () {
     return (
       <div>
-        <p>grade: <input type="number" onChange={this.onChangeGrade} /></p>
-        <p>address: <input /></p>
-        <p>tel: <input type="tel" /></p>
+        <p>
+          <label>grade:</label>
+          <input type="number" onChange={this.onChangeGrade} />
+        </p>
+        <p>
+          <label>address:</label>
+          <input />
+        </p>
+        <p>
+          <label>tel:</label>
+          <input type="number" />
+        </p>
         <Notice noticeRef={el => this.noticeRef = el} />
       </div>
     )
@@ -64,10 +77,10 @@ export default class Want extends React.Component {
 
   render () {
     return (
-      <div>
-        <p>
+      <S_Want>
+        <S_TopParagraph>
           <input data={this.state.name} onChange={this.changeDesireName} />
-        </p>
+        </S_TopParagraph>
         <fieldset>
           <legend>Your desire detail</legend>
 
@@ -83,7 +96,7 @@ export default class Want extends React.Component {
         </fieldset>
         <hr />
         <AddtionInfo/>
-      </div>
+      </S_Want>
     )
   }
 }
