@@ -23,7 +23,7 @@ module.exports = {
         loader: 'babel-loader'
       },
       {
-        test: /\.s?css/,
+        test: /\.css/,
         loaders: [
           'style-loader',
           {
@@ -37,8 +37,7 @@ module.exports = {
             options: {
               options: {},
             }
-          },
-          'sass-loader'
+          }
         ]
       },
       {
@@ -46,7 +45,8 @@ module.exports = {
         use: [{
           loader: 'file-loader',
           options: {
-            name: '[path][name].[ext]'
+            name: '[path][name].[ext]',
+            outputPath: resolve('dist/img')
           }
         }]
       },
@@ -59,9 +59,10 @@ module.exports = {
     ]
   },
   devServer: {
+    contentBase: './',
     host: 'localhost',
     port: '8001',
-    open: true
+    open: false
   },
   plugins: [
     new HtmlWebpackPlugin({
