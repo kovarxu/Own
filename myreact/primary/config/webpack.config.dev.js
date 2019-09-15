@@ -23,7 +23,7 @@ module.exports = {
         loader: 'babel-loader'
       },
       {
-        test: /\.css/,
+        test: /\.s?css/,
         loaders: [
           'style-loader',
           {
@@ -32,7 +32,13 @@ module.exports = {
               importLoaders: 1,
             },
           },
-          'postcss-loader'
+          {
+            loader: 'postcss-loader',
+            options: {
+              options: {},
+            }
+          },
+          'sass-loader'
         ]
       },
       {
