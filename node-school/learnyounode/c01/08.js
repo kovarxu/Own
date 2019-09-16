@@ -72,6 +72,7 @@ var server = http.createServer((req, res) => {
           if (ENABLECORS) { // the header must be set before the contents, or nothing will be received by the client
             res.writeHead(200, {'Access-Control-Allow-Origin': '*'})
           }
+          /* todo, add content-type */
 
           if (TEXTEXT.includes(path.extname(fullPath))) {
             res.write(pathDict[fullPath].toString())

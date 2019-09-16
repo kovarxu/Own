@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+  <style>
+    .img-container {height: 300px; border: 2px solid #ccc; border-radius: 3px; background: #eee;}
+  </style>
+</head>
+<body>
+  <div class="img-container"></div>
+
+  <script>
+    function select (selector) {
+      return document.querySelector(selector);
+    }
+
+    const imgContainer = select('.img-container');
+
+    imgContainer.ondragover = function (e) {
+      // By default, dom prevent something from dropping on it
+      e.preventDefault();
+    }
+
+    imgContainer.ondrop = function (e) {
+      e.preventDefault();
+
+      // attention: there is bug with the console, if we print e, e.dataTransfer.files will be an empty list, so as e.dataTransfer.items
+      // files are blobs
+      // { listModified, lastModifiedDate, name, size, type }
+      
+      const files = e.dataTransfer.files;
+
+      [].slice.call(files).forEach((file) => {
+        const reader = new FileReader;
+        // readAsArrayBuffer, readAsDataURL, readAsText
+        if (file.type.startsWith('image/')) {
+          reader.readAsDataURL(file);
+          reader.onloadend = function (e) {
+            let base64Result = reader.result;
+            if (base64Result) {
+              let img = document.createElement('img');
+              img.onload = function () {
+                imgContainer.appendChild(img);
+              }
+              img.src = base64Result;
+
+              // let canvas = document.createElement('canvas');
+              // let ctx = canvas.getContext('2d');
+              // canvas.width = imgEle.naturalWidth;
+              // canvas.height = imgEle.naturalHeight;
+              // ctx.drawImage(imgEle, 0, 0);
+              // let base64Result = canvas.toDataURL('image/jpeg', 0.8);
+            }
+          }
+        } else if (file.type.startsWith('text/')) {
+
+        } else {
+          // do not handle the other files
+        }
+      })
+    }
+
+    document.ondrop = function (e) {
+      // firefox open the file automatically
+      // e.stopPropagation();
+      e.preventDefault();
+    }
+
+  </script>
+</body>
+</html>
