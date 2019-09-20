@@ -161,7 +161,7 @@ function initTexture () {
 
   // async load an image
   let image = new Image()
-  image.src = 'http://127.0.0.1:9000/img/blueflower.jpg'
+  image.src = 'http://127.0.0.1:8062/imgs/blueflower.jpg'
   image.crossOrigin = 'anonymous'
   image.onload = function () {
     gl.bindTexture(gl.TEXTURE_2D, texture)

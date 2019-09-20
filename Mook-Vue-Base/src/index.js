@@ -1,5 +1,5 @@
 import Vue from 'vue'
-// import App from './app.vue'
+import App from './app.vue'
 
 // import './assets/styles/global.styl'
 // import './assets/images/sky.jpg'
@@ -13,11 +13,6 @@ document.body.appendChild(root)
 //     el.style.color = 'blue'
 //   }
 // })
-
-const App = {
-  name: 'app',
-  template: '<div>I am an app</div>'
-}
 
 const v = new Vue({
   render: h => h(App)

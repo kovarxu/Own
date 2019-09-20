@@ -1,6 +1,6 @@
-function getMainCanvas () {
+function getMainCanvas (id="mc") {
   let c
-  if (c = document.querySelector('#mc')) {
+  if (c = document.querySelector('#'+id)) {
     return c
   } else {
     _warn('找不到根canvas元素！')

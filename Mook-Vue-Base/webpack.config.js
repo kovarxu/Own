@@ -11,7 +11,7 @@ const config = {
   target: 'web',
   entry: path.join(__dirname, 'src/index.js'),
   output: {
-    filename: 'bundle.[hash:8].js',
+    filename: 'bundle.js',
     path: path.join(__dirname, 'dist')
   },
   module: {
@@ -56,6 +56,11 @@ const config = {
 // 开发环境代码devserver配置
 if (isDev) {
   // 开发环境stylus文件无需单独打包
+  config.entry = {
+    // 单独打包类库文件
+    app: path.join(__dirname, 'src/index.js'),
+    vendor: ['vue']
+  }
   config.module.rules.push({
     test: /\.styl(us)?$/,
     use: [
