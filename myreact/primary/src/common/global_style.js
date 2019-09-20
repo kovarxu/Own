@@ -9,9 +9,8 @@ ol,ul{list-style:none}
 button,h1,h2,h3,h4,h5,h6,input,select{font-size:100%;font-family:inherit}
 table{border-collapse:collapse;border-spacing:0}
 a{text-decoration:none;color:#333}
-a:hover{text-decoration:underline;}
 html{font-size:10px}
-body{margin:0 auto;min-width:320px;max-width:750px;background:#FFF;font: 14px/1.5 "Helvetica Neue",Helvetica,"Microsoft Yahei",Arial,"Hiragino Sans GB","Heiti SC","WenQuanYi Micro Hei",sans-serif;line-height:1.4;color:#666;-webkit-text-size-adjust:100%!important;-webkit-user-select:none;user-select:none;background-color:#fff;line-height: 1.5}
+body{margin:0 auto;background:#FFF;font: 14px/1.5 "Helvetica Neue",Helvetica,"Microsoft Yahei",Arial,"Hiragino Sans GB","Heiti SC","WenQuanYi Micro Hei",sans-serif;line-height:1.4;color:#666;-webkit-text-size-adjust:100%!important;-webkit-user-select:none;user-select:none;background-color:#fff;line-height: 1.5}
 input[type=text],input[type=tel],textarea{-webkit-appearance:none}
 .h,.hide{display:none!important}
 .show{display:block!important}

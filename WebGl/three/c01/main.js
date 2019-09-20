@@ -23,9 +23,7 @@ function main() {
   const cubes = [];  // just an array we can use to rotate the cubes
   const loader = new THREE.TextureLoader();
 
-  // const material = new THREE.MeshBasicMaterial({
-  //   map: loader.load('http://127.0.0.1:8062/imgs/greg/flower-1.jpg'),
-  // });
+  // add cube 1, render from image textures
   const materials = [
     new THREE.MeshBasicMaterial({ map: loader.load('http://127.0.0.1:8062/imgs/greg/flower-1.jpg') }),
     new THREE.MeshBasicMaterial({ map: loader.load('http://127.0.0.1:8062/imgs/greg/flower-2.jpg') }),
@@ -36,8 +34,24 @@ function main() {
   ]
 
   const cube = new THREE.Mesh(geometry, materials);
+  cube.position.x = 1
   scene.add(cube);
   cubes.push(cube);  // add to our list of cubes to rotate
+
+  // todo add cube2, use inner textures
+  const material2 = new THREE.MeshPhongMaterial({ color: 0x44AA88 })
+  const cube2 = new THREE.Mesh(geometry, material2)
+  cube2.position.x = -1
+  scene.add(cube2)
+  cubes.push(cube2)
+
+  {
+    const color = 0xFFFFFF;
+    const intensity = 1;
+    const light = new THREE.DirectionalLight(color, intensity);
+    light.position.set(-1, 2, 4);
+    scene.add(light);
+  }
 
   function resizeRendererToDisplaySize(renderer) {
     const canvas = renderer.domElement;
@@ -60,7 +74,7 @@ function main() {
     }
 
     cubes.forEach((cube, ndx) => {
-      const speed = .2 + ndx * .1;
+      const speed = .3 + ndx * .1;
       const rot = time * speed;
       cube.rotation.x = rot;
       cube.rotation.y = rot;

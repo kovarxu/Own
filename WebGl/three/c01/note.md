@@ -23,6 +23,10 @@ camera.position.z = 2;
 ```
 
 3.create a scene, an object(includeing mesh) and put it into the scene
+3.1 get the geometry vertices information
+3.2 create a loader and load the basic material
+3.3 mesh the material to the geometry
+3.4 add the object to the scene
 
 ```javascript
 const scene = new THREE.Scene();
@@ -43,6 +47,18 @@ const cube = new THREE.Mesh(geometry, materials);
 scene.add(cube);
 cubes.push(cube);  // add to our list of cubes to rotate
 
+```
+
+3.x maybe you need some light
+
+```javascript
+{
+  const color = 0xFFFFFF;
+  const intensity = 1;
+  const light = new THREE.DirectionalLight(color, intensity);
+  light.position.set(-1, 2, 4);
+  scene.add(light);
+}
 ```
 
 4.change view size
@@ -76,7 +92,7 @@ if (resizeRendererToDisplaySize(renderer)) {
 
 * materials usage
 
-It should be noted though that not all geometry types supports multiple materials. BoxGeometry and BoxBufferGeometry can use 6  materials one for each face. ConeGeometry and ConeBufferGeometry can use 2 materials, one for the bottom and one for the cone.  CylinderGeometry and CylinderBufferGeometry can use 3 materials, bottom, top, and side.
+It should be noted though that not all geometry types supports multiple materials. `BoxGeometry` and `BoxBufferGeometry` can use 6  materials one for each face. `ConeGeometry` and `ConeBufferGeometry` can use 2 materials, one for the bottom and one for the cone.  `CylinderGeometry` and `CylinderBufferGeometry` can use 3 materials, bottom, top, and side.
 
 
 

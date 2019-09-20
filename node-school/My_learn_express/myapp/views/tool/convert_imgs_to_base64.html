@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Convert Image to Base64</title>
+  <style>
+    .file-selector {display: block; width: 200px; line-height: 30px; background: #6495ed; color: #fff; margin-bottom: 20px;}
+    .mip-image {max-width: 150px; max-height: 100px; margin-bottom: 10px;}
+    .result {user-select: all; margin-bottom: 30px; padding: 3px 8px; border: 1px solid #6495ed; border-right: none; border-radius: 3px;}
+  </style>
+</head>
+<body>
+  <input class="file-selector" type="file" placeholder="选择图片" accept="image/png, image/jpeg" multiple />
+    
+  <script>
+    function select (selector) {
+      return document.querySelector(selector);
+    }
+
+    const fileSelector = select('.file-selector');
+
+    fileSelector.onchange = function () {
+      const files = fileSelector.files;
+      [].slice.call(files).forEach((imgEle) => {
+        let reader = new FileReader;
+        reader.readAsDataURL(imgEle);
+        reader.onloadend = function () {
+          let base64Result = reader.result;
+
+          let newImage = document.createElement('img');
+          newImage.classList.add('mip-image');
+          newImage.src = base64Result;
+
+          document.body.appendChild(newImage);
+          
+          let newResult = document.createElement('div');
+          newResult.classList.add('result');
+          newResult.innerHTML = base64Result;
+
+          document.body.appendChild(newResult);
+        }
+      })
+    }
+  </script>
+</body>
+</html>

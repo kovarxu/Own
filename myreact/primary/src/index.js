@@ -5,22 +5,13 @@ import { Provider } from 'react-redux'
 import store from './store'
 import GlobalStyle from './common/global_style'
 
-const App = () => (
-  <div>
-    <h1>App</h1>
-    <ul>
-      <li><Link to="/counter">Counter</Link></li>
-      <li><Link to="/products">Products</Link></li>
-      <li><Link to="/user">User</Link></li>
-      <li><Link to="/house">House</Link></li>
-      <li><Link to="/want">Want</Link></li>
-    </ul>
-  </div>
-)
+import Home from './page/home'
+import Blog from './page/blog'
 
 const AppRouter = () => (
   <Router>
-    <Route exact path="/" component={App} />
+    <Route exact path="/" component={Home} />
+    <Route exact path="/blog" component={Blog} />
   </Router>
 )
 
@@ -30,5 +21,4 @@ ReactDOM.render(
     <AppRouter />
   </Provider>,
   document.getElementById('root')
-);
-
+)
