@@ -76,7 +76,7 @@ if (isDev) {
     ]
   })
   // 设置devtool的模式
-  config.devtool = '#cheap-module-eval-source-map'
+  config.devtool = '#source-map'
   config.devServer = {
     port: 8000,
     host: '127.0.0.1',
