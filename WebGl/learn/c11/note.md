@@ -93,8 +93,8 @@ const gl = {
   activeTexture: function (index) {
     this.activeTextureUnit = index - gl.TEXTURE0
   },
-  bindTexture: function (target, texture) {
-    this.activeTextureUnit[target] = texture
+  bindTexture: function (TARGETNAME, texture) {
+    this.textureUnits[activeTextureUnit][TARGETNAME] = texture
   }
 }
 /* pseudo code end */
@@ -112,7 +112,7 @@ gl.activeTexture(gl.TEXTURE0 + indexOfTextureUnit);
 gl.bindTexture(gl.TEXTURE_2D, ourTexture);
 
 // max number of textures supported, at least 32
-gl.getParameter(gl.AX_COMBINED_TEXTURE_IMAGE_UNITS); // 32
+gl.getParameter(gl.MAX_COMBINED_TEXTURE_IMAGE_UNITS); // 32
 // different shaders have different number
 gl.getParameter(gl.MAX_VERTEX_TEXTURE_IMAGE_UNITS); // 16
 gl.getParameter(gl.MAX_TEXTURE_IMAGE_UNITS); // 16

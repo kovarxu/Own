@@ -121,8 +121,8 @@ function initTexture () {
 
   // async load images
   importMultiImages([
-    'http://127.0.0.1:9000/img/blueflower.jpg',
-    'http://127.0.0.1:9000/img/mask1.png',
+    'http://127.0.0.1:8062/imgs/blueflower.jpg',
+    'http://127.0.0.1:8062/imgs/mask1.png',
   ], loadTexture, render)
 }
 
