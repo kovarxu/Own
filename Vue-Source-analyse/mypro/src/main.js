@@ -1,4 +1,5 @@
 import Vue from 'vue'
+import App from './App.vue'
 
 /* eslint-disable no-new */
 new Vue({
@@ -8,6 +9,10 @@ new Vue({
       message: 'message AV'
     }
   },
+  template: `<App class="maee" :message="message" />`,
+  components: {
+    App
+  }
   // render (createElement) {
   //   return createElement('div', {
   //     attrs: {
@@ -15,5 +20,5 @@ new Vue({
   //     }
   //   }, 'I am an app')
   // },
-  template: `<div>{{ message }}</div>`
+  // template: `<div>{{ message }}</div>`
 })
