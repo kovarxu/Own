@@ -1,14 +1,21 @@
 <template>
   <div id="app">
-    <img src="./assets/logo.png">
+    <img src="./assets/logo.png" ref="logoImg">
     <div>I am vue</div>
-    <router-view/>
+    <div>{{ messageBox }}</div>
   </div>
 </template>
 
 <script>
 export default {
-  name: 'App'
+  name: 'App',
+  props: ['message-box'],
+  mounted () {
+    console.log(
+      'component: app is mounted' + 
+      'log img is ready: ', this.$refs.logoImg.complete
+      )
+  }
 }
 </script>
 
