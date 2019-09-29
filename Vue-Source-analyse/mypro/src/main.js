@@ -9,16 +9,28 @@ new Vue({
       message: 'message AV'
     }
   },
-  template: `<App class="maee" :message="message" />`,
+  mounted () {
+    console.log('root component has mounted')
+  },
+  template: `<App class="maee" :message-box="message" link="go" alias="100" />`,
   components: {
     App
   }
-  // render (createElement) {
-  //   return createElement('div', {
-  //     attrs: {
-  //       id: '#acc'
-  //     }
-  //   }, 'I am an app')
-  // },
-  // template: `<div>{{ message }}</div>`
 })
+
+// Vue.component('my-app', {
+//   functional: true,
+//   props: {
+//     type: { type: String, default: 'mean' }
+//   },
+//   render (createElement, context) {
+//     console.log('context', context.data)
+//     return createElement('div', 'Aha')
+//   }
+// })
+
+// new Vue({
+//   el: "#app",
+//   name: 'App',
+//   template: `<my-app />`
+// })
