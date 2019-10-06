@@ -5,9 +5,9 @@ function onload () {
   var detail = skeletons.querySelector('.skeleton.detail')
   var create = skeletons.querySelector('.skeleton.create')
 
-  list.parentNode.removeChild(list)
+  // list.parentNode.removeChild(list)
   detail.parentNode.removeChild(detail)
-  // create.parentNode.removeChild(create)
+  create.parentNode.removeChild(create)
 
   skeletons.style['display'] = 'block'
 }
