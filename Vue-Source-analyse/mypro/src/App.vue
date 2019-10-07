@@ -1,7 +1,7 @@
 <template>
   <div id="app">
     <img src="./assets/logo.png" ref="logoImg">
-    <div ref="foo">{{ bar }}</div>
+    <div v-graybg:good="123" ref="foo">{{ bar }}</div>
     <div>{{ messageBox }}</div>
   </div>
 </template>
@@ -38,6 +38,7 @@ export default {
     setTimeout(() => {
       console.log('---- this is in setTimeout')
     })
+
   }
 }
 </script>
