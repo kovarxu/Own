@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+  <style>
+    .icon-arrow-right {
+      width: 6px;
+      height: 9px;
+      stroke: blue;
+    }
+    .it .icon-arrow-right {
+      stroke: orange;
+    }
+    .icon-bdtt{
+      width: 10px;
+      height: 10px;
+    }
+  </style>
+</head>
+<body>
+  <!-- 在页面中使用svg -->
+  <svg 
+      xmlns="http://www.w3.org/2000/svg" 
+      xmlns:svg="http://www.w3.org/2000/svg" class="icon"
+      style="display: none;"
+  >
+    <symbol viewBox="0 0 61 102">
+      <title>arrow right</title>
+      <path id="svg_arrow_right" fill="none" stroke-linejoin="round" stroke-width="18" d="m5,5l52,45l-52,45"/>
+    </symbol>
+    
+    <symbol viewBox="0 0 80 80">
+      <g id="m_circle">
+        <circle cx="40" cy="40" r="40" stroke="none" 
+        fill="#6495ed" mask="url(#m_mask)" />
+        <circle cx="50" cy="20" r="10" fill="#3574ac" />
+      </g>
+    </symbol>
+  </svg>
+
+  <div>这是一些文本 <svg class="icon-arrow-right" viewBox="0 0 61 102"><use href="#svg_arrow_right" /></svg></div>
+  <div class="it">这是一些文本 <svg class="icon-arrow-right" viewBox="0 0 61 102"><use href="#svg_arrow_right" /></svg></div>
+  <div></div>
+  <div>这不是一些文本 <svg class="icon-bdtt" viewBox="0 0 80 80"><use href="#m_circle" /></svg></div>
+  <div>这不是一些文本 <svg class="icon-bdtt" viewBox="0 0 80 80"><use href="#m_circle" /></svg></div>
+</body>
+</html>

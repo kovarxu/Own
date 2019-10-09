@@ -1,0 +1,12 @@
+<svg 
+    viewBox="0 0 61 100"
+    xmlns="http://www.w3.org/2000/svg" 
+    xmlns:svg="http://www.w3.org/2000/svg" class="icon"
+    id="svg_arrow_right"
+    style="display: none;"
+>
+ <g>
+  <title>arrow right</title>
+  <path fill="none" stroke="blue" stroke-linejoin="round" stroke-width="18" d="m5,5l52,45l-52,45"/>
+ </g>
+</svg>
