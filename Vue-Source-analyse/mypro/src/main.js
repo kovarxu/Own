@@ -1,6 +1,20 @@
 import Vue from 'vue'
 import App from './App.vue'
 
+Vue.directive('graybg', {
+  bind: (el, binding) => {
+    el.style.backgroundColor = "#666"
+    console.log('binding: ', binding)
+  },
+  update: (el, binding) => {
+    el.style.backgroundColor = "#666"
+    console.log('binding: ', binding)
+  },
+  inserted: (el, binding) => {
+    console.log('directive inserted')
+  }
+})
+
 /* eslint-disable no-new */
 new Vue({
   el: '#app',
