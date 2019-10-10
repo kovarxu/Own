@@ -15,6 +15,11 @@ export default {
       bar: 'I am Vue'
     }
   },
+  computed: {
+    cbox () {
+      return this.bar.substr(0, 4)
+    }
+  },
   watch: {
     bar (newVal, oldVal) {
       console.log(newVal + ' || The old version is ' + oldVal)
@@ -39,6 +44,11 @@ export default {
       console.log('---- this is in setTimeout')
     })
 
+  },
+  methods: {
+    fee () {
+      console.log('wang!')
+    }
   }
 }
 </script>
