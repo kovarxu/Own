@@ -48,7 +48,9 @@ var attribs = {
 };
 twgl.createVAOAndSetAttributes(gl, attribSetters, attribs, buffers.indices);
 ```
+
 we need attribute locations and corresponding buffers to 
+
 1. create the VAO
 2. enable attribute
 3. link buffer and attribute
@@ -63,6 +65,7 @@ uniformSetters is an array of `u_xxx` like key-value object.
 this function will search in `uniforms` and match the same name in `uniformSetters`, if not match, skip it.
 
 ## twgl.createBufferInfoFromArrays(gl, arrays)
+
 ## twgl.createVAOFromBufferInfo(gl, setters, bufferInfo)
 
 ```javascript

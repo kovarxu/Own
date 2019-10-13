@@ -1,6 +1,5 @@
-// 3. 终极版本Pro
-// 支持穿透、promise.all, then中返回promise
-// 返回之前定义的promise, 返回TypeError
+// 4. 终极版本Pro
+// 满足Promise A+ 规范
 
 var $uid = 0
 var PENDING = 'pending'
@@ -28,11 +27,13 @@ function Pro(fns) {
 function resolve(res) {
     this.value = res
     this.status = FULFILLED
+    return this.status
 }
 
 function reject(rej) {
     this.value = rej
     this.status = REJECTED
+    return this.status
 }
 
 
@@ -41,8 +42,8 @@ Pro.prototype.then = function(onFulfilled, onRejected) {
 
     let newp = Pro.resolve(value)
     newp.status = PENDING
-    newp.res = onFulfilled
-    newp.rej = onRejected
+    newp.res = typeof onFulfilled === 'function' ? onFulfilled : null
+    newp.rej = typeof onRejected === 'function' ? onRejected : null
     newp.ps = this.ps.concat(newp.ps)
     newp.isthen = true
 
@@ -58,30 +59,43 @@ Pro.prototype.then = function(onFulfilled, onRejected) {
             if (!curp.isthen && curp.status === PENDING) {
                 setTimeout(timerFunc)
             } else {
+                if (!curp.isthen) curStatus = curp.status
+
                 let method = curStatus === REJECTED ? 'rej' : 'res'
 
                 try {
                     if (curp[method]) {
                         value = curp[method].call(null, value)
+                        curStatus = resolve.call(curp, value)
                     } else if (!curp.isthen) {
                         value = curp.value
                     } else {
                         // do nothing but pass down
-                        
+                        if (curStatus === FULFILLED) resolve.call(curp, value)
+                        else if (curStatus === REJECTED) reject.call(curp, value)
                     }
-                    curStatus = FULFILLED
-                    resolve.call(curp, value)
                 } catch (e) {
                     curStatus = REJECTED
                     reject.call(curp, value)
                 }
 
-                if (value && value.__proto__ === Pro.prototype) {
-                    if (value._uid <= curp._uid)
-                        throw new TypeError('can not set chain promise')
-                    newp.ps = value.ps.concat(newp.ps)
-                    // prevent execution of Pros in then
-                    clearTimeout(value.timer)
+                if (curp.isthen && value) {
+                    if (typeof value.then === 'function' && value.__proto__ !== Pro.prototype) {
+                        value = new Pro(value.then)
+                    }
+
+                    if (value.__proto__ === Pro.prototype) {
+                        if (value._uid <= curp._uid)
+                            throw new TypeError('can not set chain promise')
+
+                        curp.status = PENDING
+                        curp.rej = curp.res = null
+                        value.ps.push(curp)
+
+                        newp.ps = value.ps.concat(newp.ps)
+                        // prevent execution of Pros in then
+                        clearTimeout(value.timer)
+                    }
                 }
 
                 if (newp.ps.length) {
@@ -90,8 +104,7 @@ Pro.prototype.then = function(onFulfilled, onRejected) {
                 }
             }
         }
-    }
-    )
+    })
 
     return newp
 }
@@ -113,6 +126,9 @@ Pro.reject = function(err) {
 var p1 = new Pro((resolve, reject) => {resolve(1)}).then()
 .then(data => console.log(data))
 var p2 = new Promise((resolve, reject) => {resolve(1)})
+
+
+// -----------------------------------
 
 Promise.resolve = function (data) {
     return new Promise((res, rej) => {res(data)})
