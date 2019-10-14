@@ -97,17 +97,15 @@ Dep.prototype.notify = function () {
 let callbacks = []
 let waiting = false
 
-function Watcher (obj, exp, cb) {
+function Watcher (obj, exp, cb, deep) {
   this.obj = obj
   this.deps = []
   this.exp = exp
+  this.deep = deep
   this.id = $watid++
   let value = this.get()
-  if (typeof value === 'object') {
-    this.value = Object.assign({}, value)
-  } else {
-    this.value = value
-  }
+  this.value = value
+  if (this.deep) traverse(value)
   this.cb = cb
   Watcher._watchers.push(this)
 }
@@ -140,12 +138,7 @@ Watcher.prototype.update = function() {
   let val = this.get()
   let oldVal = this.value
   if (val !== oldVal || typeof val === 'object') {
-    if (typeof val === 'object') {
-      this.value = Object.assign({}, val)
-    } else {
-      this.value = val
-    }
-
+    this.value = val
     if (typeof this.cb === 'function') {
       callbacks.push(() => this.cb.call(this.obj, val, oldVal))
     }
@@ -159,6 +152,41 @@ Watcher.prototype.update = function() {
         waiting = false
       })
     }
+  }
+}
+
+var seenObjects = new Set()
+
+function traverse (val) {
+  _traverse(val, seenObjects)
+  seenObjects.clear()
+}
+
+function _traverse (val, seen) {
+  if (val && typeof val === 'object' && Object.keys(val).length) {
+    Object.keys(val).forEach(key => {
+      let v = val[key]
+      let isA = Array.isArray(v)
+      let isObject = val && typeof val === 'object'
+      if ((!isA && !isObject) || Object.isFrozen(val)) {
+        return
+      }
+      if (v.__ob__) {
+        var depId = v.__ob__.dep.id
+        if (seen.has(depId)) {
+          return 
+        }
+        seen.add(depId)
+      }
+      if (isA) {
+        i = val.length;
+        while (i--) { _traverse(val[i], seen) }
+      } else {
+        keys = Object.keys(val);
+        i = keys.length;
+        while (i--) { _traverse(val[keys[i]], seen) }
+      }
+    })
   }
 }
 
@@ -179,7 +207,7 @@ let bar = [1, 2, {go: 999}, 4]
 
 let b = new Observer(bar)
 
-new Watcher(bar, '', (val, oldVal) => console.log(`list `, val, oldVal))
+new Watcher(bar, '', (val, oldVal) => console.log(`list `, val.length, oldVal.length))
 b.dep.depend()
 
 bar.push(0)
