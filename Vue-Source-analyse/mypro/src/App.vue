@@ -17,16 +17,12 @@ export default {
         a: 1,
         b: 2,
         c: ['a','b']
-      },
-      nl: [1,2,3]
+      }
     }
   },
   computed: {
     cbox () {
       return this.bar.substr(0, 4)
-    },
-    c_obj () {
-      return this.d_obj
     }
   },
   watch: {
@@ -38,9 +34,6 @@ export default {
       handler: function (val, oldval) {
         console.log('db updated: ', val, oldval)
       }
-    },
-    nl (newVal, oldVal) {
-      console.log('nl updated: ', newVal, oldVal)
     }
   },
   mounted () {
@@ -63,10 +56,7 @@ export default {
     // })
     this.bar = 'xxxyyyzzz'
     console.log('cbox', this.cbox)
-
-    this.db.c.pop()
-
-    this.nl.pop()
+    console.log('db', this)
   },
   methods: {
     fee () {
