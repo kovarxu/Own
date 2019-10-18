@@ -1,5 +1,7 @@
 <template>
   <div id="app">
+    <div v-if="hasInited">Inited</div>
+    <span v-else>Loading</span>
     <img src="./assets/logo.png" ref="logoImg">
     <div v-graybg:good="123" ref="foo">{{ bar }}</div>
     <div>{{ messageBox }}</div>
@@ -18,7 +20,8 @@ export default {
         b: 2,
         c: ['a','b']
       },
-      nl: [1,2,3]
+      nl: [1,2,3],
+      hasInited: false
     }
   },
   computed: {
@@ -58,9 +61,10 @@ export default {
     // this.$nextTick(() => {
     //   console.log('----- this is in nextTick ')
     // })
-    // setTimeout(() => {
-    //   console.log('---- this is in setTimeout')
-    // })
+    setTimeout(() => {
+      this.hasInited = true
+      console.log('---- this is in setTimeout')
+    })
     this.bar = 'xxxyyyzzz'
     console.log('cbox', this.cbox)
 

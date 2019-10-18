@@ -4,13 +4,16 @@ import App from './App.vue'
 Vue.directive('graybg', {
   bind: (el, binding) => {
     el.style.backgroundColor = "#666"
+    // debugger
     console.log('binding: ', binding)
   },
   update: (el, binding) => {
+    //  debugger
     el.style.backgroundColor = "#666"
     console.log('binding: ', binding)
   },
   inserted: (el, binding) => {
+    //  debugger
     console.log('directive inserted')
   }
 })
