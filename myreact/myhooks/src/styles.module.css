@@ -1,0 +1,44 @@
+.slotRoot:hover {
+  background: rgba(245, 49, 104, 0.3) !important;
+}
+
+.slotRootStatic:hover {
+  background: rgba(100, 100, 100, 0.07) !important;
+}
+
+.slotInnerRoot:hover {
+  filter: brightness(80%);
+}
+
+.slotQuoteInput::placeholder {
+  color: #fff;
+  font-size: 0.9rem;
+}
+
+.slotQuoteInputAttention {
+  transition: all 1s ease-out;
+  animation: emptyAuthor 3s infinite;
+  border: 1px solid #91ffde !important;
+}
+
+.slotQuoteInputAttention::placeholder {
+  color: #91ffde !important;
+}
+
+.slotQuoteInputAttention:hover,
+.slotQuoteInputAttention:focus,
+.slotQuoteInputAttention:active {
+  transform: scale(1.1);
+}
+
+@keyframes emptyAuthor {
+  0% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
