@@ -1,0 +1,27 @@
+#!/bin/sh
+# test pre merge behaviors
+
+# $0 ./git/hooks/prepare-commit-msg
+# $1 ./git/MERGE_MSG
+# $2 merge 
+echo $2
+BLACKLIST=("beta" "gamma")
+if [[ $2 == merge ]]; then
+  merge_msg=`cat ./.git/MERGE_MSG`
+  merge_to=`echo ${merge_msg} | grep -oP "\'\K\w+"`
+  echo ${merge_msg}
+  cur_branch=`echo ${merge_msg} | grep -oP "into\s\K\S+"`
+
+  echo "${merge_to}"
+  for i in "${BLACKLIST[@]}"; do
+    if [[ ${i} == ${merge_to} ]]; then
+      echo -e "\033[41;37m 你又想干坏事了？ \033[0m"
+      echo -e "\033[41;37m You want to mess something up? \033[0m"
+      echo -e "你现在的分支是${cur_branch}，你想把${merge_to}分支合并到你的分支"
+      echo -e "请使用 merge --abort 命令终止合并"
+    fi
+  done
+  exit 1
+fi
+
+exit 1

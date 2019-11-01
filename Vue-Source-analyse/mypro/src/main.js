@@ -18,29 +18,38 @@ Vue.directive('graybg', {
   }
 })
 
-Vue.component('com-a', {
-  data: {
-    opacity: 1
-  },
-  methods: {
-    toggleOpacity () {
-      this.opacity = this.opacity === 1 ? 0.6 : 1
-      console.log('clicked' + this.opacity)
+Vue.component('MyTem', {
+  data () {
+    return {
+      isShow: true,
+      myClass: { mc: true },
+      fly: 'sky'
     }
   },
-  props: ['content'],
-  // template: `<div @click="toggleOpacity">{{ content }}</div>`
-  render (h) {
-    return h('div', {
-      on: {
-        click: this.toggleOpacity
-      }
-    }, this.opacity || 'no opacity')
-  }
+  template: `
+    <div v-if="isShow" data-is="wrapper-A" class="static-class" :class="myClass">
+      <header>I am a header of the < {{fly}}</header>
+      <div>
+        <p v-if="isShow">isShow is true</p>
+        <p v-else-if="fly">I can fly in {{fly}}</p>
+        <p v-else>Can not show and fly. Stupid you!</p>
+      </div>
+      <div data-track="luvi">
+        <p>this is a broken p tag
+        <div>I am div1</div>
+        <p>
+          I am a normal tag
+          <div>I am div2</div>
+        </p>
+        </br>
+        <div style="color: cornflowerblue;"> I am the end</div>
+      </div>
+    </div>
+  `
 })
 
 /* eslint-disable no-new */
-new Vue({
+var myvue = new Vue({
   el: '#app',
   data () {
     return {
@@ -51,14 +60,19 @@ new Vue({
     console.log('root component has mounted')
   },
   // template: `<App class="maee" :message-box="message" link="go" alias="100" />`,
-  template: `
-    <div>
-      <com-a content="I love animals" />
-      <com-a content="I love food" />
-      <com-a content="I love wool" />
-    </div>
-  `,
+  template: `<my-tem />`,
   components: {
     App
   }
 })
+
+// console.log('app', App)
+// // var myvue = new App()
+// var myApp = Vue.extend(App)
+// var myvue = new myApp()
+
+// new Promise((resolve, reject) => {
+//   setTimeout(() => resolve(1), 5000)
+// }).then((data) => {
+//   myvue.$mount('#app')
+// })
