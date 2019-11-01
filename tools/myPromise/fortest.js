@@ -1,13 +1,22 @@
-var Pro = require('./etest')
+var Promise = require('./demo')
 
-var p2 = new Pro((res, rej) => {
-    var oldRes = res
-    res = function(...arg) {console.log('x'); oldRes.apply(null, arg)}
-    
-    res('0')
-    console.log('1')
-}).then((data) => {
-    console.log('2')
-})  
-console.log('3')
-var s = setTimeout(() => console.log('4'))
+new Promise((resolve, reject) => {
+    console.log("log: 外部promise");
+    resolve();
+  })
+    .then(() => {
+      console.log("log: 外部第一个then");
+      new Promise((resolve, reject) => {
+        console.log("log: 内部promise");
+        resolve();
+      })
+        .then(() => {
+          console.log("log: 内部第一个then");
+        })
+        .then(() => {
+          console.log("log: 内部第二个then");
+        });
+    })
+    .then(() => {
+      console.log("log: 外部第二个then");
+    });

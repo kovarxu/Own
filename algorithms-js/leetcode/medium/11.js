@@ -1,6 +1,6 @@
-// https://leetcode.com/problems/remove-nth-node-from-end-of-list/
-// Given a linked list, remove the n-th node from the end of list and return its head.
-
+// https://leetcode.com/problems/swap-nodes-in-pairs/submissions/
+// Given a linked list, swap every two adjacent nodes and return its head.
+// You may not modify the values in the list's nodes, only nodes itself may be changed.
 /**
  * Definition for singly-linked list.
  * function ListNode(val) {
@@ -10,38 +10,48 @@
  */
 /**
  * @param {ListNode} head
- * @param {number} n
  * @return {ListNode}
  */
-var removeNthFromEnd = function(head, n) {
-  let save = head, cur = head
-  while (cur) {
-    if (n-- < 0) {
-      save = save.next
-    }
-    cur = cur.next
-  }
-  // important, the element is the head
-  if (n == 0) {
-    head = head.next
-  }
-  else if (save) {
-    let del = save.next
-    save.next = del.next
-  }
-  ret
+// recussion
+var swapPairs = function(head) {
+  let newHead = gen(head)
+  return newHead
+};
 
-function ListNode(val) {
-  this.val = val;
-  this.next = null;
+function gen(cur) {
+  if (!cur) return cur
+  let next = cur.next
+  if (next) {
+    let pre = next.next
+    next.next = cur
+    cur.next = gen(pre)
+    return next
+  }
+  return cur
 }
 
-var a = ListNode(1)
-var b = ListNode(2)
-var c = ListNode(3)
-var d = ListNode(4)
-var e = ListNode(5)
+// for
+var swapPairs = function(head) {
+  let cur = head, next, res
+  let newHead = null
+  while (cur) {
+    next = cur.next
+    if (next) {
+      pre = next.next
 
-a.next = b; b.next = c; c.next = d; d.next = e
+      next.next = cur
+      if (res) res.next = next
+      if (!newHead) newHead = next
+      cur.next = null
+      res = cur
 
-console.log(removeNthFromEnd(a, 2))
+      cur = pre
+    } else if (res) {
+      res.next = cur
+      cur = next
+    } else {
+      return cur
+    }
+  }
+  return newHead
+};
