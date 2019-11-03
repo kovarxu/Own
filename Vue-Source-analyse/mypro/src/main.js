@@ -48,21 +48,63 @@ Vue.component('MyTem', {
   `
 })
 
+var MyA = Vue.extend({
+  data() {
+    return {
+      name: 'kovar',
+      age: 25,
+      job: 'programmer',
+      address: {
+        c1: '广东省',
+        c2: '深圳市'
+      },
+      id: {
+        cert: "430X",
+        car: '878',
+        dog: 'abxxx335'
+      }      
+    }
+  },
+  template: `<div>age: {{ age }}</div>`
+})
+
+var MyB = MyA.extend({
+  data() {
+    return {
+      age: 27,
+      id: {
+        cert: '980',
+        bird: 'sfdyyy'
+      }
+    }
+  },
+  mounted () {
+    console.log(this.$data)
+  },
+  template: `<div>age: {{ age }}</div>`
+})
+
+Vue.component('MyTreak', {
+  data: {
+    message: 'I am a message'
+  },
+  template: `rendered message: {{ message }}`
+})
+
 /* eslint-disable no-new */
 var myvue = new Vue({
   el: '#app',
-  data () {
-    return {
-      message: 'message AV'
-    }
+  data: {
+    message: 'message AV'
   },
   mounted () {
     console.log('root component has mounted')
   },
   // template: `<App class="maee" :message-box="message" link="go" alias="100" />`,
-  template: `<my-tem />`,
+  // template: `<my-tem />`,
+  template: `<my-b />`,
   components: {
-    App
+    App, MyB
   }
 })
 
