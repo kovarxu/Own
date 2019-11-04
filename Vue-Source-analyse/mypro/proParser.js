@@ -1,10 +1,11 @@
 const startSpaceReg = /^\s/g;
 const startReg = /^(?:(?:var|let|const)\s+|\s*)([a-zA-z_$][\w_$]*)\s*=\s*(?=new)/;
 const newPromiseReg = /^new\s+Promise\(\s*/;
+const bodyNewPromiseReg = new RegExp('\(\\s\+return\\s\+\)\?' + newPromiseReg.source.substring(1))
 const varableNameReg = /^[a-zA-z_$][\w_$]*/
 const funcReg = /^function\s*([a-zA-z_$][\w_$]*)?\s*\((.*?)\)\s*|\((.*?)\)\s*(=>)\s*/
 const endFunPartReg = /^\s*\)/
-const thenReg = /^\.then\(/
+const thenReg = /^\s*\.then\(/
 const nullReg = /^\s*null\s*/
 const funcDelimerReg = /^\s*,\s*/
 const additionReg = /^(?=(\s*;?\s*))\1(?!(\s|$))/
@@ -18,19 +19,19 @@ function parse (code) {
       prePromise = null,
       activePromise = null;
 
-  // 消除空格
+  // dinimish spaces
   if (startSpaceReg.exec(code)) {
     advance(startSpaceReg.lastIndex)
   }
 
-  // 解析`var p1 = new Promise()`这种形式
+  // resolve `var p1 = new Promise()`
   var start = code.match(startReg)
   var isCreateNewP = true
   if (start) {
     varName = start[1]
     advance(start[0].length)
   }
-  // 已存在该变量名
+  // if promise already exists
   else if (varableNameReg.test(code)) {
     let matchedName = code.match(varableNameReg)[0]
     advance(matchedName.length)
@@ -42,7 +43,7 @@ function parse (code) {
       throw new Error('未定义的变量名: ' + matchedName)
     }
   }
-  // 匿名promise
+  // anonymous promise
   else {
     varName = defaultVarName()
   }
@@ -50,8 +51,8 @@ function parse (code) {
   if (!results[varName]) {
     results[varName] = []
   } else {
-    // 如果这个Promise已经存在了
-    // 先依据results[varName].then找到最后一个child
+    // if Promise already exists
+    // then find the last child base on results[varName].then
     let then = results[varName].then
     let lastChild = results[varName]
     while (then--) {
@@ -78,8 +79,24 @@ function parse (code) {
   let handler = parseFuncDefine()
   if (handler) {
     activePromise.handler = handler
-
-    // 主体部分终止
+    
+    if (handler.promises) {
+      handler.promises.forEach(promise) {
+        if (!promise.return) {
+          // custom promise
+          parse(promise.body)
+        } else {
+          // return promise
+          let childname = parse(promise.body)
+          activePromise.child[0] = results[childname]
+          // fast forward
+          while (activePromise.child.length) {
+            activePromise = activePromise.child[0]
+          }
+        }
+      }
+    }
+    // end of the main part
     parseEndPart()
   }
 
@@ -104,7 +121,7 @@ function parse (code) {
   //   }
   // }
 
-  // 处理then
+  // handle then
   while (1) {
     let controlKeys = code.match(thenReg)
     if (controlKeys) {
@@ -129,19 +146,36 @@ function parse (code) {
             child: []
           }
           prePromise.child.push(activePromise)
-          // 只在创建新Promise时，保存then的数量
+          // save number of then only when creating new promise
           if (isCreateNewP) {
             results[varName].then ++
           }
+          // if then return promise
+          if (handlerRes.promises) {
+            handlerRes.promises.forEach(promise => {
+              if (!promise.return) {
+                // custom promise
+                parse(promise.body)
+              } else {
+                // return promise
+                let childname = parse(promise.body)
+                activePromise.child[0] = results[childname]
+                // fast forward
+                while (activePromise.child.length) {
+                  activePromise = activePromise.child[0]
+                }
+              }
+            })
+          }
         } else {
-          // 多次then的情况
+          // multi then
           activePromise = prePromise.child[0]
           activePromise.res.push(handlerRes)
           activePromise.rej.push(handlerRej)
         }
       }
 
-      // 处理最后的括号
+      // the last brace
       parseEndPart()
     } else {
       break
@@ -158,6 +192,8 @@ function parse (code) {
   
   console.log('remain code: ' + code)
 
+  return varName
+
   function parseEndPart () {
     let endPart = code.match(endFunPartReg)
     if (endPart) {
@@ -168,7 +204,8 @@ function parse (code) {
   function parseFuncDefine () {
     let name = '',
         parameters = '',
-        body = ''
+        body = '',
+        promises = null
   
     let funcStart = code.match(funcReg)
     if (funcStart) {
@@ -181,8 +218,46 @@ function parse (code) {
         advance(body.length)
       }
 
-      return { name, parameters, body }
+      if (body) {
+        promises = parsePromiseInBody(body)
+      }
+
+      return { name, parameters, body, promises }
     }
+  }
+
+  function parsePromiseInBody (body) {
+    let bnp
+    let promises = []
+    while (bnp = body.match(bodyNewPromiseReg)) {
+      let offset = bnp.index + bnp[0].length
+      let promiseBody = parsePromiseFromStartOffset(body, offset)
+      let isReturn = bnp[1] !== undefined
+      promises.push({
+        return: isReturn,
+        body: promiseBody
+      })
+      if (isReturn) break
+      body = body.substr(offset + promiseBody.length - 1)
+    }
+    return promises
+  }
+
+  function parsePromiseFromStartOffset (body, startIdx) {
+    let psBody = body.substr(startIdx) + '('
+    let promiseBody = findCloseBrace(psBody, '(', ')')
+    psBody = psBody.substr(promiseBody.length)
+    while (1) {
+      let controlKeys = psBody.match(thenReg)
+      if (controlKeys) {
+        psBody = psBody.substr(controlKeys[0]) + '('
+        let thenBody = findCloseBrace(psBody, '(', ')')
+        promiseBody += '.then' + thenBody
+      } else {
+        break
+      }
+    }
+    return promiseBody
   }
 
   function parseNullFuncDefine () {
@@ -196,17 +271,20 @@ function parse (code) {
   }
   
   function parseFuncBodyString () {
+    findCloseBrace(code, '{', '}')
+  }
+
+  function findCloseBrace (code, brace, antiBrace) {
     let fidx = 0
     let body = ''
     let braceNum = 1
-    // in func brace
-    if (code[fidx] === '{') {
-      body += '{'
+    if (code[fidx] === brace) {
+      body += brace
       while (braceNum) {
         fidx ++
-        if (code[fidx] === '{') {
+        if (code[fidx] === brace) {
           braceNum ++
-        } else if (code[fidx] === '}') {
+        } else if (code[fidx] === antiBrace) {
           braceNum --
         } else if (code[fidx] === undefined) {
           break
