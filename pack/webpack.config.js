@@ -1,44 +1,51 @@
-var fs = require('fs')
-var path = require('path')
-var MyPlugin = require('./pg')
-var HtmlWebpackPlugin = require('html-webpack-plugin')
+const path = require('path')
+const HTMLWebpackPlugin = require('html-webpack-plugin')
+const { CleanWebpackPlugin } = require('clean-webpack-plugin')
 
 module.exports = {
+  mode: 'development',
   entry: {
-    tp: './src/index.js',
-    product: './src/product.js'
+    product: path.resolve(__dirname, 'src/product.js')
   },
   output: {
-    path: path.join(__dirname, 'dist'),
-    filename: '[name].js'
+    path: path.resolve(__dirname, 'dist'),
+    filename: '[name].[hash:8].js'
   },
   module: {
     rules: [
       {
-        test: /\.(png|svg|jpg|gif)$/,
+        test: /\.(jpg|png|gif)$/,
         use: [
-          'file-loader?name=[name].[ext]&outputPath=img/'
+          {
+            loader: 'url-loader',
+            options: {
+              limit: 10000,
+              fallback: 'file-loader?name=[name].[ext]&outputPath=img/'
+            },
+          }
         ]
+      },
+      {
+        test: /\.css$/,
+        use: ['style-loader', 'css-loader']
       }
     ]
   },
-  devServer: {
-    port: 7098
+  resolve: {
+    alias: {
+      '@': path.resolve(__dirname, 'src/')
+    }
+  },
+  optimization: {
+    runtimeChunk: {
+      name: 'manifest'
+    }
   },
   plugins: [
-    new HtmlWebpackPlugin({
-      template: './src/tp.html',
-      filename: 'tp.html',
-      chunks: ['tp'],
-      mixins: {
-        header: fs.readFileSync('./src/mixin.html', { encoding: 'utf-8' })
-      }
-    }),
-    new HtmlWebpackPlugin({
-      template: './src/product.html',
+    new HTMLWebpackPlugin({
       filename: 'product.html',
-      chunks: ['product']
+      template: path.resolve(__dirname, './src/product.html')
     }),
-    new MyPlugin({ options: '' })
+    new CleanWebpackPlugin()
   ],
 }

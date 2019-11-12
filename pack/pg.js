@@ -1,3 +1,5 @@
+// webpack3 can use this plugin
+
 var fs = require('fs')
 
 function MyPlugin(options) {
