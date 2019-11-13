@@ -4,6 +4,7 @@
 - add loaders to handle css and image / what's the structure of packed files ?
 
 - extract manifest / what's in manifest ?
+- use optimization / what's split chunks and how to use it ?
 - use postcss / see the ast formed by postcss
 - css loader / explore into this loader
 
@@ -40,4 +41,9 @@ optimization: {
 
 ## what's in manifest ?
 
+- add `webpackJsonp`
+- extract basic `__webpack_require__`
 
+## what's split chunks and how to use it ?
+
+chrome://inspect/#devices

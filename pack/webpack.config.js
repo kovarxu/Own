@@ -38,6 +38,7 @@ module.exports = {
   },
   optimization: {
     splitChunks: {
+      name: 'vendor',
       chunks: 'all',
       minChunks: 1,
       minSize: 30000
