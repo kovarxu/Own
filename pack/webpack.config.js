@@ -36,11 +36,16 @@ module.exports = {
       '@': path.resolve(__dirname, 'src/')
     }
   },
-  // optimization: {
-  //   runtimeChunk: {
-  //     name: 'manifest'
-  //   }
-  // },
+  optimization: {
+    splitChunks: {
+      chunks: 'all',
+      minChunks: 1,
+      minSize: 30000
+    },
+    runtimeChunk: {
+      name: 'manifest'
+    }
+  },
   plugins: [
     new HTMLWebpackPlugin({
       filename: 'product.html',
