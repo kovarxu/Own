@@ -27,7 +27,7 @@ module.exports = {
       },
       {
         test: /\.css$/,
-        use: ['style-loader', 'css-loader']
+        use: ['style-loader', 'css-loader', 'postcss-loader']
       }
     ]
   },
@@ -38,10 +38,17 @@ module.exports = {
   },
   optimization: {
     splitChunks: {
-      name: 'vendor',
+      name: true,
       chunks: 'all',
       minChunks: 1,
-      minSize: 30000
+      minSize: 30000,
+      cacheGroups: {
+        jquery: {
+          test: /[\\/]node_modules[\\/].*?jquery/,
+          priority: -5,
+          automaticNameDelimiter: '.'
+        }
+      }
     },
     runtimeChunk: {
       name: 'manifest'
@@ -55,3 +62,6 @@ module.exports = {
     new CleanWebpackPlugin()
   ],
 }
+
+// debug on this site:
+// chrome://inspect/#devices

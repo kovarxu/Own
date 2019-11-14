@@ -1,14 +1,15 @@
 const _ = require('lodash')
+const $ = require('jquery')
 const mail = require('./mail.png')
 require('./style.css')
 const util = require('./active')
 
 window.onload = function () {
-  let asv = document.querySelector('.asv')
-  asv.addEventListener('mouseover', function () {
+  let asv = $('.asv')
+  asv.on('mouseover', function () {
     asv.classList.add('active')
   }, false)
-  asv.addEventListener('mouseout', function () {
+  asv.on('mouseout', function () {
     asv.classList.remove('active')
   }, false)
 
