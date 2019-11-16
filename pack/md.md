@@ -72,3 +72,11 @@ splitChunks: {
 
 <!-- npm install postcss-loader autoprefixer --save-dev -->
 
+## use mini-css-extract-plugin
+
+## webpack under the hood
+
+compiler --- compilation --- factory --- resolver --- parser --- loader --- plugin
+
+webpack need much knowledgement about the compile itself
+
