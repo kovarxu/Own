@@ -1,16 +1,18 @@
-const startSpaceReg = /^\s/g;
-const startReg = /^(?:(?:var|let|const)\s+|\s*)([a-zA-z_$][\w_$]*)\s*=\s*(?=new)/;
-const newPromiseReg = /^new\s+Promise\(\s*/;
-const bodyNewPromiseReg = new RegExp('\(\\s\+return\\s\+\)\?' + newPromiseReg.source.substring(1))
-const varableNameReg = /^([a-zA-z_$][\w_$]*)\./
-const funcReg = /^function\s*([a-zA-z_$][\w_$]*)?\s*\((.*?)\)\s*|\((.*?)\)\s*(=>)\s*/
-const endFunPartReg = /^\s*\)/
-const thenReg = /^\s*\.then\(/
-const nullReg = /^\s*null\s*/
-const funcDelimerReg = /^\s*,\s*/
-const additionReg = /^(?=(\s*;?\s*))\1(?!(\s|$))/
+var startSpaceReg = /^\s/g;
+var startReg = /^(?:(?:var|let|const)\s+|\s*)([a-zA-z_$][\w_$]*)\s*=\s*(?=new)/;
+var newPromiseReg = /^new\s+Promise\(\s*/;
+var bodyNewPromiseReg = new RegExp('\(\\s\+return\\s\+\)\?' + newPromiseReg.source.substring(1))
+var varableNameReg = /^([a-zA-z_$][\w_$]*)\./
+var funcReg = /^function\s*([a-zA-z_$][\w_$]*)?\s*\((.*?)\)\s*|\((.*?)\)\s*(=>)\s*/
+var endFunPartReg = /^\s*\)/
+var thenReg = /^\s*\.then\(/
+var nullReg = /^\s*null\s*/
+var funcDelimerReg = /^\s*,\s*/
+var additionReg = /^(?=(\s*;?\s*))\1(?!(\s|$))/
 
-const results = {};
+
+var results = {}
+var useOptmize = true
 
 function parse (code) {
   let index = 0,
@@ -80,7 +82,7 @@ function parse (code) {
   if (handler) {
     activePromise.handler = handler
     // end of the main part
-    parseEndPart()
+    parseEndBrace()
   }
 
   // else, arrow func
@@ -143,7 +145,7 @@ function parse (code) {
       }
 
       // the last brace
-      parseEndPart()
+      parseEndBrace()
     } else {
       break
     }
@@ -161,7 +163,7 @@ function parse (code) {
 
   return varName
 
-  function parseEndPart () {
+  function parseEndBrace () {
     let endPart = code.match(endFunPartReg)
     if (endPart) {
       advance(endPart[0].length)
@@ -243,7 +245,7 @@ function parse (code) {
     return findCloseBrace(code, '{', '}')
   }
 
-  function findCloseBrace (code, brace, antiBrace) {
+  function findCloseBrace (code, brace, counterpart) {
     let fidx = 0
     let body = ''
     let braceNum = 1
@@ -253,7 +255,7 @@ function parse (code) {
         fidx ++
         if (code[fidx] === brace) {
           braceNum ++
-        } else if (code[fidx] === antiBrace) {
+        } else if (code[fidx] === counterpart) {
           braceNum --
         } else if (code[fidx] === undefined) {
           break
@@ -274,7 +276,7 @@ function parse (code) {
   }
 }
 
-function optimize () {
+function optimize (results) {
   // in this step, we handle some new promises in then or return blocks
   // just handle the initialized results in the first pass 
   for (key in results) {
@@ -325,3 +327,12 @@ var pid = 0
 function defaultVarName () {
   return '_p' + pid++
 } 
+
+var demo = `new Promise(function (resolve, reject) { resolve(1) }).then(function(data) {
+  return data + 3;
+}).then(function(data) { return new Promise(function (resolve, reject) { resolve('a') }); })
+.then(function(data) { return data + 'b'; })`
+
+parse(demo)
+optimize(results)
+console.log(results)

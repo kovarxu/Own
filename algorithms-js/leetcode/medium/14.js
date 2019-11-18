@@ -1,43 +1,53 @@
+/**
+ * @param {number[]} nums
+ * @param {number} target
+ * @return {number}
+ */
+// I am not familiar with binary search so this problem costs me much time
+// binary search has boundary conditions, so as this problem
 var search = function(nums, target) {
   if (nums.length == 0) return -1;
-  else if (nums.length == 1) {
-    if (nums[0] == target) return 0;
-    else return -1;
+  else if (nums.length == 1) return nums[0] == target ? 0 : -1;
+
+  // first find the pivot
+  let i = 0, j = nums.length - 1, pivot = ((i + j) / 2) | 0;
+  while (j > i + 1) {
+    if (nums[pivot] > nums[i])
+      i = pivot;
+    else if (nums[pivot] < nums[j])
+      j = pivot;
+    pivot = ((i + j) / 2) | 0;
   }
-  // binary search
-  var i = 0, j = nums.length - 1;
-  while (i !== j) {
-    var len = j - i + 1;
-    var left = nums[i], right = nums[j];
-    if (left == target) return i;
-    if (right == target) return j;
-    
-    var m = Math.floor(len / 2);
-    var middle = nums[i + m];
-    if (middle === target) {
-      return i + m;
-    }
-    else if (len > 3) {
-      var lf = nums[m-1], rf = nums[m+1];
-      var isTrunPoint = lf < middle && rf < middle;
-      if (isTrunPoint) {
-        if (target > right) {
-          // left
-          j -= m;
-        } else {
-          i += m;
-        }
+  pivot = nums[j] > nums[i] ? j : i;
+
+  let ll = nums.slice(0, pivot + 1);
+  let rl = nums.slice(pivot + 1);
+  
+  if (target >= ll[0]) {
+    return findInArray(ll, target);
+  } else {
+    let idInArray = findInArray(nums.splice(pivot + 1), target);
+    return idInArray == -1 ? -1 : idInArray + pivot + 1;
+  }
+
+  // do the binary search
+  function findInArray(arr, target) {
+    if (arr.length == 0) return -1;
+    let i = 0, j = arr.length - 1, mid;
+    while (j > i + 1) {
+      mid = ((i + j) / 2) | 0;
+      if (arr[mid] == target) {
+        return mid;
+      } else if (arr[mid] > target) {
+        //left
+        j = mid;
       } else {
-        if (target < middle && target > right) {
-          // left
-          j -= m;
-        } else {
-          i += m;
-        }
+        //right
+        i = mid;
       }
-    } else {
-      return -1;
-    } 
-    continue;
+    }
+    if (arr[i] == target) return i;
+    if (arr[j] == target) return j;
+    return -1;
   }
 };
