@@ -5,7 +5,7 @@ var bodyNewPromiseReg = new RegExp('\(\\s\+return\\s\+\)\?' + newPromiseReg.sour
 var varableNameReg = /^([a-zA-z_$][\w_$]*)\./
 var funcReg = /^function\s*([a-zA-z_$][\w_$]*)?\s*\((.*?)\)\s*|\((.*?)\)\s*(=>)\s*/
 var endFunPartReg = /^\s*\)/
-var thenReg = /^\s*\.then\(/
+var thenReg = /^\s*\.then\(\s*/
 var nullReg = /^\s*null\s*/
 var funcDelimerReg = /^\s*,\s*/
 var additionReg = /^(?=(\s*;?\s*))\1(?!(\s|$))/
@@ -13,6 +13,7 @@ var additionReg = /^(?=(\s*;?\s*))\1(?!(\s|$))/
 
 var results = {}
 var useOptmize = true
+var $id = 0
 
 function parse (code) {
   let index = 0,
@@ -70,7 +71,8 @@ function parse (code) {
       handler: null,
       child: [],
       siblings: [],
-      then: 0
+      then: 0,
+      id: ++$id
     }
     results[varName] = activePromise
     
@@ -129,7 +131,8 @@ function parse (code) {
             res: [ handlerRes ],
             rej: [ handlerRej ],
             child: [],
-            siblings: []
+            siblings: [],
+            id: ++$id
           }
           prePromise.child.push(activePromise)
           // save number of then only when creating new promise
@@ -296,7 +299,7 @@ function optimize (results) {
               while (j--) {
                 last = last.child[0]
               }
-              last.child.push(next)
+              if (next) last.child.push(next)
             }
           })
         })
@@ -312,7 +315,7 @@ function optimize (results) {
               while (j--) {
                 last = last.child[0]
               }
-              last.child.push(next)
+              if (next) last.child.push(next)
             }
           })
         })
@@ -328,10 +331,15 @@ function defaultVarName () {
   return '_p' + pid++
 } 
 
+// var demo = `new Promise(function (resolve, reject) { resolve(1) }).then(function(data) {
+//   return data + 3;
+// }).then(function(data) { return new Promise(function (resolve, reject) { resolve('a') }); })
+// .then(function(data) { return data + 'b'; })`
 var demo = `new Promise(function (resolve, reject) { resolve(1) }).then(function(data) {
-  return data + 3;
-}).then(function(data) { return new Promise(function (resolve, reject) { resolve('a') }); })
-.then(function(data) { return data + 'b'; })`
+  return new Promise(function (resolve, reject) { resolve('a') }).then(
+  function(data) {return data + data;})}, function(data) {
+  return new Promise(function (resolve, reject) { resolve('A') }) })
+.then(function (data) { return data + 3; }); var pp = new Promise(function (resolve, reject) { resolve(1) })`
 
 parse(demo)
 optimize(results)
