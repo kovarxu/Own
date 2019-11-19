@@ -10,12 +10,17 @@ var nullReg = /^\s*null\s*/
 var funcDelimerReg = /^\s*,\s*/
 var additionReg = /^(?=(\s*;?\s*))\1(?!(\s|$))/
 
-
-var results = {}
-var useOptmize = true
 var $id = 0
 
 function parse (code) {
+  var results = {}
+  // var useOptmize = true
+  build(code, results)
+  disposeNesting(results)
+  return results
+}
+
+function build (code, results) {
   let index = 0,
       varName = '',
       // parse Promise
@@ -158,7 +163,7 @@ function parse (code) {
     let remain = code.match(additionReg)
     if (remain) {
       advance(remain[0].length)
-      parse(code)
+      build(code)
     }
   }
   
@@ -279,7 +284,7 @@ function parse (code) {
   }
 }
 
-function optimize (results) {
+function disposeNesting (results) {
   // in this step, we handle some new promises in then or return blocks
   // just handle the initialized results in the first pass 
   for (key in results) {
@@ -290,12 +295,12 @@ function optimize (results) {
         result.res.forEach(item => {
           if (!item) return
           item.promises.forEach(promise => {
-            let name = parse(promise.body)
+            let childPromise = getUniqItem(parse(promise.body))
             if (!promise.return) {
-              result.siblings[0] = results[name]
+              result.siblings[0] = childPromise
             } else {
-              result.child[0] = results[name]
-              let j = results[name].then, last = results[name]
+              result.child[0] = childPromise
+              let j = childPromise.then, last = childPromise
               while (j--) {
                 last = last.child[0]
               }
@@ -306,12 +311,14 @@ function optimize (results) {
         result.rej.forEach(item => {
           if (!item) return
           item.promises.forEach(promise => {
-            let name = parse(promise.body)
+            let childPromise = getUniqItem(parse(promise.body))
             if (!promise.return) {
-              result.siblings[1] = results[name]
+              result.siblings[1] = childPromise
+              // boundary condition
+              result.child[1] = next
             } else {
-              result.child[1] = results[name]
-              let j = results[name].then, last = results[name]
+              result.child[1] = childPromise
+              let j = childPromise.then, last = childPromise
               while (j--) {
                 last = last.child[0]
               }
@@ -325,11 +332,25 @@ function optimize (results) {
   }
 }
 
-var pid = 0
+function getUniqItem (obj) {
+  if (obj && typeof obj === 'object') {
+    let keys = Object.keys(obj)
+    if (keys.length === 1)
+      return obj[keys[0]]
+    else
+      throw new Error('the parsed object has more than one attributes, maybe it has been contaminated !')
+  }
+}
+
+var $pid = 0
 
 function defaultVarName () {
-  return '_p' + pid++
+  return '_p' + $pid++
 } 
+
+function resetParser () {
+  $id = 0
+}
 
 // var demo = `new Promise(function (resolve, reject) { resolve(1) }).then(function(data) {
 //   return data + 3;
@@ -339,8 +360,7 @@ var demo = `new Promise(function (resolve, reject) { resolve(1) }).then(function
   return new Promise(function (resolve, reject) { resolve('a') }).then(
   function(data) {return data + data;})}, function(data) {
   return new Promise(function (resolve, reject) { resolve('A') }) })
-.then(function (data) { return data + 3; }); var pp = new Promise(function (resolve, reject) { resolve(1) })`
+.then(function (data) { return data + 3; });`
 
-parse(demo)
-optimize(results)
+var results = parse(demo)
 console.log(results)
