@@ -1,9 +1,10 @@
-var startSpaceReg = /^\s/g;
-var startReg = /^(?:(?:var|let|const)\s+|\s*)([a-zA-z_$][\w_$]*)\s*=\s*(?=new)/;
-var newPromiseReg = /^new\s+Promise\(\s*/;
+var startSpaceReg = /^\s/g
+var annotationReg = /\/\/.*/g
+var startReg = /^(?:(?:var|let|const)\s+|\s*)([a-zA-z_$][\w_$]*)\s*=\s*(?=new)/
+var newPromiseReg = /^new\s+Promise\(\s*/
 var bodyNewPromiseReg = new RegExp('\(\\s\+return\\s\+\)\?' + newPromiseReg.source.substring(1))
 var varableNameReg = /^([a-zA-z_$][\w_$]*)\./
-var funcReg = /^function\s*([a-zA-z_$][\w_$]*)?\s*\((.*?)\)\s*|\((.*?)\)\s*(=>)\s*/
+var funcReg = /^function\s*([a-zA-z_$][\w_$]*)?\s*\(([\s\S]*?)\)\s*|^(\S+?|\([\s\S]*?\))\s*(=>)\s*/
 var endFunPartReg = /^\s*\)/
 var thenReg = /^\s*\.then\(\s*/
 var nullReg = /^\s*null\s*/
@@ -27,6 +28,9 @@ function build (code, results) {
       prePromise = null,
       activePromise = null;
 
+  // remove annotations first
+  code = code.replace(annotationReg, '')
+
   // dinimish spaces
   if (startSpaceReg.exec(code)) {
     advance(startSpaceReg.lastIndex)
@@ -48,7 +52,7 @@ function build (code, results) {
       isCreateNewP = false
       varName = matchedName
     } else {
-      throw new Error('未定义的变量名: ' + matchedName)
+      throw new TypeError('Undefined variable: ' + matchedName)
     }
   }
   // anonymous promise
@@ -91,27 +95,6 @@ function build (code, results) {
     // end of the main part
     parseEndBrace()
   }
-
-  // else, arrow func
-  // else if (isArrowFunction) {
-  //   while (braceNum > 0) {
-  //     if (fidx > 0) funcBody += code[fidx - 1]
-  //     if (code[fidx] === '(') {
-  //       braceNum ++
-  //     } else if (code[fidx] === ')') {
-  //       braceNum --
-  //     } else if (code[fidx] === undefined) {
-  //       break
-  //     }
-  //     fidx ++
-  //   }
-  //   if (fidx < code.length) {
-  //     // the final one is ), that's the end of func part
-  //     advance(fidx)
-  //   } else {
-  //     throw new Error('error in parse arrow function: brace not close propriatly')
-  //   }
-  // }
 
   // handle then
   while (1) {
@@ -163,11 +146,11 @@ function build (code, results) {
     let remain = code.match(additionReg)
     if (remain) {
       advance(remain[0].length)
-      build(code)
+      build(code, results)
     }
   }
   
-  console.log('remain code: ' + code)
+  // console.log('remain code: ' + code)
 
   return varName
 
@@ -186,12 +169,21 @@ function build (code, results) {
   
     let funcStart = code.match(funcReg)
     if (funcStart) {
-      name = funcStart[1] || 'anonymous'
-      parameters = funcStart[2]
+      let isArrowFunction = false
+      // arrow function
+      if (funcStart[4] == '=>') {
+        isArrowFunction = true
+        name = 'anonymous~arrow'
+        let params = funcStart[3]
+        parameters = params.startsWith('(') ? params.slice(1, params.length-1) : params
+      } else {
+        name = funcStart[1] || 'anonymous'
+        parameters = funcStart[2]
+      }
       advance(funcStart[0].length)
 
-      if (code[0] === '{') {
-        body = parseFuncBodyString()
+      if (code[0] === '{' || isArrowFunction) {
+        body = parseFuncBodyString(isArrowFunction)
         advance(body.length)
       }
 
@@ -232,6 +224,12 @@ function build (code, results) {
         psBody = '(' + psBody.substr(controlKeys[0].length)
         let thenBody = findCloseBrace(psBody, '(', ')')
         promiseBody += '.then' + thenBody
+
+        // we should cut the psBody
+        psBody = psBody.slice(thenBody.length)
+        if (thenBody = psBody.match(additionReg)) {
+          psBody = psBody.slice(thenBody[0].length)
+        }
       } else {
         break
       }
@@ -244,13 +242,23 @@ function build (code, results) {
     if (nullRes) {
       advance(nullRes[0].length)
     } else {
-      throw new Error('函数定义出错: ' + code)
+      throw new Error('function define error: ' + code)
     }
     return null
   }
   
-  function parseFuncBodyString () {
-    return findCloseBrace(code, '{', '}')
+  function parseFuncBodyString (isArrowFunction) {
+    // Arrow Fuction 
+    // may be data => data + 1 or data => (data + 1) or data => {return data + 1}
+    // if it's the two previous condition, we should convert the algorithm to the last one
+    // the first condition needs much intelligence, TODO someday ...
+    if (isArrowFunction && code[0] === '(') {
+      let body = findCloseBrace(code, '(', ')')
+      if (body) body = body.slice(1, body.length - 1)
+      return `{ return ${body} }`
+    } else {
+      return findCloseBrace(code, '{', '}')
+    }
   }
 
   function findCloseBrace (code, brace, counterpart) {
