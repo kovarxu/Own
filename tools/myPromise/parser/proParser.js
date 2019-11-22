@@ -3,10 +3,13 @@ var annotationReg = /\/\/.*/g
 var startReg = /^(?:(?:var|let|const)\s+|\s*)([a-zA-z_$][\w_$]*)\s*=\s*(?=new)/
 var newPromiseReg = /^new\s+Promise\(\s*/
 var bodyNewPromiseReg = new RegExp('\(\\s\+return\\s\+\)\?' + newPromiseReg.source.substring(1))
-var varableNameReg = /^([a-zA-z_$][\w_$]*)\./
-var funcReg = /^function\s*([a-zA-z_$][\w_$]*)?\s*\(([\s\S]*?)\)\s*|^(\S+?|\([\s\S]*?\))\s*(=>)\s*/
+var varNameReg = /[a-zA-z_$][\w_$]*/
+var varableNameReg = new RegExp(`^(${varNameReg.source})\\.`)
+var funcReg = new RegExp(`^function\\s*(${varNameReg.source})?\\s*\\(([\\s\\S]*?)\\)\\s*|^(${varNameReg.source}|\\([\\w\\s,_$]*?\\))\\s*(=>)\\s*`)
+// var funcReg = /^function\s*([a-zA-z_$][\w_$]*)?\s*\(([\s\S]*?)\)\s*|^(\S+?|\([\s\S]*?\))\s*(=>)\s*/
 var endFunPartReg = /^\s*\)/
 var thenReg = /^\s*\.then\(\s*/
+var catchReg = /^\s*\.catch\(\s*/
 var nullReg = /^\s*null\s*/
 var funcDelimerReg = /^\s*,\s*/
 var additionReg = /^(?=(\s*;?\s*))\1(?!(\s|$))/
@@ -81,7 +84,8 @@ function build (code, results) {
       child: [],
       siblings: [],
       then: 0,
-      id: ++$id
+      id: ++$id,
+      realm: varName
     }
     results[varName] = activePromise
     
@@ -120,7 +124,8 @@ function build (code, results) {
             rej: [ handlerRej ],
             child: [],
             siblings: [],
-            id: ++$id
+            id: ++$id,
+            realm: varName
           }
           prePromise.child.push(activePromise)
           // save number of then only when creating new promise
