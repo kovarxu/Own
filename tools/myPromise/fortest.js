@@ -51,3 +51,11 @@ var p1 = new Promise((resolve, reject) => {
   .then(data => { console.log(data) })
   .then(data => { console.log(data + 'def') })
 }).then(data => { console.log(data) + 125})
+
+var p2 = new Promise((resolve, reject) => {
+  resolve(45)
+}).then((data) => {return data})
+
+p2.then((data) => {console.log(data + 1)})
+p2.then((data) => {console.log(data + 2); return data + 4;})
+.then((data) => {console.log(data + 3)})

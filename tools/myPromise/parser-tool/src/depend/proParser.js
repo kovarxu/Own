@@ -1,16 +1,16 @@
 var startSpaceReg = /^\s/g
 var annotationReg = /\/\/.*/g
-var startReg = /^(?:(?:var|let|const)\s+|\s*)([a-zA-z_$][\w_$]*)\s*=\s*(?=new)/
+var startReg = /^(?:(?:var|let|const)\s+|\s*)([a-zA-z_$][\w_$]*)\s*=\s*(?=new|Promise)/
 var newPromiseReg = /^new\s+Promise\(\s*/
+var resRejReg = /^Promise\.(resolve|reject)\s*/
 var bodyNewPromiseReg = new RegExp('\(\\s\+return\\s\+\)\?' + newPromiseReg.source.substring(1))
 var varNameReg = /[a-zA-z_$][\w_$]*/
-var varableNameReg = new RegExp(`^(${varNameReg.source})\\.`)
+var varableNameReg = new RegExp(`^(${varNameReg.source})\\.(?=then|catch)`)
 var funcReg = new RegExp(`^function\\s*(${varNameReg.source})?\\s*\\(([\\s\\S]*?)\\)\\s*|^(${varNameReg.source}|\\([\\w\\s,_$]*?\\))\\s*(=>)\\s*`)
 var endFunPartReg = /^\s*\)/
-var thenReg = /^\s*\.then\(\s*/
-var catchReg = /^\s*\.catch\(\s*/
-var nullReg = /^\s*null\s*/
-var funcDelimerReg = /^\s*,\s*/
+var thenCatchReg = mergeBeginReg('\\.(then|catch)\\(')
+var nullReg = mergeBeginReg('null')
+var funcDelimerReg = mergeBeginReg(',')
 var additionReg = /^(?=(\s*;?\s*))\1(?!(\s|$))/
 
 var $id = 0
@@ -48,13 +48,18 @@ function build (code, results) {
   // if promise already exists
   else if (varableNameReg.test(code)) {
     let matchedName = code.match(varableNameReg)[1]
-    advance(matchedName.length)
 
-    if (results[matchedName]) {
-      isCreateNewP = false
-      varName = matchedName
+    // boundary condition, 'Promise' itself can't be a variable name
+    if (matchedName !== 'Promise') {
+      advance(matchedName.length)
+      if (results[matchedName]) {
+        isCreateNewP = false
+        varName = matchedName
+      } else {
+        throw new TypeError('Undefined variable: ' + matchedName)
+      }
     } else {
-      throw new TypeError('Undefined variable: ' + matchedName)
+      varName = defaultVarName()
     }
   }
   // anonymous promise
@@ -84,13 +89,44 @@ function build (code, results) {
       siblings: [],
       then: 0,
       id: ++$id,
-      realm: varName
+      realm: varName,
+      head: true
     }
     results[varName] = activePromise
     
     advance(newP[0].length)
   }
 
+  // Promise.resolve / Promise.reject
+  if (!activePromise) {
+    let resj = code.match(resRejReg)
+    if (resj) {
+      advance(resj[0].length)
+      let body = findCloseBrace(code, '(', ')')
+      let handler = `function (resolve, reject) { ${resj[1]}${body} }`
+      code = code.slice(body.length)
+      // add an anti brace for the next step
+      code = handler + ')' + code
+
+      activePromise = {
+        handler: null,
+        child: [],
+        siblings: [],
+        then: 0,
+        id: ++$id,
+        realm: varName,
+        head: true
+      }
+
+      results[varName] = activePromise
+    }
+  }
+
+  // activePromise not found, we should terminate this parse
+  if (!activePromise) {
+    delete results[varName]
+    return
+  }
   // function
   let handler = parseFuncDefine()
   if (handler) {
@@ -99,20 +135,27 @@ function build (code, results) {
     parseEndBrace()
   }
 
-  // handle then
+  // handle then/catch
   while (1) {
-    let controlKeys = code.match(thenReg)
+    let controlKeys = code.match(thenCatchReg)
     if (controlKeys) {
       advance(controlKeys[0].length)
-
+      let isCatch = controlKeys[1] === 'catch'
+      
       let handlerRes = parseFuncDefine() || parseNullFuncDefine()
       let handlerRej = null
-
+      
       if (handlerRes) {
-        let delimiter = code.match(funcDelimerReg)
-        if (delimiter) {
-          advance(delimiter[0].length)
-          handlerRej = parseFuncDefine() || parseNullFuncDefine()
+        if (isCatch) {
+          // if control key is catch, we should only point to the handlerRej
+          handlerRej = handlerRes
+          handlerRes = null
+        } else {
+          let delimiter = code.match(funcDelimerReg)
+          if (delimiter) {
+            advance(delimiter[0].length)
+            handlerRej = parseFuncDefine() || parseNullFuncDefine()
+          }
         }
 
         prePromise = activePromise
@@ -220,16 +263,16 @@ function build (code, results) {
     let psBody = '(' + body.substr(startIdx)
     let promiseBody = findCloseBrace(psBody, '(', ')')
     psBody = psBody.substr(promiseBody.length)
-    // pat it
+    // wrap it back
     promiseBody = 'new Promise' + promiseBody
     while (1) {
-      let controlKeys = psBody.match(thenReg)
+      let controlKeys = psBody.match(thenCatchReg)
       if (controlKeys) {
         psBody = '(' + psBody.substr(controlKeys[0].length)
         let thenBody = findCloseBrace(psBody, '(', ')')
-        promiseBody += '.then' + thenBody
+        promiseBody += '.' + controlKeys[1] + thenBody
 
-        // we should cut the psBody
+        // we should cut the parsed parts
         psBody = psBody.slice(thenBody.length)
         if (thenBody = psBody.match(additionReg)) {
           psBody = psBody.slice(thenBody[0].length)
@@ -310,6 +353,8 @@ function disposeNesting (results) {
             let childPromise = getUniqItem(parse(promise.body))
             if (!promise.return) {
               result.siblings[0] = childPromise
+              // we should also set this
+              result.siblings[1] = null
             } else {
               result.child[0] = childPromise
               let j = childPromise.then, last = childPromise
@@ -325,6 +370,8 @@ function disposeNesting (results) {
           item.promises.forEach(promise => {
             let childPromise = getUniqItem(parse(promise.body))
             if (!promise.return) {
+              // we should also set this
+              if (!result.siblings[0]) result.siblings[0] = null
               result.siblings[1] = childPromise
               // boundary condition
               result.child[1] = next
@@ -352,6 +399,10 @@ function getUniqItem (obj) {
     else
       throw new Error('the parsed object has more than one attributes, maybe it has been contaminated !')
   }
+}
+
+function mergeBeginReg (source) {
+  return new RegExp(`^\\s*${source}\\s*`)
 }
 
 var $pid = 0

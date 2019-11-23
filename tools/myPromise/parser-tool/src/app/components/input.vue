@@ -23,18 +23,19 @@ export default {
 
 <style>
 .input-area {
-  max-width: 500px;
+  width: 400px;
+  padding-top: 20px;
 }
 .input-area .textarea {
   display: block;
-  height: 200px;
+  height: 500px;
   margin-bottom: 20px;
 }
 .input-area .btn {
   padding: 10px 30px;
   border-radius: 6px;
   text-decoration: none;
-  background-color: #ec32ec;
+  background-color: #8c7fee;
   color: #fff;
 }
 </style>
