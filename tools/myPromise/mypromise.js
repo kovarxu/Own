@@ -1,173 +1,98 @@
 // 4. 终极版本Pro
 // 满足Promise A+ 规范
 
-var $uid = 0
 var PENDING = 'pending'
 var FULFILLED = 'fulfilled'
 var REJECTED = 'rejected'
+var savedThenable = new WeakMap()
 
-function Pro(fns) {
-    this.value = undefined
-    this.ps = [this]
-    this.res = null
-    this.rej = null
+function Promise(fns) {
+    this.data = undefined
+    this.reason = undefined
     this.status = PENDING
-    this.timer = null
-    this.isthen = false
-    this._uid = $uid++
-    // care about it
+    this.resCallbacks = []
+    this.rejCallbacks = []
+    this.savedThenable.set(this, true)
+
     try {
         fns(resolve.bind(this), reject.bind(this))
     } catch (e) {
+        reject(e)
+    }
+
+    function resolve(data) {
+        this.data = data
+        this.status = FULFILLED
+        this.resCallbacks.forEach(cb => cb(data))
+    }
+
+    function reject(reason) {
+        this.reason = reason
         this.status = REJECTED
-        this.value = e
+        this.rejCallbacks.forEach(cb => cb(reason))
     }
 }
 
-function resolve(res) {
-    this.value = res
-    this.status = FULFILLED
-    return this.status
-}
+Promise.prototype.then = function(onFulfilled, onRejected) {
+    let newP
 
-function reject(rej) {
-    this.value = rej
-    this.status = REJECTED
-    return this.status
-}
-
-
-Pro.prototype.then = function(onFulfilled, onRejected) {
-    let value = this.value
-
-    let newp = Pro.resolve(value)
-    newp.status = PENDING
-    newp.res = typeof onFulfilled === 'function' ? onFulfilled : null
-    newp.rej = typeof onRejected === 'function' ? onRejected : null
-    newp.ps = this.ps.concat(newp.ps)
-    newp.isthen = true
-
-    clearTimeout(this.timer)
-
-    newp.timer = setTimeout(()=>{
-        let value
-        let curp = newp.ps.shift()
-        let curStatus = curp.status
-        timerFunc()
-
-        function timerFunc() {
-            if (!curp.isthen && curp.status === PENDING) {
-                setTimeout(timerFunc)
-            } else {
-                if (!curp.isthen) curStatus = curp.status
-
-                let method = curStatus === REJECTED ? 'rej' : 'res'
-
+    if (this.status === PENDING) {
+        newP = new Promise((resolve, reject) => {
+            this.resCallbacks.push((data) => {
                 try {
-                    if (curp[method]) {
-                        value = curp[method].call(null, value)
-                        curStatus = resolve.call(curp, value)
-                    } else if (!curp.isthen) {
-                        value = curp.value
-                    } else {
-                        // do nothing but pass down
-                        if (curStatus === FULFILLED) resolve.call(curp, value)
-                        else if (curStatus === REJECTED) reject.call(curp, value)
-                    }
+                    let x = onFulfilled(data)
+                    // resolvePromise(x, newP, resolve, reject)
+                    resolve(x)
                 } catch (e) {
-                    curStatus = REJECTED
-                    reject.call(curp, value)
+                    reject(x)
                 }
-
-                if (curp.isthen && value) {
-                    if (typeof value.then === 'function' && value.__proto__ !== Pro.prototype) {
-                        value = new Pro(value.then)
-                    }
-
-                    if (value.__proto__ === Pro.prototype) {
-                        if (value._uid <= curp._uid)
-                            throw new TypeError('can not set chain promise')
-
-                        curp.status = PENDING
-                        curp.rej = curp.res = null
-                        value.ps.push(curp)
-
-                        newp.ps = value.ps.concat(newp.ps)
-                        // prevent execution of Pros in then
-                        clearTimeout(value.timer)
-                    }
+            })
+            this.rejCallbacks.push((reason) => {
+                try {
+                    let x = onRejected(reason)
+                    resolve(x)
+                } catch (e) {
+                    reject(x)
                 }
-
-                if (newp.ps.length) {
-                    curp = newp.ps.shift()
-                    timerFunc()
-                }
+            })
+        })
+    }
+    else if (this.status === FULFILLED) {
+        let data = this.data
+        newP = new Promise((resolve, reject) => {
+            try {
+                let x = onFulfilled(data)
+                resolve(x)
+            } catch (e) {
+                reject(x)
             }
-        }
-    })
-
-    return newp
-}
-
-Pro.resolve = function(data) {
-    return new Pro((res,rej)=>{
-        res(data)
+        })
     }
-    )
-}
-
-Pro.reject = function(err) {
-    return new Pro((res,rej)=>{
-        rej(err)
-    }
-    )
-}
-
-var p1 = new Pro((resolve, reject) => {resolve(1)}).then()
-.then(data => console.log(data))
-var p2 = new Promise((resolve, reject) => {resolve(1)})
-
-
-// -----------------------------------
-
-Promise.resolve = function (data) {
-    return new Promise((res, rej) => {res(data)})
-}
-
-Promise.reject = function (err) {
-    return new Promise((res, rej) => {rej(err)})
-}
-
-Promise.all = function (iterable) {
-    let sum = 0
-    let mp = Promise.resolve()
-    let wm = new WeakMap()
-    
-    mp.status = PENDING
-    mp.isthen = false
-
-    if (typeof iterable[Symbol.iterator] !== 'function') {
-        throw new TypeError('Promise.all need an iterable parameter')
-    }
-    for (let p of iterable) {
-        if (p.__proto__ !== Promise.prototype) {
-            throw new TypeError('Promise.all need Promise items')
-        }
-        ++sum
-
-        p.then((data) => {
-            wm.set(p, data)
-            if (--sum === 0) {
-               let l = []
-               for (p of iterable) {
-                   l.push(wm.get(p))
-               }
-               resolve.call(mp, l) 
+    else if (this.status === REJECTED) {
+        let reason = this.reason
+        newP = new Promise((resolve, reject) => {
+            try {
+                let x = onRejected(reason)
+                resolve(x)
+            } catch (e) {
+                reject(x)
             }
         })
     }
 
-    return mp
+    return newP
+}
+
+Promise.resolve = function(data) {
+    return new Promise((res,rej)=>{
+        res(data)
+    })
+}
+
+Promise.reject = function(err) {
+    return new Promise((res,rej)=>{
+        rej(err)
+    })
 }
 
 Promise.defer = Promise.deferred = function () {
