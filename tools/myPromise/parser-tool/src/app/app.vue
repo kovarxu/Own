@@ -28,6 +28,7 @@ export default {
   methods: {
     parse(content) {
       console.log('start mission.')
+      // resetParser()
       let results = parse(content), layers
       console.log(results)
       if (results) {

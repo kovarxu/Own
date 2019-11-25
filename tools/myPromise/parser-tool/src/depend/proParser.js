@@ -357,6 +357,7 @@ function disposeNesting (results) {
               result.siblings[1] = null
             } else {
               result.child[0] = childPromise
+              result.child[1] = null
               let j = childPromise.then, last = childPromise
               while (j--) {
                 last = last.child[0]
@@ -376,6 +377,7 @@ function disposeNesting (results) {
               // boundary condition
               result.child[1] = next
             } else {
+              if (!result.child[0]) result.child[0] = null
               result.child[1] = childPromise
               let j = childPromise.then, last = childPromise
               while (j--) {
@@ -413,6 +415,7 @@ function defaultVarName () {
 
 function resetParser () {
   $id = 0
+  $pid = 0
 }
 
 module.exports = parse

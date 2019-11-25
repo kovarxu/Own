@@ -10,6 +10,7 @@ export function convert (results) {
     // I give it a layer rank flag
     cur._layer = 0
     let layer = layers[key] = []
+    let layerSetList = []
     let stack = [ cur ]
 
     while (stack.length) {
@@ -18,9 +19,13 @@ export function convert (results) {
       let layerId = now._layer
       
       if (layer[layerId]) {
-        layer[layerId].push(cinfo)
+        if (! layerSetList[layerId].has(cinfo.id)) {
+          layer[layerId].push(cinfo)
+          layerSetList[layerId].add(cinfo.id)
+        }
       } else {
         layer[layerId] = [ cinfo ]
+        layerSetList[layerId] = new Set([ cinfo.id ])
       }
 
       // traverse siblings and childs
@@ -123,7 +128,6 @@ let colorIndex = 0
 const colorMap = new Map()
 
 export function getThemeColor (realm) {
-  console.log(realm)
   let color
   if (color = colorMap.get(realm)) {
     return color
