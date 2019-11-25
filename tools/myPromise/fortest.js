@@ -1,26 +1,32 @@
 var Promise = require('./demo')
 
-new Promise((resolve, reject) => {
+console.log('外部动作1')
+setTimeout(() => {
+  console.log('setTimeout 动作')
+})
+
+var p = new Promise((resolve, reject) => {
     console.log("log: 外部promise");
     resolve();
   })
-    .then(() => {
-      console.log("log: 外部第一个then");
-      new Promise((resolve, reject) => {
-        console.log("log: 内部promise");
-        resolve();
-      })
-        .then(() => {
-          console.log("log: 内部第一个then");
-        })
-        .then(() => {
-          console.log("log: 内部第二个then");
-        });
+  .then(() => {
+    console.log("log: 外部第一个then");
+    return new Promise((resolve, reject) => {
+      console.log("log: 内部promise");
+      resolve();
     })
-    .then(() => {
-      console.log("log: 外部第二个then");
-    });
+      .then(() => {
+        console.log("log: 内部第一个then");
+      })
+      .then(() => {
+        console.log("log: 内部第二个then");
+      });
+  })
+  .then(() => {
+    console.log("log: 外部第二个then");
+  });
 
+console.log('外部动作2')
 
 new Promise((resolve, reject) => {
   resolve(23);
@@ -51,3 +57,11 @@ var p1 = new Promise((resolve, reject) => {
   .then(data => { console.log(data) })
   .then(data => { console.log(data + 'def') })
 }).then(data => { console.log(data) + 125})
+
+var p2 = new Promise((resolve, reject) => {
+  resolve(45)
+}).then((data) => {return data})
+
+p2.then((data) => {console.log(data + 1)})
+p2.then((data) => {console.log(data + 2); return data + 4;})
+.then((data) => {console.log(data + 3)})
