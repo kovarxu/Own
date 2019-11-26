@@ -1,6 +1,3 @@
-// 4. 终极版本Pro
-// 满足Promise A+ 规范
-
 var PENDING = 'pending'
 var FULFILLED = 'fulfilled'
 var REJECTED = 'rejected'
@@ -16,7 +13,7 @@ function Promise(fns) {
     this.id = $id++
 
     try {
-        fns(resolve.bind(this), reject.bind(this))
+        fns(resolve, reject)
     } catch (e) {
         reject(e)
     }
@@ -39,7 +36,7 @@ function Promise(fns) {
             if (that.status === PENDING) {
                 that.reason = reason
                 that.status = REJECTED
-                that.resCallbacks.forEach(cb => cb(reason))
+                that.rejCallbacks.forEach(cb => cb(reason))
             }
         })
         
@@ -47,42 +44,43 @@ function Promise(fns) {
 }
 
 Promise.prototype.then = function(onFulfilled, onRejected) {
-    let newP
+    let newP, that = this
     if (typeof onFulfilled !== 'function') onFulfilled = data => data
     if (typeof onRejected !== 'function') onRejected = reason => { throw reason }
 
     if (this.status === PENDING) {
         newP = new Promise((resolve, reject) => {
-            this.resCallbacks.push((data) => {
-                setTimeout(() => {
-                    try {
-                        let x = onFulfilled(data)
-                        resolvePromise(x, newP, resolve, reject)
-                        // resolve(x)
-                    } catch (e) {
-                        reject(e)
-                    }
-                })
+            this.resCallbacks.push(() => {
+                try {
+                    let data = that.data
+                    let x = onFulfilled(data)
+                    resolvePromise(x, newP, resolve, reject)
+                    // resolve(x)
+                } catch (e) {
+                    reject(e)
+                }
             })
-            this.rejCallbacks.push((reason) => {
-                setTimeout(() => {
-                    try {
-                        let x = onRejected(reason)
-                        resolvePromise(x, newP, resolve, reject)
-                        // resolve(x)
-                    } catch (e) {
-                        reject(e)
-                    }
-                })
+            this.rejCallbacks.push(() => {
+                try {
+                    let reason = that.reason
+                    let x = onRejected(reason)
+                    resolvePromise(x, newP, resolve, reject)
+                    // resolve(x)
+                } catch (e) {
+                    reject(e)
+                }
             })
         })
     }
     else if (this.status === FULFILLED) {
-        let data = this.data
+        // we could not store data here for it's async handle in Promise,
+        // `this.data` may change in the current func stack
+        // we need to get the Real-time value
+        // let data = this.data
         newP = new Promise((resolve, reject) => {
             setTimeout(() => {
                 try {
-                    let x = onFulfilled(data)
+                    let x = onFulfilled(that.data)
                     resolvePromise(x, newP, resolve, reject)
                     // resolve(x)
                 } catch (e) {
@@ -92,11 +90,11 @@ Promise.prototype.then = function(onFulfilled, onRejected) {
         })
     }
     else if (this.status === REJECTED) {
-        let reason = this.reason
+        // let reason = this.reason
         newP = new Promise((resolve, reject) => {
             setTimeout(() => {
                 try {
-                    let x = onRejected(reason)
+                    let x = onRejected(that.reason)
                     resolvePromise(x, newP, resolve, reject)
                     // resolve(x)
                 } catch (e) {
@@ -110,31 +108,72 @@ Promise.prototype.then = function(onFulfilled, onRejected) {
 }
 
 function resolvePromise(x, promise, resolve, reject) {
+    // A. we should also concern about this boundary condition: thenable twice asynchronously:
+    //    resolve / reject can only be called once 
+    //
+    // return {
+    //     then: function (resolvePromise, rejectPromise) {
+    //         setTimeout(function () {
+    //             resolvePromise(sentinel);
+    //         }, 0);
+
+    //         setTimeout(function () {
+    //             resolvePromise(other);
+    //         }, 0);
+    //     }
+    // };
+    //
+    // B. if `throw reason` after resolvePromise / rejectPromise has been executed, ignore it
+    //    or reject promise with the reason
+    //
+    // then: function (resolvePromise, rejectPromise) {
+    //     resolvePromise(sentinel);
+    //     rejectPromise(other);
+    //     throw other;
+    // }
+
+    let called = false
+
     if (x instanceof Promise) {
         if (x.id <= promise.id) {
-            throw 'Error: Circuit Reference In Promise.'
+            throw new TypeError('Circuit Reference In Promise.')
         }
         if (x.status === PENDING) {
+            // x.then(resolve, reject) ??
+            // y would also be a promise instance, so resolvePromise should be called here, not resolve directly
+            x.then(y => {
+                resolvePromise(y, promise, resolve, reject);
+            }, reason => {
+                reject(reason);
+            });
+        } else {
             x.then(resolve, reject)
-        } else if (x.status === FULFILLED) {
-            resolve(x.data)
-        } else if (x.status === REJECTED) {
-            reject(x.reason)
         }
-    } else if (typeof x === 'function' || typeof x === 'object') {
+    } else if (x && (typeof x === 'function' || typeof x === 'object')) {
+        // null is banned
         try {
             let then = x.then
             if (typeof then === 'function') {
-                setTimeout(() => {
-                    try {
-                        let y = then.call(x, resolve, reject)
-                        resolvePromise(y, promise, resolve, reject)
-                    } catch (e) {
-                        reject(e)
-                    }
+                // let y = then.call(x, resolve, reject)
+                // resolvePromise(y, promise, resolve, reject)
+                then.call(x, y => {
+                    // upper reason A
+                    if (called) return
+                    called = true
+                    resolvePromise(y, promise, resolve, reject)
+                }, reason => {
+                    // upper reason A
+                    if (called) return
+                    called = true
+                    reject(reason)
                 })
+            } else {
+                resolve(x)
             }
         } catch (e) {
+            // upper reason B
+            if (called) return
+            called = true
             reject(e)
         }
     } else {
@@ -158,17 +197,22 @@ Promise.prototype.catch = function (rej) {
     this.then(null, rej)
 }
 
-Promise.defer = Promise.deferred = function () {
-  let dfd = {}
-  dfd.promise = new Promise((resolve,reject)=>{
-      dfd.resolve = resolve
-      dfd.reject = reject
-  })
-  return dfd
+Promise.deferred = function () {
+    let defer = {}
+    defer.promise = new Promise((resolve, reject) => {
+        defer.resolve = resolve
+        defer.reject = reject
+    })
+    return defer
 }
 
-module.exports = Promise;
+try {
+    module.exports = Promise
+} catch (e) {
+}
 
+// using mocha
+// https://github.com/promises-aplus/promises-tests
 
 // var p = new Promise((res, rej) => {
 //     setTimeout(() => res(1), 1000)
