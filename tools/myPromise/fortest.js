@@ -11,7 +11,7 @@ var p = new Promise((resolve, reject) => {
   })
   .then(() => {
     console.log("log: 外部第一个then");
-    return new Promise((resolve, reject) => {
+    new Promise((resolve, reject) => {
       console.log("log: 内部promise");
       resolve();
     })
@@ -65,3 +65,15 @@ var p2 = new Promise((resolve, reject) => {
 p2.then((data) => {console.log(data + 1)})
 p2.then((data) => {console.log(data + 2); return data + 4;})
 .then((data) => {console.log(data + 3)})
+
+new Promise((resolve, reject) => {
+  resolve(new Promise((resolve, reject) => {
+    setTimeout(() => resolve(11))
+  })) 
+  reject(1)
+  resolve(3)
+}).then(data => {
+  console.log('fullfilled ' + data)
+}, err => {
+  console.log('rejected ' + err)
+})

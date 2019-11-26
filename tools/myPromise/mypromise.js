@@ -7,6 +7,7 @@ var REJECTED = 'rejected'
 var $id = 0
 
 function Promise(fns) {
+    var that = this
     this.data = undefined
     this.reason = undefined
     this.status = PENDING
@@ -22,18 +23,26 @@ function Promise(fns) {
 
     function resolve(data) {
         if (data instanceof Promise) {
-            data.then(resolve, reject)
-        } else {
-            this.data = data
-            this.status = FULFILLED
-            this.resCallbacks.forEach(cb => cb(data))
+            return data.then(resolve, reject)
         }
+        setTimeout(() => {
+            if (that.status === PENDING) {
+                that.data = data
+                that.status = FULFILLED
+                that.resCallbacks.forEach(cb => cb(data))
+            }
+        })
     }
 
     function reject(reason) {
-        this.reason = reason
-        this.status = REJECTED
-        this.rejCallbacks.forEach(cb => cb(reason))
+        setTimeout(() => {
+            if (that.status === PENDING) {
+                that.reason = reason
+                that.status = REJECTED
+                that.resCallbacks.forEach(cb => cb(reason))
+            }
+        })
+        
     }
 }
 
@@ -45,47 +54,55 @@ Promise.prototype.then = function(onFulfilled, onRejected) {
     if (this.status === PENDING) {
         newP = new Promise((resolve, reject) => {
             this.resCallbacks.push((data) => {
-                try {
-                    let x = onFulfilled(data)
-                    resolvePromise(x, newP, resolve, reject)
-                    // resolve(x)
-                } catch (e) {
-                    reject(e)
-                }
+                setTimeout(() => {
+                    try {
+                        let x = onFulfilled(data)
+                        resolvePromise(x, newP, resolve, reject)
+                        // resolve(x)
+                    } catch (e) {
+                        reject(e)
+                    }
+                })
             })
             this.rejCallbacks.push((reason) => {
-                try {
-                    let x = onRejected(reason)
-                    resolvePromise(x, newP, resolve, reject)
-                    // resolve(x)
-                } catch (e) {
-                    reject(e)
-                }
+                setTimeout(() => {
+                    try {
+                        let x = onRejected(reason)
+                        resolvePromise(x, newP, resolve, reject)
+                        // resolve(x)
+                    } catch (e) {
+                        reject(e)
+                    }
+                })
             })
         })
     }
     else if (this.status === FULFILLED) {
         let data = this.data
         newP = new Promise((resolve, reject) => {
-            try {
-                let x = onFulfilled(data)
-                resolvePromise(x, newP, resolve, reject)
-                // resolve(x)
-            } catch (e) {
-                reject(x)
-            }
+            setTimeout(() => {
+                try {
+                    let x = onFulfilled(data)
+                    resolvePromise(x, newP, resolve, reject)
+                    // resolve(x)
+                } catch (e) {
+                    reject(x)
+                }
+            })
         })
     }
     else if (this.status === REJECTED) {
         let reason = this.reason
         newP = new Promise((resolve, reject) => {
-            try {
-                let x = onRejected(reason)
-                resolvePromise(x, newP, resolve, reject)
-                // resolve(x)
-            } catch (e) {
-                reject(x)
-            }
+            setTimeout(() => {
+                try {
+                    let x = onRejected(reason)
+                    resolvePromise(x, newP, resolve, reject)
+                    // resolve(x)
+                } catch (e) {
+                    reject(x)
+                }
+            })
         })
     }
 
@@ -108,8 +125,14 @@ function resolvePromise(x, promise, resolve, reject) {
         try {
             let then = x.then
             if (typeof then === 'function') {
-                let y = then.call(x, promise.data)
-                resolvePromise(y, promise, resolve, reject)
+                setTimeout(() => {
+                    try {
+                        let y = then.call(x, resolve, reject)
+                        resolvePromise(y, promise, resolve, reject)
+                    } catch (e) {
+                        reject(e)
+                    }
+                })
             }
         } catch (e) {
             reject(e)
@@ -120,15 +143,19 @@ function resolvePromise(x, promise, resolve, reject) {
 }
 
 Promise.resolve = function(data) {
-    return new Promise((res,rej)=>{
-        res(data)
+    return new Promise((resolve, reject) => {
+        resolve(data)
     })
 }
 
-Promise.reject = function(err) {
-    return new Promise((res,rej)=>{
-        rej(err)
+Promise.reject = function(reason) {
+    return new Promise((resolve, reject) => {
+        reject(reason)
     })
+}
+
+Promise.prototype.catch = function (rej) {
+    this.then(null, rej)
 }
 
 Promise.defer = Promise.deferred = function () {

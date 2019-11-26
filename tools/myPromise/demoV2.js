@@ -48,12 +48,12 @@ new Promise((resolve, reject) => {
   })
 }).then(...)
 
-/* page 2 */
+/* page 2 状态 */
 var p = new Promise((resolve, reject) => {
-  setTimeout(() => resolve(99), 5000)
-}).then(data => {
-  console.log(++data);
-  return data;
+  setTimeout(() => {
+    resolve(99)
+    console.log('fulfilled')
+  }, 5000)
 })
 
 var p = new Promise((resolve, reject) => {
@@ -66,7 +66,7 @@ p.then((data) => {
   console.log('in rej ' + err)
 })
 
-/* page 3 */
+/* page 3 结构 */
 var p = new Promise((resolve, reject) => {
   resolve('a')
 })
@@ -131,12 +131,10 @@ var p = new Promise((resolve, reject) => {
   console.log(err)
   return err + 'e'
 })
-
 p.then((res) => {
   console.log('a');
   return data + 'b'
 })
-
 p.then((res) => {
   console.log('a');
   return data + 'b'
@@ -162,15 +160,36 @@ var p = new Promise((resolve, reject) => {
   })
 })
 
-p.then((res) => {
-  console.log('a');
-  return data + 'b'
+/* page 4 执行顺序 */
+console.log('外部动作1')
+setTimeout(() => {
+  console.log('setTimeout 动作')
 })
 
-p.then((res) => {
-  console.log('a');
-  return data + 'b'
-})
+var p = new Promise((resolve, reject) => {
+    console.log("log: 外部promise");
+    resolve();
+  })
+  .then(() => {
+    console.log("log: 外部第一个then");
+    new Promise((resolve, reject) => {
+      console.log("log: 内部promise");
+      resolve();
+    })
+      .then(() => {
+        console.log("log: 内部第一个then");
+      })
+      .then(() => {
+        console.log("log: 内部第二个then");
+      });
+  })
+  .then(() => {
+    console.log("log: 外部第二个then");
+  });
+
+console.log('外部动作2')
+
+/* page 5 语法糖 */
 
 // sugar
 Promise.resolve(data)
@@ -195,54 +214,7 @@ PromiseInstance.then(null, err => {
   ...
 })
 
-
-new Promise((resolve, reject) => {
-  console.log('abc')
-  resolve(1)
-  reject(2)
-  resolve(3)
-  console.log('def')
-}).then(data => {
-  console.log(data)
-})
-
-new Promise((resolve, reject) => {
-  resolve(1)
-}).then(345)
-.then(Promise.resolve('a'))
-.then(Promise.reject('b'))
-.then(data => {
-  console.log(data)
-})
-
-new Promise((resolve, reject) => {
-  resolve(1)
-}).then(data => {
-  console.log(1)
-  return {
-    then (resolve, reject) {
-      setTimeout(() => {
-        resolve(++data)
-      }, 1000)
-    }
-  }
-}).then(data => {
-  console.log(data)
-})
-
-new Promise((resolve, reject) => {
-  resolve(new Promise((resolve, reject) => {
-    resolve(100)
-  }).then(data => {
-      console.log('在内部')
-      return data + 1
-    })
-  )
-}).then(data => {
-  console.log('在外部 ' + data);
-})
-
-// error
+/* page 6 错误处理 */
 new Promise((resolve, reject) => {
   resolve(1)
 }).then(data => {
@@ -265,3 +237,56 @@ new Promise((resolve, reject) => {
 
 throw new Error('reason')
 return Promise.reject('reason')
+
+/* page 7 A+规范边界条件 */
+// 取第一个值
+new Promise((resolve, reject) => {
+  console.log('abc')
+  resolve(1)
+  reject(2)
+  resolve(3)
+  console.log('def')
+}).then(data => {
+  console.log(data)
+})
+
+// 穿透
+new Promise((resolve, reject) => {
+  resolve(1)
+}).then(345)
+.then(Promise.resolve('a'))
+.then(Promise.reject('b'))
+.then(data => {
+  console.log(data)
+})
+
+// thenable
+new Promise((resolve, reject) => {
+  resolve(1)
+}).then(data => {
+  console.log(1)
+  return {
+    then (resolve, reject) {
+      setTimeout(() => {
+        resolve(++data)
+      }, 1000)
+    }
+  }
+}).then(data => {
+  console.log(data)
+})
+
+// *** resolve Promise
+new Promise((resolve, reject) => {
+  resolve(new Promise((resolve, reject) => {
+    resolve(100)
+  }).then(data => {
+      console.log('在内部')
+      return data + 1
+    })
+  )
+}).then(data => {
+  console.log('在外部 ' + data);
+})
+
+
