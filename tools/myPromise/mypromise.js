@@ -18,15 +18,36 @@ function Promise(fns) {
         reject(e)
     }
 
+    // It should always be noticed that
+    // resolve and reject are `different` between Promise instances
     function resolve(data) {
+        // D. we don't need to handle thenable objects here (A+ specification not specified)
+        //    that is to see, if we `resolve(thenable)` directly, the behavior is arbitrary
+        //    For instance: whether log `{foo: "bar"}` or `{then: [func]}` in the following example is alternative
+        //    new Promise((resolve, reject) => {
+        //        resolve({ then (res, rej) { res({ foo: 'bar' }) }})
+        //    }).then((data) => {console.log(data)})
         if (data instanceof Promise) {
             return data.then(resolve, reject)
         }
+        // onFulfilled or onRejected must not be called until the execution context stack contains only platform code. (2.2.4)
+        // C. why not fulfill / reject promise synchronously and call callbacks asynchronously? (2.3.3.3.1)
+        //    a weird boundary condition: an already fulfilled / rejected promise for an asynchronous / synchronous thenable
+        //    new Promise((resolve, reject) => {
+        //            resolve({foo: 'bar'})
+        //        })
+        //        .then(data => {
+        //            return Promise.resolve({ then (res, rej) { res(data) }} )
+        //        })
+        //        .then((data) => {console.log(data)})
+        //    by this way, we must merely log `{foo: "bar"}`
         setTimeout(() => {
             if (that.status === PENDING) {
                 that.data = data
                 that.status = FULFILLED
+                // setTimeout(() => {
                 that.resCallbacks.forEach(cb => cb(data))
+                // })
             }
         })
     }
@@ -36,10 +57,11 @@ function Promise(fns) {
             if (that.status === PENDING) {
                 that.reason = reason
                 that.status = REJECTED
+                // setTimeout(() => {
                 that.rejCallbacks.forEach(cb => cb(reason))
+                // })
             }
         })
-        
     }
 }
 
@@ -84,7 +106,7 @@ Promise.prototype.then = function(onFulfilled, onRejected) {
                     resolvePromise(x, newP, resolve, reject)
                     // resolve(x)
                 } catch (e) {
-                    reject(x)
+                    reject(e)
                 }
             })
         })
@@ -98,7 +120,7 @@ Promise.prototype.then = function(onFulfilled, onRejected) {
                     resolvePromise(x, newP, resolve, reject)
                     // resolve(x)
                 } catch (e) {
-                    reject(x)
+                    reject(e)
                 }
             })
         })
@@ -211,40 +233,10 @@ try {
 } catch (e) {
 }
 
-// using mocha
+// tests using mocha
 // https://github.com/promises-aplus/promises-tests
 
-// var p = new Promise((res, rej) => {
-//     setTimeout(() => res(1), 1000)
-// }).then(data => {
-//     console.log(data + 1)
-//     return data + 1
-// }).then(data => {
-//     console.log(data + 1)
-//     return new Promise((res, rej) => {
-//        setTimeout(() => res(10), 1000)
-//     }).then(data => {
-//         console.log(data + 1)
-//         return data + 1
-//     })
-// }).then().then(data => {
-//     console.log(data + 1)
-//     return data + 1
-// }).then(data => {
-//     console.log(data + 1)
-//     return data + 1
-// })
-
-// var p = new Promise((res, rej) => {
-//     setTimeout(() => res(1), 1000)
-// })
-
-// p.then(data => { return p })
-
-// var p2 = Promise.all([p, new Promise((res, rej) => {
-//   setTimeout(() => res(1), 3000)
-// })]).then(data => {
-//   console.log(data)
-// })
-
-// var p3 = new Promise((res, rej) => res(1)).then(data => p3)
+() => {
+    let x = onFulfilled()
+    resolve(x)
+}
