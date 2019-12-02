@@ -22,8 +22,8 @@ function Promise(fns) {
     // resolve and reject are `different` between Promise instances
     function resolve(data) {
         // D. we don't need to handle thenable objects here (A+ specification not specified)
-        //    that is to see, if we `resolve(thenable)` directly, the behavior is arbitrary
-        //    For instance: whether log `{foo: "bar"}` or `{then: [func]}` in the following example is alternative
+        //    that is to say, if we `resolve(thenable)` directly, the behavior is arbitrary
+        //    For instance: log `{foo: "bar"}` or `{then: [func]}` in the following example are both correct actions
         //    new Promise((resolve, reject) => {
         //        resolve({ then (res, rej) { res({ foo: 'bar' }) }})
         //    }).then((data) => {console.log(data)})

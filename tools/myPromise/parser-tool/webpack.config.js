@@ -5,8 +5,10 @@ const MiniCssExtractPlugin = require('mini-css-extract-plugin')
 const VueLoaderPlugin = require('vue-loader/lib/plugin')
 
 module.exports = {
+  mode: 'development',
   entry: {
-    app: './src/index.js'
+    app: './src/index.js',
+    async: './src/async.js'
   },
   output: {
     path: path.resolve(__dirname, 'dist'), 
