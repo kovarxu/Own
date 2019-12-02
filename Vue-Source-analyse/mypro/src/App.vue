@@ -5,6 +5,7 @@
     <img src="./assets/logo.png" ref="logoImg">
     <div v-graybg:good="123" ref="foo">{{ bar }}</div>
     <div>{{ messageBox }}</div>
+    <router-view />
   </div>
 </template>
 ``
@@ -62,6 +63,8 @@ export default {
     this.bar = 'xxxyyyzzz'
     console.log('cbox', this.cbox)
     console.log('db', this)
+    console.log('----------------------------')
+    console.log(this.$route)
   },
   methods: {
     fee () {

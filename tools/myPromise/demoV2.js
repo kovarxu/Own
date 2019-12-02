@@ -260,6 +260,16 @@ new Promise((resolve, reject) => {
   console.log(data)
 })
 
+// 循环引用
+var p = Promise.resolve('yes').then(() => {
+  return p
+})
+.then(() => {
+  console.log('data')
+},() => {
+  console.log('error')
+})
+
 // thenable
 new Promise((resolve, reject) => {
   resolve(1)
@@ -289,4 +299,16 @@ new Promise((resolve, reject) => {
   console.log('在外部 ' + data);
 })
 
+/* page 8 async */ 
+async function foo () {
+  let data = await bar()
+  console.log(data)
+}
 
+function bar () {
+return Promise.resolve(1).then((data) => {
+  setTimeout(console.log, 1000, data + 2)
+})
+}
+
+var f = foo()

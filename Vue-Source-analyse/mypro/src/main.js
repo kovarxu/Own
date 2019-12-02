@@ -1,4 +1,5 @@
 import Vue from 'vue'
+import router from './router'
 import App from './App.vue'
 
 Vue.directive('graybg', {
@@ -84,25 +85,21 @@ var MyB = MyA.extend({
   template: `<div>age: {{ age }}</div>`
 })
 
-Vue.component('MyTreak', {
-  data: {
-    message: 'I am a message'
-  },
-  template: `rendered message: {{ message }}`
-})
-
 /* eslint-disable no-new */
 var myvue = new Vue({
   el: '#app',
-  data: {
-    message: 'message AV'
+  router,
+  data () {
+    return {
+      message: 'avv'
+    }
   },
   mounted () {
     console.log('root component has mounted')
   },
   // template: `<App class="maee" :message-box="message" link="go" alias="100" />`,
   // template: `<my-tem />`,
-  template: `<my-b />`,
+  template: `<app />`,
   components: {
     App, MyB
   }
