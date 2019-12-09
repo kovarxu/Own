@@ -3,7 +3,7 @@
     <div v-if="hasInited">Inited</div>
     <span v-else>Loading</span>
     <img src="./assets/logo.png" ref="logoImg">
-    <div v-graybg:good="123" ref="foo">{{ bar }}</div>
+    <div v-graybg:good="123" ref="foo">{{ bar | fil('a', 'b') }}</div>
     <div>{{ messageBox }}</div>
     <router-view />
   </div>
@@ -13,6 +13,11 @@
 export default {
   name: 'App',
   props: ['message-box'],
+  filters: {
+    fil(target, a, b) {
+      return target + a + b
+    }
+  },
   data () {
     return {
       bar: 'I am Vue',
