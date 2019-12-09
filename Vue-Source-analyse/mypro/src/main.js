@@ -27,9 +27,14 @@ Vue.component('MyTem', {
       fly: 'sky'
     }
   },
+  filters: {
+    fil(target, a, b) {
+      return target + a + b
+    }
+  },
   template: `
     <div v-if="isShow" data-is="wrapper-A" class="static-class" :class="myClass">
-      <header>I am a header of the < {{fly}}</header>
+      <header>I am a header of the < {{fly | fil('a', 'b')}}</header>
       <div>
         <p v-if="isShow">isShow is true</p>
         <p v-else-if="fly">I can fly in {{fly}}</p>
@@ -99,7 +104,7 @@ var myvue = new Vue({
   },
   // template: `<App class="maee" :message-box="message" link="go" alias="100" />`,
   // template: `<my-tem />`,
-  template: `<app />`,
+  template: `<MyTem />`,
   components: {
     App, MyB
   }
