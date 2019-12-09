@@ -2,9 +2,7 @@
   <div id="app">
     <div v-if="hasInited">Inited</div>
     <span v-else>Loading</span>
-    <img src="./assets/logo.png" ref="logoImg">
-    <div v-graybg:good="123" ref="foo">{{ bar }}</div>
-    <div>{{ messageBox }}</div>
+    <div ref="foo">{{ bar | fli('a', 'b') }}</div>
     <router-view />
   </div>
 </template>
@@ -23,6 +21,11 @@ export default {
       },
       nl: [1,2,3],
       hasInited: false
+    }
+  },
+  filters:{
+    fli (target, a, b) {
+      return target + a + b
     }
   },
   computed: {

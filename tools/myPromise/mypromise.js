@@ -32,7 +32,7 @@ function Promise(fns) {
         }
         // onFulfilled or onRejected must not be called until the execution context stack contains only platform code. (2.2.4)
         // C. why not fulfill / reject promise synchronously and call callbacks asynchronously? (2.3.3.3.1)
-        //    a weird boundary condition: an already fulfilled / rejected promise for an asynchronous / synchronous thenable
+        //    a weird edge case: an already fulfilled / rejected promise for an asynchronous / synchronous thenable
         //    new Promise((resolve, reject) => {
         //            resolve({foo: 'bar'})
         //        })
@@ -130,7 +130,7 @@ Promise.prototype.then = function(onFulfilled, onRejected) {
 }
 
 function resolvePromise(x, promise, resolve, reject) {
-    // A. we should also concern about this boundary condition: thenable twice asynchronously:
+    // A. we should also concern about this edge case: thenable twice asynchronously:
     //    resolve / reject can only be called once 
     //
     // return {
@@ -235,8 +235,3 @@ try {
 
 // tests using mocha
 // https://github.com/promises-aplus/promises-tests
-
-() => {
-    let x = onFulfilled()
-    resolve(x)
-}
