@@ -30,6 +30,11 @@ export default {
       hasInited: false
     }
   },
+  filters:{
+    fli (target, a, b) {
+      return target + a + b
+    }
+  },
   computed: {
     cbox () {
       return this.bar.substr(0, 4)
