@@ -1,5 +1,5 @@
 <template>
-  <div class="hello">
+  <div class="hello" @click="_handleMsgChange" @change.native="_handleMsgChange">
     {{ msg }}
   </div>
 </template>
@@ -9,13 +9,23 @@ export default {
   name: 'B',
   data () {
     return {
-      msg: 'B'
+      bname: 'xxx'
     }
+  },
+  created () {
+    this.$emit('click', 1223434)
+    console.log('options', this.$options)
   },
   beforeRouteEnter(to, from, next) {
     console.log('enter B')
     next('/')
-  }
+  },
+  methods: {
+    _handleMsgChange () {
+      this.$emit('update:msg', this.msg + 1)
+    }
+  },
+  props: ['msg']
 }
 </script>
 

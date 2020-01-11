@@ -1,0 +1,105 @@
+function hash(str) {
+  var hash = 5381;
+  var i = str.length;
+  while(i) {
+    hash = (hash * 33) ^ str.charCodeAt(--i);
+  }
+  return hash >>> 0
+}
+
+function testIsNull (target) {
+  return target === null || target === undefined || (typeof target === 'string' && /^\s*$/.test(target)) || Number.isNaN(target)
+}
+
+function isNative (constructor) {
+  return typeof constructor === 'function' && /native code/.test(Ctor.toString())
+}
+
+function isType(typeName) {
+  return function (target) {
+    const type = Object.prototype.toString.call(target).slice(8, -1)
+    if (typeName.length) {
+      return typeName.includes(type)
+    } else {
+      return typeName === type
+    }
+  }
+}
+
+function copyRegExp(regExp) {
+  const flags =  /\w+/.exec(regExp.flags)
+  const result = new regExp.constructor(regExp.source, flags ? flags[0] : '')
+  result.lastIndex = regExp.lastIndex
+  return result
+}
+
+function copySymbol(symbol) {
+  let description = symbol.description
+}
+
+let hasMapToken = false
+
+const isObject = target => !testIsNull(target) && typeof target === 'object'
+const isArray = isType('Array')
+const isFunction = isType('Function')
+const isSymbol = isType('Symbol')
+const isRegExp = isType('RegExp')
+const isPrimitive = isType(['Number', 'String', 'Boolean'])
+const isUndef = target => target === null || target === undefined
+
+if (typeof WeakMap !== 'undefined' && isNative(WeakMap)) {
+  hasMapToken = true
+}
+
+function copy(target, hMap) {
+  if (isPrimitive(target) || isUndef(target)) {
+    return target
+  }
+  else if (isRegExp(target)) {
+    return copyRegExp(target)
+  }
+  else if (isFunction(target)) {
+    if (isNative(target)) {
+      return target
+    }
+    else {
+      return new Function(target.toString())
+    }
+  }
+  else if (isArray(target)) {
+    if (hMap.has(target)) {
+      return hMap.get(target)
+    }
+    else {
+      let mirList = []
+      for (let i = 0; i < target.length; i++) {
+        mirList.push(copy(target[i], hMap))
+      }
+      hMap.set(mirList, 1)
+      return mirList
+    }
+  }
+  else if (isObject(target)) {
+    if (hMap.has(target)) {
+      return hMap.get(target)
+    } else {
+      let mirObj = {}
+      let keys = Reflect.keys(target)
+    }
+  }
+}
+var o = {
+    a: 1,
+    b: 2,
+    [Symbol('a')]: 'dd',
+    get [Symbol.toStringTag] () {
+        return 'XYZ'
+    }
+}
+
+Object.defineProperty(o, 'en', {value: false})
+
+console.log(Object.keys(o))
+console.log(Reflect.ownKeys(o))
+console.log(Object.getOwnPropertyNames(o))
+console.log(Object.getOwnPropertySymbols(o))
