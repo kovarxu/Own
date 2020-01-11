@@ -10,11 +10,12 @@ class Node:
 
 def buildTrie(root, word):
   tmp = root
+  tmp.words.append(word)
   for c in word:
-    tmp.words.append(word)
     if (not c in tmp.cmap):
       tmp.cmap[c] = Node()
     tmp = tmp.cmap[c]
+    tmp.words.append(word)
 
 class Solution:
   def build(self, words):
@@ -25,17 +26,17 @@ class Solution:
   def slove(self, wanting):
     tmp = self.root
     for c in wanting:
-      n = tmp.cmap[c]
+      n = tmp.cmap.get(c)
       if (n):
         print(n.words)
         tmp = n
       else:
-        print('not found')
+        print([])
         break
 
 if (__name__ == '__main__'):
   words = ['cat', 'act', 'cate', 'cayon', 'cab', 'gooes', 'go', 'does']
-  wanting = 'cat'
+  wanting = 'good'
 
   s = Solution()
   s.build(words)

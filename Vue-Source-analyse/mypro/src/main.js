@@ -1,6 +1,8 @@
 import Vue from 'vue'
 import router from './router'
 import App from './App.vue'
+import B from './components/B.vue'
+import F from './components/f.js'
 
 Vue.directive('graybg', {
   bind: (el, binding) => {
@@ -19,14 +21,7 @@ Vue.directive('graybg', {
   }
 })
 
-Vue.component('SlotA', {
-  data () {
-    return {
-      myname: 'kovar'
-    }
-  },
-  template: `<div>I have a slot <slot name="human" :myname="myname" /></div>`
-})
+Vue.component(F.name, F)
 
 Vue.component('MyTem', {
   data () {
@@ -42,8 +37,8 @@ Vue.component('MyTem', {
     }
   },
   methods: {
-    handleClick () {
-      console.log('clicked')
+    modEvent (e) {
+      console.log(e)
     }
   },
   template: `
@@ -53,11 +48,13 @@ Vue.component('MyTem', {
               @change.native="handleClick"
       >ClickMe!</button>
       <div @click="handleClick">
+      <header v-graybg.tfboy="bname">I am a header of the < {{fly | fil('a', 'b')}}</header>
+      <div>
         <p v-if="isShow">isShow is true</p>
         <p v-else-if="fly">I can fly in {{fly}}</p>
         <p v-else>Can not show and fly. Stupid you!</p>
       </div>
-      <div data-track="luvi">
+      <div data-track="luvi" @click.left.ctrl="modEvent($event)">
         <p>this is a broken p tag
         <div>I am div1</div>
         <p>
@@ -72,69 +69,52 @@ Vue.component('MyTem', {
   `
 })
 
-var MyA = Vue.extend({
-  data() {
+Vue.component('Sow', {
+  name: 'Sow',
+  data () {
     return {
-      name: 'kovar',
-      age: 25,
-      job: 'programmer',
-      address: {
-        c1: '广东省',
-        c2: '深圳市'
-      },
-      id: {
-        cert: "430X",
-        car: '878',
-        dog: 'abxxx335'
-      }      
+      sow: '1',
+      saw: 'foo'
     }
   },
-  template: `<div>age: {{ age }}</div>`
+  template: `<div>Sow <slot name="foo" :sow="sow"></slot> Sow</div>`
 })
 
-var MyB = MyA.extend({
-  data() {
-    return {
-      age: 27,
-      id: {
-        cert: '980',
-        bird: 'sfdyyy'
-      }
-    }
-  },
-  mounted () {
-    console.log(this.$data)
-  },
-  template: `<div>age: {{ age }}</div>`
+Vue.component('Fun', {
+  functional: true,
+  name: 'Fun',
+  props: ['bor'],
+  render (h, c) {
+    console.log(c, c.slots(), c.scopedSlots)
+    // in pre vue 2.6, use c.slots().default
+    return h('div', c.data, [c.scopedSlots.default(), c.scopedSlots.man({bor:c.props.bor})])
+  }
 })
 
 /* eslint-disable no-new */
 var myvue = new Vue({
   el: '#app',
-  router,
+  // router,
   data () {
     return {
-      message: 'avv'
+      message: 'vvvbvvvv',
+      sel: 2
     }
   },
   mounted () {
     console.log('root component has mounted')
   },
+  methods: {
+    handleClick($event) {console.log($event)}
+  },
   // template: `<App class="maee" :message-box="message" link="go" alias="100" />`,
-  // template: `<my-tem />`,
-  template: `<MyTem />`,
+  template: `<my-tem />`,
+  // template: `<Fun :mes="message" :bor="{a: 1}" @click="handleClick">AAA<template v-slot:man="G">MMM{{G.bor.a}}</template></Fun>`,
+  // template: `<Sow><template v-slot:foo="G">MMM{{G.sow}}  {{message}}</template></Sow>`,
+  // template: `<B @click="handleClick" :msg.sync="message"></B>`,
+  // template: `<fn-boy :sel="sel" :bar="message">Hello my boy!<template v-slot:man="G">{{G.bar}}</template></fn-boy>`,
   components: {
-    App, MyB
+    App,
+    B
   }
-})
-
-// console.log('app', App)
-// // var myvue = new App()
-// var myApp = Vue.extend(App)
-// var myvue = new myApp()
-
-// new Promise((resolve, reject) => {
-//   setTimeout(() => resolve(1), 5000)
-// }).then((data) => {
-//   myvue.$mount('#app')
-// })
+}).$mount('#app')
