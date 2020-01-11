@@ -19,6 +19,15 @@ Vue.directive('graybg', {
   }
 })
 
+Vue.component('SlotA', {
+  data () {
+    return {
+      myname: 'kovar'
+    }
+  },
+  template: `<div>I have a slot <slot name="human" :myname="myname" /></div>`
+})
+
 Vue.component('MyTem', {
   data () {
     return {
@@ -32,10 +41,18 @@ Vue.component('MyTem', {
       return target + a + b
     }
   },
+  methods: {
+    handleClick () {
+      console.log('clicked')
+    }
+  },
   template: `
     <div v-if="isShow" data-is="wrapper-A" class="static-class" :class="myClass">
       <header>I am a header of the < {{fly | fil('a', 'b')}}</header>
-      <div>
+      <button @click.right.ctrl="handleClick"
+              @change.native="handleClick"
+      >ClickMe!</button>
+      <div @click="handleClick">
         <p v-if="isShow">isShow is true</p>
         <p v-else-if="fly">I can fly in {{fly}}</p>
         <p v-else>Can not show and fly. Stupid you!</p>
@@ -50,6 +67,7 @@ Vue.component('MyTem', {
         </br>
         <div style="color: cornflowerblue;"> I am the end</div>
       </div>
+      <slot-a><template v-slot:human="{myname}"><em>Here are something in the slot</em></template></slot-a>
     </div>
   `
 })
