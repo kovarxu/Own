@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+</head>
+<body>
+  <script>
+    var data = {
+      time: '20200101',
+      id: 'c8966523',
+      user: {
+        name: {
+          first: 'James',
+          last: 'Brient'
+        },
+        age: 35,
+        hobby: 'basketball'
+      }
+    }
+
+    // Observer
+    var watchers = {}
+
+    class Observer {
+      constructor (vm, prefix) {
+        let self = this
+        for (let key in vm) {
+          let val = vm[key]
+          let tkey = prefix ? `${prefix}.${key}` : key
+          Object.defineProperty(vm, key, {
+            configurable: true,
+            enumerable: true,
+            get () {
+              return val
+            },
+            set (newVal) {
+              if (watchers[tkey])
+                watchers[tkey].notify(newVal, val)
+              val = newVal
+            }
+          })
+          
+          if (val && typeof val === 'object') {
+            new Observer(val, tkey)
+          }
+        }
+
+        vm.__ob__ = this
+      }
+    }
+
+    class Watcher {
+      constructor (exp, cb) {
+        this.exp = exp
+        this.cb = cb
+
+        let shortExp = exp.split('.').slice(1).join('.')
+        watchers[shortExp] = this
+      }
+
+      notify (newVal, val) {
+        this.cb.call(null, newVal, val)
+      }
+    }
+
+    var ob = new Observer(data)
+    new Watcher('d.time', function (a, b) { console.log(a, b) })
+    new Watcher('d.user.name.first', function (a, b) { console.log(a, b) })
+  </script>
+</body>
+</html>

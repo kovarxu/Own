@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+</head>
+<body>
+  <script>
+    // VM
+    var data = {
+      time: '20200101',
+      id: 'c8966523',
+      user: {
+        name: {
+          first: 'James',
+          last: 'Brient'
+        },
+        age: 35,
+        hobby: 'basketball'
+      }
+    }
+
+    // Observer
+    class Observer {
+      constructor (data) {
+        let self = this
+        this.dep = new Dep()
+        
+        for (let key in data) {
+          let val = data[key]
+          Object.defineProperty(data, key, {
+            configurable: true,
+            enumerable: true,
+            get () {
+              if (Dep.target) {
+                self.dep.depend()
+              }
+              return val
+            },
+            set (newVal) {
+              val = newVal
+              self.dep.notify()
+            }
+          })
+
+          if (val && typeof val === 'object') {
+            new Observer(val)
+          }
+        }
+
+        data.__ob__ = this
+      }
+    }
+
+    // Dep
+    class Dep {
+      subs = []
+      
+      depend () {
+        let curWatcher = Dep.target
+        this.addSub(curWatcher)
+      }
+
+      addSub (w) {
+        if (!this.subs.includes(w)) {
+          this.subs.push(w)
+        }
+        w.addDep(this)
+      }
+
+      notify () {
+        this.subs.forEach(watcher => {
+          watcher.update()
+        })
+      }
+    }
+
+    const noop = function () {}
+    // Watcher
+    class Watcher {
+      constructor (vm, expOrFn, cb) {
+        this.vm = vm
+        this.expOrFn = expOrFn
+        this.cb = cb || noop
+
+        this.value = undefined
+        this.deps = []
+        this.get()
+      }
+
+      addDep (dep) {
+        if (!this.deps.includes(dep)){
+          this.deps.push(dep)
+        }
+      }
+
+      get () {
+        Dep.target = this
+        
+        let vm = this.vm
+        let val = this.expOrFn.call(vm, vm)
+        
+        this.value = val
+        return val
+      }
+
+      update () {
+        let vm = this.vm
+        let oldVal = this.value
+        let curVal = this.get()
+        if (oldVal !== curVal) {
+          this.cb.call(vm, curVal, oldVal)
+        }
+      }
+    }
+  
+    var ob = new Observer(data)
+    new Watcher(data, function (vm) { return vm.time }, function (a, b) { console.log(a, b) })
+    new Watcher(data, function (vm) { return vm.user.name.first }, function (a, b) { console.log(a, b) })
+  </script>
+</body>
+</html>

@@ -2,7 +2,10 @@ import Vue from 'vue'
 import router from './router'
 import App from './App.vue'
 import B from './components/B.vue'
+import M from './components/M.vue'
 import F from './components/f.js'
+
+console.log('M ', M)
 
 Vue.directive('graybg', {
   bind: (el, binding) => {
@@ -108,13 +111,15 @@ var myvue = new Vue({
     handleClick($event) {console.log($event)}
   },
   // template: `<App class="maee" :message-box="message" link="go" alias="100" />`,
-  template: `<my-tem />`,
+  // template: `<my-tem />`,
+  template: `<M />`,
   // template: `<Fun :mes="message" :bor="{a: 1}" @click="handleClick">AAA<template v-slot:man="G">MMM{{G.bor.a}}</template></Fun>`,
   // template: `<Sow><template v-slot:foo="G">MMM{{G.sow}}  {{message}}</template></Sow>`,
   // template: `<B @click="handleClick" :msg.sync="message"></B>`,
   // template: `<fn-boy :sel="sel" :bar="message">Hello my boy!<template v-slot:man="G">{{G.bar}}</template></fn-boy>`,
   components: {
     App,
-    B
+    B,
+    M
   }
 }).$mount('#app')
