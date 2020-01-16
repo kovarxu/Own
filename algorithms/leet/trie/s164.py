@@ -40,5 +40,6 @@ if (__name__ == '__main__'):
 
   s = Solution()
   s.build(words)
+  print(s)
   s.slove(wanting)
 

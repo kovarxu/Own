@@ -6,6 +6,8 @@ import V from './components/V.vue'
 import D from './components/D.vue'
 import F from './components/f.js'
 
+console.log('M ', M)
+
 Vue.directive('graybg', {
   bind: (el, binding) => {
     el.style.backgroundColor = "#666"
@@ -45,6 +47,11 @@ Vue.component('MyTem', {
   },
   template: `
     <div v-if="isShow" data-is="wrapper-A" class="static-class" :class="myClass">
+      <header>I am a header of the < {{fly | fil('a', 'b')}}</header>
+      <button @click.right.ctrl="handleClick"
+              @change.native="handleClick"
+      >ClickMe!</button>
+      <div @click="handleClick">
       <header v-graybg.tfboy="bname">I am a header of the < {{fly | fil('a', 'b')}}</header>
       <input v-model="fly" />
       <div>
@@ -62,6 +69,7 @@ Vue.component('MyTem', {
         </br>
         <div style="color: cornflowerblue;"> I am the end</div>
       </div>
+      <slot-a><template v-slot:human="{myname}"><em>Here are something in the slot</em></template></slot-a>
     </div>
   `
 })
