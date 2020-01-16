@@ -7,6 +7,40 @@
   <title>For test</title>
 </head>
 <body>
-  <script src="./proParser.js"></script>
+  <div id="btn">
+    <i id="ci">CLICK ME</i>
+  </div>
+
+  <script>
+    const $ = (des) => document.querySelector(des)
+    const joke = function () {console.log('tell me a joke')}
+    const out = function () {console.log('in setTimeout')}
+
+    $('#ci').onclick = function () {
+      
+      // message channel
+      const channel = new MessageChannel()
+      const port = channel.port2
+      channel.port1.onmessage = joke
+      port.postMessage(1);
+
+      // waste some time
+      /(\d+)*a/.test('19568956544845412112112')
+
+      setTimeout(out, 0)
+
+      Promise.resolve().then(function () {
+        $('#btn').onclick = function () {
+          $('#ci').innerHTML = 'Have Clicked'
+          $('#ci').style.color = 'cornflowerblue'
+          console.log('bubbled to the outer')
+          Promise.resolve().then(function() {
+            $('#ci').innerHTML = 'Have Clicked and triggered'
+            console.log('micro task in bubbled event')
+          })
+        }
+      })
+    }
+  </script>
 </body>
 </html>
