@@ -41,6 +41,9 @@
             },
             set (newVal) {
               val = newVal
+              if (val && typeof val === 'object') {
+                new Observer(val)
+              }
               self.dep.notify()
             }
           })

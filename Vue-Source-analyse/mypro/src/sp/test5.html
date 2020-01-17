@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Iterator</title>
+</head>
+<body>
+  <script>
+    function iter () {
+      let i = 0
+      return {
+        next () {
+          if (i < 5)
+            return { value: ++i, done: false }
+          else
+            return { value: i, done: true }
+        }
+      }
+    }
+
+    var o = {}
+
+    o[Symbol.iterator] = iter
+
+    for (let i of o) {
+      console.log(i)
+    }
+  </script>
+</body>
+</html>

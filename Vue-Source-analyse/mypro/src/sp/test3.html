@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+</head>
+<body>
+  <input type="text" id="wordInput" />
+  <ul id="rearchResults"></ul>
+
+  <script>
+    var origDatas = ['cat', 'cta', 'cut', 'catu', 'category', 'do', 'does', 'did', 'eat']
+    var $ = (selector) => document.querySelector(selector)
+
+    class Trie {
+      keys = []
+      words = []
+      addWord (w, id=0) {
+        if (w.length > id) {
+          let curLetter = w[id]
+          if (this.keys[curLetter]) {
+            this.keys[curLetter].addWord(w, id+1)
+          } else {
+            let t = this.keys[curLetter] = new Trie()
+            t.addWord(w, id+1)
+          }
+        }
+        this.words.push(w)
+      }
+      searchPrefix (w) {
+        if (w.length) {
+          let firstLetter = w[0]
+          if (this.keys[firstLetter]) {
+            return this.keys[firstLetter].searchPrefix(w.slice(1))
+          } else {
+            return []
+          }
+        } else {
+          return this.words
+        }
+      }
+    }
+
+    function buildTrie (words) {
+      let trie = new Trie()
+      for (let word of words) {
+        trie.addWord(word)
+      }
+      return trie
+    }
+
+    function bindInputHandler (trie) {
+      if (!trie) return
+      $('#wordInput').oninput = function (e) {
+        let val = e.target.value
+        let result = trie.searchPrefix(val)
+        console.log(result)
+        refreshResult(result)
+      }
+    }
+
+    function init () {
+      let trie = buildTrie(origDatas)
+      bindInputHandler(trie)
+    }
+
+    function refreshResult (result) {
+      let ulContainer = $('#rearchResults')
+      ulContainer.innerHTML = ''
+      
+      if (result.length === 0) {
+        insertLiElement(ulContainer)
+      } else {
+        for (let r of result) {
+          insertLiElement(ulContainer, r)
+        }
+      }
+    }
+
+    function insertLiElement (container, r='无搜索结果') {
+      let newLi = document.createElement('li')
+      newLi.innerHTML = r
+      container.appendChild(newLi)
+    }
+
+    init()
+  </script>
+</body>
+</html>

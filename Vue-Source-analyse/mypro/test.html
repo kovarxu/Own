@@ -15,31 +15,41 @@
     const $ = (des) => document.querySelector(des)
     const joke = function () {console.log('tell me a joke')}
     const out = function () {console.log('in setTimeout')}
+    const mut = function () {console.log('mutation observer triggered')}
 
     $('#ci').onclick = function () {
+      setTimeout(out, 0);
       
+      // waste some time
+      /(\d+)*a/.test('19568956544845412112112')
+
       // message channel
       const channel = new MessageChannel()
       const port = channel.port2
       channel.port1.onmessage = joke
       port.postMessage(1);
 
-      // waste some time
-      /(\d+)*a/.test('19568956544845412112112')
-
-      setTimeout(out, 0)
-
       Promise.resolve().then(function () {
         $('#btn').onclick = function () {
           $('#ci').innerHTML = 'Have Clicked'
           $('#ci').style.color = 'cornflowerblue'
-          console.log('bubbled to the outer')
+          console.log('bubbled to the outer after micro task')
           Promise.resolve().then(function() {
             $('#ci').innerHTML = 'Have Clicked and triggered'
-            console.log('micro task in bubbled event')
+            console.log('micro task registered in bubbled event')
           })
         }
       })
+
+      // mutation observer
+      var counter = 1
+      var observer = new MutationObserver(mut)
+      var textNode = document.createTextNode(String(counter))
+      observer.observe(textNode, {
+        characterData: true
+      })
+      counter = (counter + 1) % 2
+      textNode.data = String(counter)
     }
   </script>
 </body>

@@ -22,8 +22,6 @@
     }
 
     // Observer
-    var watchers = {}
-
     class Observer {
       constructor (vm, prefix) {
         let self = this
@@ -38,7 +36,7 @@
             },
             set (newVal) {
               if (watchers[tkey])
-                watchers[tkey].notify(newVal, val)
+              watchers[tkey].notify(newVal, val)
               val = newVal
             }
           })
@@ -47,11 +45,13 @@
             new Observer(val, tkey)
           }
         }
-
+        
         vm.__ob__ = this
       }
     }
-
+    
+    // Watcher
+    var watchers = {}
     class Watcher {
       constructor (exp, cb) {
         this.exp = exp
