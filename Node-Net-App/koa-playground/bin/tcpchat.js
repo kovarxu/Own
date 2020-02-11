@@ -1,4 +1,4 @@
-const notFound = require('../lib/chatroom-static')
+const notFound = require('../lib/tcpchat')
 
 if (!module.parent) {
   notFound.listen(3003, function () {

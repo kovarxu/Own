@@ -1,14 +1,18 @@
 const fs = require('fs')
 const path = require('path')
-const Koa = require('koa2')
 const mime = require('mime')
 
 const FILE_CACHE = Object.create(null)
-const app = module.exports = new Koa()
+
+const htmlFilePath = './html'
+const staticFilePath = './mime'
 
 function getFullPath (filename) {
-  const commonPath = './mime'
-  return path.join(commonPath, filename)
+  if (filename.endsWith('.html')) {
+    return path.join(htmlFilePath, filename)
+  } else {
+    return path.join(staticFilePath, filename)
+  }
 }
 
 function response404 (ctx, filename) {
@@ -71,7 +75,7 @@ function checkFileExists (filename) {
 
 const STATIC_URL_PREFIX = 'static/'
 
-app.use(async function staticFile (ctx, next) {
+module.exports = async function staticFile (ctx, next) {
   if (ctx.path.indexOf(STATIC_URL_PREFIX) >= 0) {
     // static file
     let filename = ctx.path.split('/')
@@ -83,8 +87,10 @@ app.use(async function staticFile (ctx, next) {
     }
 
     await responseFile(ctx, filename)
+  } else if (ctx.path === '/') {
+    await responseFile(ctx, 'chatroom.html')
   }
 
   await next()
-})
+}
 

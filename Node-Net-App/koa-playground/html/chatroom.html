@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ChatRoom</title>
+</head>
+<body>
+  <h2>ChatRoom</h2>
+
+  <div>昵称：<span id="nick-name"></span></div>
+
+  <form action="">
+    <input type="text" class="f-input" id="f-input" />
+    <input type="submit" value="发言" id="talk-btn">
+  </form>
+  
+  <div id="talk-area">
+    <ul></ul>
+  </div>
+
+  <script src="/static/socket.io.slim.js"></script>
+  <script src="/static/jquery.min.js"></script>
+  <script src="/static/chatroom-client.js"></script>
+</body>
+</html>
