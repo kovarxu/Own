@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Upload File Example</title>
+</head>
+<body>
+  <h2>Questionnaire</h2>
+  <form action="/echo" method="POST" enctype="multipart/form-data">
+    <p>
+      name: <input type="text" name="name" />
+    </p>
+    <p>
+      age: <input type="text" name="age" />
+    </p>
+    <p>
+      like this video?
+      <input type="radio" name="like" value="1" />Yes
+      <input type="radio" name="like" value="0" />No
+    </p>
+    <p>
+      your avatar: <input type="file" accept="text/*" name="avatar" />
+    </p>
+    <p>
+      <input type="submit" />
+    </p>
+  </form>
+</body>
+</html>

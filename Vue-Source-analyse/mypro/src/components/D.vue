@@ -2,6 +2,7 @@
   <div>
     <button @click="onShift">Shift</button>
     <div>{{ seats }}</div>
+    <slot :car="car">I am foo</slot>
   </div>
 </template>
 

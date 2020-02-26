@@ -9,7 +9,7 @@ if (typeof filename !== 'string' || !(filename = filename.trim())) {
   throw new Error('please specify execuatable js file')
 }
 
-filename = dir + filename.replace(/\.js$/, '')
+filename = dir + filename.replace(/(?<!\.js)(?!\.js)$/, '.js')
 
 if (!fs.existsSync(filename)) {
   throw new Error('file not exist : ' + filename)

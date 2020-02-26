@@ -35,6 +35,18 @@ function initTexture () {
 }
 ```
 
+## gl.texImage2D parameters
+
+1. `target`  one of: `gl.TEXTURE_2D  gl.TEXTURE_CUBE_MAP_POSITIVE_X, gl.TEXTURE_CUBE_MAP_POSITIVE_Y, gl.TEXTURE_CUBE_MAP_POSITIVE_Z, gl.TEXTURE_CUBE_MAP_NEGATIVE_X, gl.TEXTURE_CUBE_MAP_NEGATIVE_Y, gl.TEXTURE_CUBE_MAP_NEGATIVE_Z`
+2. `level` texture level, 0
+3. `internal format` inner color component
+4. `width`
+5. `height`
+6. `border` must be 0
+7. `format` texel format, in webgl1 must = internal format, in webgl2 has some combinations
+8. `type` texel data type, such as `gl.UNSIGNED_BYTE, gl.UNSIGNED_SHORT_4_4_4_4`
+9. `pixels` source `ArrayBufferView, ImageData, HTMLImageElement, HTMLCanvasElement, HTMLVideoElement, ImageBitMap`
+
 ## image cors
 
 we should set `Access-Control-Allow-Origin: "*"` in the back end.
@@ -48,12 +60,12 @@ when we take a 16\*16 image and draw on 2\*2 plain, what photoshop do is average
 
 A mipmap is a collection of progressively smaller images, each one 1/4th the size of the previous one
 
-`gl.generateMipmap(gl.TEXTURE_2D)` we gen bitmap for the texture, that need 1/3 more memory space (it create 1*1, 2*2, 4*4, 8*8, ..., sqrt(a)*sqrt(a))
+`gl.generateMipmap(gl.TEXTURE_2D)` we gen bitmap for the texture, that need 1/3 more memory space (it create 1\*1, 2\*2, 4\*4, 8\*8, ..., sqrt(a)\*sqrt(a))
 
 
 ## texture atalas
 
-we merge some small pictures in a big image, and can get then through texture coordinate.
+we merge some small pictures in a big image, and can get them by texture coordinate.
 
 ## texture settings
 
@@ -67,7 +79,9 @@ gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, s.filter);
 gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
 ```
 
-`TEXTURE_MIN_FILTER` is the setting used when the size you are drawing is smaller than the largest mip. TEXTURE_MAG_FILTER is the setting used when the size you are drawing is larger than the largest mip. For `TEXTURE_MAG_FILTER` only NEAREST and LINEAR are valid settings.
+`TEXTURE_MIN_FILTER` is the setting used when the size you are drawing is smaller than the largest mip. 
+
+`TEXTURE_MAG_FILTER` is the setting used when the size you are drawing is larger than the largest mip. For `TEXTURE_MAG_FILTER` only NEAREST and LINEAR are valid settings.
 
 ## texture units
 
@@ -128,6 +142,6 @@ We can see more detail here, with bit and channel information
 
 ![./format_bit_info.png](./format_bit_info.png)
 
-And then, then `inner type` -- `type` -- `javascript data type` map
+And then, then `inner type` -- `type` -- `gl enum data type` map
 
 ![./inner_type.png](./inner_type.png)

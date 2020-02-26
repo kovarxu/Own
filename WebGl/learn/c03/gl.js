@@ -116,6 +116,7 @@ function changeM (pr) {
     0, sy, 0,
     0, 0, 1
   ]
+  // scale * rot * trans
   pr.m = m3mul( scale, rotation, tranlation )
 }
 

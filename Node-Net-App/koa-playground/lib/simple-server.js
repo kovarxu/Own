@@ -1,11 +1,13 @@
 const Koa = require('koa2')
 
 const app = module.exports = new Koa()
+const path = require('path')
 
 let items = []
 
 console.log(process.argv)
-console.log(__dirname)
+console.log(__dirname) // 文件所在地
+console.log(path.resolve('abc', '345', '../456')) // 命令行执行时所在的目录
 
 app.use(async function routes (ctx, next) {
   switch (ctx.method) {

@@ -33,7 +33,7 @@ so a perspective matrix could be like this:
 
 [ 1, 0, 0, 0,
   0, 1, 0, 0,
-  0, 1, 1, fudgeFactor,
+  0, 0, 1, fudgeFactor,
   0, 0, 0, 1]
 
 which means: `w_out = x_in * 0 + y_in * 0 + z_in * fudgeFactor + 1.0`
