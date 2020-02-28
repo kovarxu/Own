@@ -26,3 +26,5 @@
 4. normalize(vec) 归一化矢量
 5. faceforward(N, I, ref) 朝向，用于计算一个矢量是否朝向一个面，如果dot(ref, I) < 0 返回N 否则返回-N
 6. reflect(I, N) 折射，返回 I-2\*dot(N,I)\*N, N需要事先被归一化
+
+### 纹理函数

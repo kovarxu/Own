@@ -23,8 +23,10 @@ function getVertexShaderSource () {
   return `#version 300 es
   // 外部传入的attibution
   in vec4 a_position;
+  out vec4 v_color;
   void main () {
     gl_Position = a_position;
+    v_color = vec4(fract(a_position.xyz * 1.58457), 1.0);
   }
   `
 }
@@ -33,9 +35,10 @@ function getFragmentShaderSource () {
   return `#version 300 es
   // 浮点数精度设定，高精度需要消耗更多性能
   precision mediump float;
+  in vec4 v_color;
   out vec4 outColor;
   void main () {
-    outColor = vec4(0.6, 0.8, 1, 1);
+    outColor = v_color;
   }
   `
 }

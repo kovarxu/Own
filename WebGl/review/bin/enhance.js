@@ -30,7 +30,7 @@
   // colors to each triangle. Finally it passes
   // the result to createBufferInfoFromArrays and
   // returns a twgl.BufferInfo
-  twgl.createFlattenedVertices = function createFlattenedVertices(gl, vertices, vertsPerColor, controlOnVertices) {
+  function createFlattenedVertices(gl, vertices, vertsPerColor, controlOnVertices) {
     let last;
     if (typeof controlOnVertices === 'function') {
       vertices = controlOnVertices(gl, vertices)
@@ -41,15 +41,13 @@
             twgl.primitives.deindexVertices(vertices),
             {
               vertsPerColor: vertsPerColor || 1,
-              rand: function(ndx, channel) {
-                if (channel === 0) {
-                  last = 128 + Math.random() * 128 | 0;
-                }
-                return channel < 3 ? last : 255;
-              },
-            })
+              rand: randFns[currentRandFnType]
+            }
+        )
       );
   }
+
+  twgl.createFlattenedVertices = createFlattenedVertices
 
   function createFlattenedFunc(createVerticesFunc, vertsPerColor) {
     return function(gl) {
