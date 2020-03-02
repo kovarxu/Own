@@ -31,7 +31,7 @@ function getVertexShaderSource () {
 
   void main () {
     v_relative_poz = a_position / 200.0;
-    gl_Position = vec4(v_relative_poz, 0.0, 1.0);
+    gl_Position = vec4(v_relative_poz - .5, 0.0, 1.0);
   }
   `
 }
@@ -44,6 +44,8 @@ function getFragmentShaderSource () {
   out vec4 outColor;
   // 纹理
   uniform sampler2D u_texture;
+  uniform mat4 u_cmatrix;
+  uniform mat4 u_cmatrix_i;
 
   uniform float brightness;
   uniform float contrast;
@@ -66,15 +68,19 @@ function getFragmentShaderSource () {
 
   void main () {
     vec2 p = v_relative_poz;
-    vec3 a = rgb2hsv(texture(u_texture, p).rgb);
-    vec3 m = a + vec3(contrast/100.0, saturation/100.0, brightness/100.0);
-    outColor = vec4(hsv2rgb(m), 1.0);
-    // outColor = texture(u_texture, v_relative_poz);
+    // vec3 a = rgb2hsv(texture(u_texture, p).rgb);
+    // vec3 m = a + vec3(contrast/100.0, saturation/100.0, brightness/100.0);
+    // outColor = vec4(hsv2rgb(m), 1.0);
+    vec4 tcolor = texture(u_texture, p);
+    vec4 ccolor = u_cmatrix * vec4(tcolor.rgb, 1.);
+    vec4 gcolor = ccolor + vec4(brightness/100.0, contrast/100.0, saturation/100.0, 0.);
+    vec4 fcolor = u_cmatrix_i * gcolor;
+    outColor = vec4(fcolor.rgb, 1.0);
   }
   `
 }
 
-function draw (gl, program, bufferInfo, vao) {
+function draw (gl, program, offset, count) {
   gl.viewport(0, 0, WIDTHPIX, HEIGHTPIX)
   // 清空屏幕
   gl.clearColor(0, 0, 0, 0)
@@ -83,21 +89,26 @@ function draw (gl, program, bufferInfo, vao) {
   gl.enable(gl.CULL_FACE);
   gl.enable(gl.DEPTH_TEST);
 
-  gl.useProgram(program.program || program)
-  gl.bindVertexArray(vao)
+  gl.useProgram(program.program)
+  gl.bindVertexArray(program.vao)
 
   let primitiveType = gl.TRIANGLES // 画三角形
-  let offset = 0 // 偏移量
-  // let count = 36 // 点的数量
-  gl.drawArrays(primitiveType, offset, bufferInfo.numElements)
+  offset = offset || 0 // 偏移量
+  count = count || program.bufferInfo.numElements // 点的数量
+  gl.drawArrays(primitiveType, offset, count)
   // gl.drawElements(primitiveType, count, gl.UNSIGNED_SHORT, offset)
   // twgl.drawBufferInfo(gl, bufferInfo, primitiveType, count, offset)
 }
 
+const cMatrix = [ 0.299, 0.587, 0.114, 0.0, 0.1687, -0.3313, 0.5, 0.5, 0.5, -0.4187, -0.0813, 0.5, 0.0, 0.0, 0.0, 1.0 ];
+const ciMatrix = m4.inverse(cMatrix);
+
 function setUniforms (gl, programContext, context) {
   gl.useProgram(programContext.program)
-  twgl.setUniforms(programContext, { 
+  twgl.setUniforms(programContext.context, { 
     resolution: [WIDTHPIX, HEIGHTPIX],
+    u_cmatrix: cMatrix,
+    u_cmatrix_i: ciMatrix,
     ...context
   })
 }
@@ -161,27 +172,45 @@ window.onload = function main () {
     console.log('enhanced twgl start failed, program automatically exit')
     return
   }
+  twgl.setAttributePrefix('a_')
+  
   const gl = createCanvasAndWebgl2Context()
   if (!gl) return
 
   const vertexShaderSource = getVertexShaderSource()
   const fragmentShaderSource = getFragmentShaderSource()
-  const programContext = twgl.createProgramInfo(gl, [vertexShaderSource, fragmentShaderSource])
 
-  twgl.setAttributePrefix('a_')
   const mapVertices = getMapVertices()
   const mapVerticesBufferInfo = twgl.createBufferInfoFromArrays(gl, mapVertices)
-  const vao = twgl.createVAOFromBufferInfo(gl, programContext, mapVerticesBufferInfo)
+
+  const programContext = createProgram(gl, { vshader: vertexShaderSource, fshader: fragmentShaderSource, bufferInfo: mapVerticesBufferInfo })
   let texture = getTexture(gl, rerender)
 
-  const context = { brightness: 10, contrast: 10, saturation: 0 }
+  const guiContext = { brightness: 10, contrast: 10, saturation: 0 }
 
   rerender()
 
-  initGUI(context, rerender)
+  initGUI(guiContext, rerender)
 
   function rerender () {
-    setUniforms(gl, programContext, context)
-    draw(gl, programContext, mapVerticesBufferInfo, vao)
+    setUniforms(gl, programContext, guiContext)
+    draw(gl, programContext)
+  }
+}
+
+function createProgram (gl, options) {
+  if (typeof options !== 'object') {
+    return null
+  }
+  let { vshader, fshader, bufferInfo } = options
+
+  let programContext = twgl.createProgramInfo(gl, [vshader, fshader])
+  let vao = twgl.createVAOFromBufferInfo(gl, programContext, bufferInfo)
+
+  return {
+    context: programContext,
+    program: programContext.program,
+    bufferInfo,
+    vao
   }
 }
