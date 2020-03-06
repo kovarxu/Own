@@ -1,7 +1,8 @@
 function initMainPage () {
   const appContainer = $('#app')
   appContainer.innerHTML = `
-  <div>图片是：<img src="/static/imgs/flower.jpg" /></div>
+  <div>图片是：<img src="/sworker/imgs/flower-1.jpg" width=100 height=100 /></div>
+  <div><button id="btn">再次获取图片</button></div>
   `
 }
 
@@ -10,8 +11,8 @@ function $ (sel) {
 }
 
 function initServiceWorker() {
-  if ('serviceworker' in navigator) {
-    return navigator.serviceworker.regiester('/sworker/sw.js', '/sworker/').then(reg => {
+  if ('serviceWorker' in navigator) {
+    return navigator.serviceWorker.register('/sworker/sw.js', { scope: '/sworker/' }).then(reg => {
       console.log('regiester service worker: ' + reg.scope)
     }).catch(e => {
       console.log('register failed with ' + e)

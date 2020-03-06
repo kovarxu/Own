@@ -5,9 +5,9 @@ const path = require('path')
 
 let items = []
 
-console.log(process.argv)
+console.log(process.argv) // 命令行执行时所在的目录
 console.log(__dirname) // 文件所在地
-console.log(path.resolve('abc', '345', '../456')) // 命令行执行时所在的目录
+console.log(path.resolve('abc', '345', '../456'))
 
 app.use(async function routes (ctx, next) {
   switch (ctx.method) {

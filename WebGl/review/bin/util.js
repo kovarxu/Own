@@ -1,64 +1,20 @@
-function getMainCanvas () {
-  let c
-  if (c = document.querySelector('#mc')) {
-    return c
-  } else {
-    warn('找不到根canvas元素！')
-  }
-}
 
-function warn () {
-  let arg = [].slice.call(arguments)
-  console.warn.apply(null, arg)
-}
+// 创建一个canvas元素和webgl2上下文
+function createCanvasAndWebgl2Context (width=800, height=600) {
+  let canvas = document.createElement('canvas')
+  canvas.width = width
+  canvas.height = height
 
-function createWebGlContext (mc) {
-  let wgx
-  try {
-    wgx = mc.getContext('webgl2')
-  } catch (e) {
-    warn(e)
-  }
-  return wgx
-}
+  let gl = canvas.getContext('webgl2')
 
-
-/*
-  create shader
-  type is gl.VERTEX_SHADER or gl.FRAGMENT_SHADER
-  source is shader's string
-*/
-function createShader (gl, type, source) {
-  let shader = gl.createShader(type)
-  gl.shaderSource(shader, source)
-  gl.compileShader(shader)
-  
-  let success = gl.getShaderParameter(shader, gl.COMPILE_STATUS);
-  if (success) {
-    return shader;
+  if (!gl) {
+    console.log('您的浏览器不支持webgl2')
+    return
   }
 
-  warn(gl.getShaderInfoLog(shader))
-  gl.deleteShader(shader)
-}
+  document.body.appendChild(canvas)
 
-
-/*
-  create program
-*/
-function createProgram (gl, vertexShader, fragmentShader) {
-  let program = gl.createProgram()
-  gl.attachShader(program, vertexShader)
-  gl.attachShader(program, fragmentShader)
-  gl.linkProgram(program)
-  
-  let success = gl.getProgramParameter(program, gl.LINK_STATUS)
-  if (success) {
-    return program
-  }
-
-  warn(gl.getProgramInfoLog(program))
-  gl.deleteProgram(program)
+  return gl
 }
 
 /* --------------------- */

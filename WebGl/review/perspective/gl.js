@@ -82,11 +82,11 @@ function setUniforms (programContext, context) {
   const transformMatrix = getTransformMatrix(context)
   const perspectiveMatrix = perspective(globalContext)
   const orthoMatrix = ortho()
-  const cameraMatrix = camara(globalContext)
+  const cameraMatrix = camera(globalContext)
   twgl.setUniforms(programContext, { 'u_matrix': m4.m4mul(transformMatrix, cameraMatrix, perspectiveMatrix) })
 }
 
-function camara (context) {
+function camera (context) {
   let eye = [context.eye_x, context.eye_y, context.eye_z]
   let target = [context.target_x, context.target_y, context.target_z]
   let up = [1, 0, 0]
