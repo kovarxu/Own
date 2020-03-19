@@ -13,6 +13,7 @@ class Shader {
     void main () {
       gl_Position = u_matrix * vec4(a_position, 1.0);
       v_color = a_color;
+      // v_color = vec4(0.6, 0.8, 1.0, 1.0);
     }
     `
   }

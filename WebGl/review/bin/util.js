@@ -23,6 +23,19 @@ function createCanvasAndWebgl2Context (width=800, height=600) {
   if (global.twgl) {
     const m4 = global.m4 = global.twgl.m4
     const v3 = global.v3 = global.twgl.v3
+
+    m4.orthographic = function(left, right, bottom, top, near, far) {
+      return [
+        2 / (right - left), 0, 0, 0,
+        0, 2 / (top - bottom), 0, 0,
+        0, 0, 2 / (near - far), 0,
+   
+        (left + right) / (left - right),
+        (bottom + top) / (bottom - top),
+        (near + far) / (near - far),
+        1,
+      ];
+    }
     
     // 4d matrix multiply
     m4.m4mul = function () {

@@ -2,20 +2,35 @@ import Vue from 'vue'
 import Router from 'vue-router'
 import HelloWorld from '@/components/HelloWorld'
 import B from '@/components/B'
+import M from '@/components/M'
 
 Vue.use(Router)
 
-export default new Router({
+const router = new Router({
+  mode: 'hash',
   routes: [
     {
       path: '/',
-      name: 'HelloWorld',
       component: HelloWorld
     },
     {
       path: '/b',
-      name: 'B',
-      component: B
+      component: B,
+      children: [
+        {
+          path: 'db',
+          name: 'db',
+          component: M
+        }
+      ]
     }
   ]
 })
+
+router.beforeEach((to, from, next) => {
+  console.log('before exec')
+  console.log(router)
+  next()
+})
+
+export default router

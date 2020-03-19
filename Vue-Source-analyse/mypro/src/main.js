@@ -5,8 +5,8 @@ import B from './components/B.vue'
 import V from './components/V.vue'
 import D from './components/D.vue'
 import F from './components/f.js'
-import myFoo from './ok.js'
-console.log('foo ' + myFoo)
+// import myFoo from './ok.js'
+// console.log('foo ' + myFoo)
 
 Vue.directive('graybg', {
   bind: (el, binding) => {
@@ -24,77 +24,6 @@ Vue.directive('graybg', {
     console.log('directive inserted')
   }
 })
-
-// Vue.component(F.name, F)
-
-// Vue.component('MyTem', {
-//   data () {
-//     return {
-//       isShow: true,
-//       myClass: { mc: true },
-//       fly: 'sky'
-//     }
-//   },
-//   filters: {
-//     fil(target, a, b) {
-//       return target + a + b
-//     }
-//   },
-//   methods: {
-//     modEvent (e) {
-//       console.log(e)
-//     }
-//   },
-//   template: `
-//     <div v-if="isShow" data-is="wrapper-A" class="static-class" :class="myClass">
-//       <header>I am a header of the < {{fly | fil('a', 'b')}}</header>
-//       <button @click.right.ctrl="handleClick"
-//               @change.native="handleClick"
-//       >ClickMe!</button>
-//       <div @click="handleClick">
-//       <header v-graybg.tfboy="bname">I am a header of the < {{fly | fil('a', 'b')}}</header>
-//       <input v-model="fly" />
-//       <div>
-//         <p v-if="isShow">isShow is true</p>
-//         <p v-else-if="fly">I can fly in {{fly}}</p>
-//         <p v-else>Can not show and fly. Stupid you!</p>
-//       </div>
-//       <div data-track="luvi" @click.left.ctrl="modEvent($event)">
-//         <p>this is a broken p tag
-//         <div>I am div1</div>
-//         <p>
-//           I am a normal tag
-//           <div>I am div2</div>
-//         </p>
-//         </br>
-//         <div style="color: cornflowerblue;"> I am the end</div>
-//       </div>
-//       <slot-a><template v-slot:human="{myname}"><em>Here are something in the slot</em></template></slot-a>
-//     </div>
-//   `
-// })
-
-// Vue.component('Sow', {
-//   name: 'Sow',
-//   data () {
-//     return {
-//       sow: '1',
-//       saw: 'foo'
-//     }
-//   },
-//   template: `<div>Sow <slot name="foo" :sow="sow"></slot> Sow</div>`
-// })
-
-// Vue.component('Fun', {
-//   functional: true,
-//   name: 'Fun',
-//   props: ['bor'],
-//   render (h, c) {
-//     console.log(c, c.slots(), c.scopedSlots)
-//     // in pre vue 2.6, use c.slots().default
-//     return h('div', c.data, [c.scopedSlots.default(), c.scopedSlots.man({bor:c.props.bor})])
-//   }
-// })
 
 Vue.component('Sl', {
   name: 'slotl',
@@ -123,10 +52,10 @@ Vue.component('Sl', {
   `
 })
 
+
 /* eslint-disable no-new */
 var myvue = new Vue({
-  el: '#app',
-  // router,
+  router,
   data () {
     return {
       message: 'vvvbvvvv',
@@ -162,6 +91,8 @@ var myvue = new Vue({
               <template slot="basement">
                 I am a new basement
               </template>
+
+              <router-view name="default" />
             </sl>`,
   // template: `<Fun :mes="message" :bor="{a: 1}" @click="handleClick">AAA<template v-slot:man="G">MMM{{G.bor.a}}</template></Fun>`,
   // template: `<Sow><template v-slot:foo="G">MMM{{G.sow}}  {{message}}</template></Sow>`,

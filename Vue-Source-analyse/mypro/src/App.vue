@@ -5,7 +5,6 @@
     <img src="./assets/logo.png" ref="logoImg">
     <div v-graybg:good="123" ref="foo">{{ bar | fil('a', 'b') }}</div>
     <div>{{ messageBox }}</div>
-    <router-view />
   </div>
 </template>
 ``

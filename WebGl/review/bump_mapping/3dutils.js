@@ -1,14 +1,15 @@
 function camera (context) {
-  let eye = [context.eye_x, context.eye_y, context.eye_z]
-  let target = [0, 0, 0]
+  let { eye_x, eye_y, eye_z, target_x=0, target_y=0, target_z=0 } = context
+  let eye = [eye_x, eye_y, eye_z]
+  let target = [target_x, target_y, target_z]
   let up = [1, 0, 0]
   let lookat = m4.lookAt(eye, target, up)
   return m4.inverse(lookat)
 }
 
 function perspective (context) {
-  let { pov, width, height, near=1, far=5000 } = context
-  pov = toRad(pov || 135)
+  let { pov=90, width, height, near=1, far=5000 } = context
+  pov = toRad(pov)
   let aspect = width / height
   // 这个方法可以直接把默认的左手坐标系变成右手坐标系
   return m4.perspective(pov, aspect, near, far)
@@ -34,10 +35,17 @@ function getTransformMatrix (pr) {
 }
 
 function getUMatrixValue (options) {
-  let transformMatrix = options.transform.length ? options.transform : getTransformMatrix(options.transform)
+  let transformMatrix = m4.m4unit()
   let perspectiveMatrix = m4.m4unit()
   let orthoMatrix = m4.m4unit()
-  let cameraMatrix = options.camera.length ? options.camera : camera(options.camera)
+  let cameraMatrix = m4.m4unit()
+
+  if (options.transform) {
+    transformMatrix = options.transform.length ? options.transform : getTransformMatrix(options.transform)
+  }
+  if (options.camera) {
+    cameraMatrix = options.camera.length ? options.camera : camera(options.camera)
+  }
   if (options.perspective) {
     perspectiveMatrix = options.perspective.length ? options.perspective : perspective(options.perspective)
   }

@@ -16,24 +16,6 @@ class DrawnObject {
     this.options = options
   }
 
-  preDraw ({ viewport, clearColor=[0, 0, 0, 0], refresh=false }) {
-    let gl = this.gl
-    gl.viewport.apply(gl, viewport)
-    // 清空屏幕
-    if (refresh) {
-      gl.scissor.apply(gl, viewport)
-      gl.clearColor.apply(gl, clearColor || [0, 0, 0, 0])
-      gl.clear(gl.COLOR_BUFFER_BIT|gl.DEPTH_BUFFER_BIT)
-
-      gl.enable(gl.CULL_FACE);
-      gl.enable(gl.DEPTH_TEST);
-      gl.enable(gl.SCISSOR_TEST)
-    }
-    
-    gl.useProgram(this.program)
-    gl.bindVertexArray(this.vao)
-  }
-
   draw () {
     let { drawType } = this.options
     let gl = this.gl
