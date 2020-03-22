@@ -27,7 +27,7 @@ class Shader {
   static getCustomFragmentShaderSource () {
     return `#version 300 es
     // 浮点数精度设定，高精度需要消耗更多性能
-    precision mediump float;
+    precision highp float;
     in vec4 v_texture_coord;
     in vec2 v_texcoord;
 
@@ -45,22 +45,22 @@ class Shader {
       vec3 normalTexCoord = v_texture_coord.xyz / v_texture_coord.w;
 
       vec4 texel = texture(u_texture_mapping, normalTexCoord.xy);
-      float mulFactor = 0.38;
-      // float bias = 0.0001;
+      float bias = -0.006;
 
       bool inMapping = false;
       if (normalTexCoord.x >= 0.0 &&
           normalTexCoord.x <= 1.0 &&
           normalTexCoord.y >= 0.0 &&
-          normalTexCoord.y <= 1.0 &&
-          texel.r <= normalTexCoord.z) {
+          normalTexCoord.y <= 1.0) {
         
           inMapping = true;    
       }
 
-      vec4 mappingColor = vec4(texture(u_texture_mapping, normalTexCoord.xy).rrr * mulFactor, 1.0);
+      float shadowLight = inMapping && texel.r <= normalTexCoord.z + bias ? 0.3 : 1.0;
 
-      outColor = inMapping ? mappingColor: texture(u_texture_custom, v_texcoord) * u_color_orig;
+      // vec4 mappingColor = vec4(texel.rrr, 1.0);
+      vec4 texColor = texture(u_texture_custom, v_texcoord) * u_color_orig;
+      outColor = vec4(texColor.rgb * shadowLight, texColor.a);
     }
     `
   }
@@ -69,14 +69,14 @@ class Shader {
     // webgl2 需要始终在首行加上版本声明
     return `#version 300 es
     // 外部传入的attibution
-    in vec3 a_position;
+    in vec4 a_position;
     // 变换矩阵
     uniform mat4 u_world_matrix;
     uniform mat4 u_camera_matrix;
     uniform mat4 u_view_matrix;
 
     void main () {
-      vec4 poz = u_world_matrix * vec4(a_position, 1.0);
+      vec4 poz = u_world_matrix * a_position;
       gl_Position = u_view_matrix * u_camera_matrix * poz;
     }
     `

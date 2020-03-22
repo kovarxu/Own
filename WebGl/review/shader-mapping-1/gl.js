@@ -25,8 +25,8 @@ function setPlainUniformForDepthBuffer(programContext, context, drawnObj) {
     pov: context.tex_pov,
     width: context.tex_scale,
     height: context.tex_scale,
-    near: 0.1,
-    far: 200
+    near: 0.5,
+    far: 20
   })), convertMatrix})
 
   twgl.setUniforms(programContext, { 'u_color': drawnObj.texColor })
@@ -43,8 +43,8 @@ function setPlainUniformsScene1(programContext, context) {
       pov: context.tex_pov,
       width: context.tex_scale,
       height: context.tex_scale,
-      near: 0.1,
-      far: 200
+      near: 0.5,
+      far: 20
     },
     camera: {
       eye_x: context.t_tx,
@@ -91,8 +91,8 @@ function setViewUniformsScene1(programContext, context, drawnObj) {
       pov: context.tex_pov,
       width: context.tex_scale,
       height: context.tex_scale,
-      near: 0.1,
-      far: 200
+      near: 0.5,
+      far: 20
     },
     camera: {
       eye_x: context.t_tx,
@@ -102,7 +102,7 @@ function setViewUniformsScene1(programContext, context, drawnObj) {
   })
   const transformMatrix = getUMatrixValue({
     transform: {
-      sz: 10000
+      sz: 100
     }
   })
   
