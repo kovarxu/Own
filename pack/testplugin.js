@@ -1,7 +1,7 @@
 class MyTestPlugin {
   apply(compiler) {
     compiler.hooks.compilation.tap('MyTestPlugin', (compilation, params) => {
-      debugger
+      // debugger
       console.log('new compilation hooks was called!' + params)
     })
   }

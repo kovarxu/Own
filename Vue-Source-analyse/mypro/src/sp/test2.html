@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>For test</title>
+</head>
+<body>
+  <div id="btn">
+    <i id="ci">CLICK ME</i>
+  </div>
+
+  <script>
+    const $ = (des) => document.querySelector(des)
+    const joke = function () {console.log('tell me a joke')}
+    const out = function () {console.log('in setTimeout')}
+    const mut = function () {console.log('mutation observer triggered')}
+
+    $('#ci').onclick = function () {
+      setTimeout(out, 0);
+      
+      // waste some time
+      /(\d+)*a/.test('19568956544845412112112')
+
+      // message channel
+      const channel = new MessageChannel()
+      const port = channel.port2
+      channel.port1.onmessage = joke
+      port.postMessage(1);
+
+      // mutation observer
+      var counter = 1
+      var observer = new MutationObserver(mut)
+      var textNode = document.createTextNode(String(counter))
+      observer.observe(textNode, {
+        characterData: true
+      })
+      counter = (counter + 1) % 2
+      textNode.data = String(counter)
+
+      Promise.resolve().then(function () {
+        $('#btn').onclick = function () {
+          $('#ci').innerHTML = 'Have Clicked'
+          $('#ci').style.color = 'cornflowerblue'
+          console.log('bubbled to the outer after micro task')
+          Promise.resolve().then(function() {
+            $('#ci').innerHTML = 'Have Clicked and triggered'
+            console.log('micro task registered in bubbled event')
+          })
+        }
+      })
+    }
+
+    new Vue({
+      el: '#app',
+      template: '<div @click="handleClick">{{ msg }}</div>',
+      data () {
+        return {
+          msg: 1.0
+        }
+      },
+      methods: {
+        handleClick () {
+          this.msg = Math.random()
+          console.log('c1')
+          Promise.resolve().then(() => {
+            console.log('c2')
+          })
+//           this.$nextTick().then(() => {
+//             console.log('c3')
+//           })
+          this.$nextTick(() => {
+            console.log('c3')
+          })
+        }
+      }
+    })
+  </script>
+</body>
+</html>

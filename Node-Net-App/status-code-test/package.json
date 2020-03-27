@@ -1,0 +1,16 @@
+{
+  "name": "status-code-test",
+  "version": "1.0.0",
+  "description": "一个展示基本状态码的程序",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "go": "node ./bin/start"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "koa2": "^2.0.0-alpha.7"
+  }
+}

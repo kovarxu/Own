@@ -5,8 +5,13 @@ import B from './components/B.vue'
 import V from './components/V.vue'
 import D from './components/D.vue'
 import F from './components/f.js'
+<<<<<<< HEAD
 
 // console.log('M ', M)
+=======
+// import myFoo from './ok.js'
+// console.log('foo ' + myFoo)
+>>>>>>> 90f6c0f6a83eea438bc90688096be9f67f274023
 
 Vue.directive('graybg', {
   bind: (el, binding) => {
@@ -25,81 +30,37 @@ Vue.directive('graybg', {
   }
 })
 
-Vue.component(F.name, F)
-
-Vue.component('MyTem', {
+Vue.component('Sl', {
+  name: 'slotl',
   data () {
     return {
-      isShow: true,
-      myClass: { mc: true },
-      fly: 'sky'
-    }
-  },
-  filters: {
-    fil(target, a, b) {
-      return target + a + b
-    }
-  },
-  methods: {
-    modEvent (e) {
-      console.log(e)
+      defaultFloorPatterns: [
+        '***************',
+        '###############',
+        '@@@@@@@@@@@@@@@'
+      ]
     }
   },
   template: `
-    <div v-if="isShow" data-is="wrapper-A" class="static-class" :class="myClass">
-      <header>I am a header of the < {{fly | fil('a', 'b')}}</header>
-      <button @click.right.ctrl="handleClick"
-              @change.native="handleClick"
-      >ClickMe!</button>
-      <div @click="handleClick">
-      <header v-graybg.tfboy="bname">I am a header of the < {{fly | fil('a', 'b')}}</header>
-      <input v-model="fly" />
-      <div>
-        <p v-if="isShow">isShow is true</p>
-        <p v-else-if="fly">I can fly in {{fly}}</p>
-        <p v-else>Can not show and fly. Stupid you!</p>
-      </div>
-      <div data-track="luvi" @click.left.ctrl="modEvent($event)">
-        <p>this is a broken p tag
-        <div>I am div1</div>
-        <p>
-          I am a normal tag
-          <div>I am div2</div>
-        </p>
-        </br>
-        <div style="color: cornflowerblue;"> I am the end</div>
-      </div>
-      <slot-a><template v-slot:human="{myname}"><em>Here are something in the slot</em></template></slot-a>
+    <div>
+      <h3>Hear is the roof</h3>
+      <slot>
+        <p>house body</p>
+      </slot>
+      <slot name="floor" :patterns="defaultFloorPatterns">
+        <p>----- the floor -----</p>
+      </slot>
+      <slot name="basement" :patterns="defaultFloorPatterns">
+        <p>basement</p>
+      </slot>
     </div>
   `
 })
 
-Vue.component('Sow', {
-  name: 'Sow',
-  data () {
-    return {
-      sow: '1',
-      saw: 'foo'
-    }
-  },
-  template: `<div>Sow <slot name="foo" :sow="sow"></slot> Sow</div>`
-})
-
-Vue.component('Fun', {
-  functional: true,
-  name: 'Fun',
-  props: ['bor'],
-  render (h, c) {
-    console.log(c, c.slots(), c.scopedSlots)
-    // in pre vue 2.6, use c.slots().default
-    return h('div', c.data, [c.scopedSlots.default(), c.scopedSlots.man({bor:c.props.bor})])
-  }
-})
 
 /* eslint-disable no-new */
 var myvue = new Vue({
-  el: '#app',
-  // router,
+  router,
   data () {
     return {
       message: 'vvvbvvvv',
@@ -111,20 +72,47 @@ var myvue = new Vue({
     console.log('root component has mounted')
   },
   methods: {
-    handleClick($event) {console.log($event)}
+    // handleClick($event) {console.log($event)}
   },
   // template: `<App class="maee" :message-box="message" link="go" alias="100" />`,
   // template: `<my-tem />`,
+<<<<<<< HEAD
   template: `<V v-model="nut" />`,
   // template: `<div>softly <D /></div>`,
+=======
+  // template: `<V v-model="nut" />`,
+  // template: `<div>softly <D /></div>`,
+  template: `<sl>
+              <div>
+                <p>my table</p>
+                <p>my chair</p>
+                <p>my bed</p>
+              </div>
+
+              <template v-slot:floor="p">
+                <p>{{ p.patterns[1] }}</p>
+              </template>
+
+              <D v-slot="pl">
+                {{ pl.car }}
+              </D>
+
+              <template slot="basement">
+                I am a new basement
+              </template>
+
+              <router-view name="default" />
+            </sl>`,
+>>>>>>> 90f6c0f6a83eea438bc90688096be9f67f274023
   // template: `<Fun :mes="message" :bor="{a: 1}" @click="handleClick">AAA<template v-slot:man="G">MMM{{G.bor.a}}</template></Fun>`,
   // template: `<Sow><template v-slot:foo="G">MMM{{G.sow}}  {{message}}</template></Sow>`,
   // template: `<B @click="handleClick" :msg.sync="message"></B>`,
   // template: `<fn-boy :sel="sel" :bar="message">Hello my boy!<template v-slot:man="G">{{G.bar}}</template></fn-boy>`,
   components: {
-    App,
-    B,
-    V,
-    D
+    // App,
+    // B,
+    // V,
+    D,
+
   }
 }).$mount('#app')

@@ -1,6 +1,7 @@
 <template>
   <div class="hello" @click="_handleMsgChange" @change.native="_handleMsgChange">
     {{ msg }}
+    <router-view />
   </div>
 </template>
 
@@ -18,7 +19,8 @@ export default {
   },
   beforeRouteEnter(to, from, next) {
     console.log('enter B')
-    next('/')
+    // next('/')
+    next()
   },
   methods: {
     _handleMsgChange () {

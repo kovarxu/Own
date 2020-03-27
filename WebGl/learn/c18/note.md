@@ -24,6 +24,8 @@ the u_world matrix should be an invert transposed matrix of the world matrix, wh
 
 <em>u_matrix</em> = (<strong>M</strong><sup>-1</sup>)<sup>T</sup>
 
+this formula can be proved to be right by matrix multiply.
+
 `worldMatrix = m4mul(rotationZ, rotationY, rotationX)`
 
 ![world matrix with pure orientation](./c01.JPG)

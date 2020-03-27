@@ -6,7 +6,7 @@ const MyPlugin = require('./testplugin')
 module.exports = {
   mode: 'development',
   entry: {
-    product: path.resolve(__dirname, 'src/product.js')
+    product: path.resolve('src/product.js')
   },
   output: {
     path: path.resolve(__dirname, 'dist'),
@@ -38,22 +38,22 @@ module.exports = {
     }
   },
   optimization: {
-    splitChunks: {
-      name: true,
-      chunks: 'all',
-      minChunks: 1,
-      minSize: 30000,
-      cacheGroups: {
-        jquery: {
-          test: /[\\/]node_modules[\\/].*?jquery/,
-          priority: -5,
-          automaticNameDelimiter: '.'
-        }
-      }
-    },
-    runtimeChunk: {
-      name: 'manifest'
-    }
+    // splitChunks: {
+    //   name: true,
+    //   chunks: 'all',
+    //   minChunks: 1,
+    //   minSize: 30000,
+    //   cacheGroups: {
+    //     jquery: {
+    //       test: /[\\/]node_modules[\\/].*?jquery/,
+    //       priority: -5,
+    //       automaticNameDelimiter: '.'
+    //     }
+    //   }
+    // },
+    // runtimeChunk: {
+    //   name: 'manifest'
+    // }
   },
   plugins: [
     new HTMLWebpackPlugin({
