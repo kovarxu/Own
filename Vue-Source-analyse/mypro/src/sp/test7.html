@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Render Problems</title>
+  <style>
+    #upper {
+      width: 100px;
+      outline: 1px solid gray;
+      height: 30px;
+    }
+  </style>
+</head>
+<body>
+  <div id="upper"></div>
+  <p>some contents 1</p>
+  <p>some contents 2</p>
+  <p>some contents 3</p>
+  <p>some contents 4</p>
+
+  <script>
+    var $ = (selector) => document.querySelector(selector)
+    var upper = $('#upper')
+    upper.onclick = function (e) {
+      e.target.style.height = '300px';
+      /(\d+)*a/.test('1214314343232423121252346')
+      let k = e.target.innerHeight
+      e.target.style.height = '30px';
+      console.log('afd')
+    }
+  </script>
+</body>
+</html>

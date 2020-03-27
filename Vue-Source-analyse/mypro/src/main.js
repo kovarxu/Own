@@ -6,7 +6,7 @@ import V from './components/V.vue'
 import D from './components/D.vue'
 import F from './components/f.js'
 
-console.log('M ', M)
+// console.log('M ', M)
 
 Vue.directive('graybg', {
   bind: (el, binding) => {
@@ -104,7 +104,7 @@ var myvue = new Vue({
     return {
       message: 'vvvbvvvv',
       sel: 2,
-      nut: 1,
+      nut: [112,23,34],
     }
   },
   mounted () {
@@ -115,8 +115,8 @@ var myvue = new Vue({
   },
   // template: `<App class="maee" :message-box="message" link="go" alias="100" />`,
   // template: `<my-tem />`,
-  // template: `<V v-model="nut" />`,
-  template: `<div>softly <D /></div>`,
+  template: `<V v-model="nut" />`,
+  // template: `<div>softly <D /></div>`,
   // template: `<Fun :mes="message" :bor="{a: 1}" @click="handleClick">AAA<template v-slot:man="G">MMM{{G.bor.a}}</template></Fun>`,
   // template: `<Sow><template v-slot:foo="G">MMM{{G.sow}}  {{message}}</template></Sow>`,
   // template: `<B @click="handleClick" :msg.sync="message"></B>`,
