@@ -5,9 +5,17 @@ import B from './components/B.vue'
 import V from './components/V.vue'
 import D from './components/D.vue'
 import F from './components/f.js'
+<<<<<<< HEAD
 import S from './components/S.vue'
+=======
+<<<<<<< HEAD
+
+// console.log('M ', M)
+=======
+>>>>>>> b968e8a47c1442e244cd01ed72cebba2c207fb02
 // import myFoo from './ok.js'
 // console.log('foo ' + myFoo)
+>>>>>>> 90f6c0f6a83eea438bc90688096be9f67f274023
 
 Vue.directive('graybg', {
   bind: (el, binding) => {
@@ -61,11 +69,15 @@ var myvue = new Vue({
     return {
       message: 'vvvbvvvv',
       sel: 2,
+<<<<<<< HEAD
       nut: 1,
       info: [
         {title: 'title1', desc: 'a bunch of things'},
         {title: 'title2'}
       ]
+=======
+      nut: [112,23,34],
+>>>>>>> b968e8a47c1442e244cd01ed72cebba2c207fb02
     }
   },
   mounted () {
@@ -86,6 +98,10 @@ var myvue = new Vue({
              </div>`,
   // template: `<App class="maee" :message-box="message" link="go" alias="100" />`,
   // template: `<my-tem />`,
+<<<<<<< HEAD
+  template: `<V v-model="nut" />`,
+  // template: `<div>softly <D /></div>`,
+=======
   // template: `<V v-model="nut" />`,
   // template: `<div>softly <D /></div>`,
   // template: `<sl>
@@ -107,8 +123,14 @@ var myvue = new Vue({
   //               I am a new basement
   //             </template>
 
+<<<<<<< HEAD
   //             <router-view name="default" />
   //           </sl>`,
+=======
+              <router-view name="default" />
+            </sl>`,
+>>>>>>> 90f6c0f6a83eea438bc90688096be9f67f274023
+>>>>>>> b968e8a47c1442e244cd01ed72cebba2c207fb02
   // template: `<Fun :mes="message" :bor="{a: 1}" @click="handleClick">AAA<template v-slot:man="G">MMM{{G.bor.a}}</template></Fun>`,
   // template: `<Sow><template v-slot:foo="G">MMM{{G.sow}}  {{message}}</template></Sow>`,
   // template: `<B @click="handleClick" :msg.sync="message"></B>`,
