@@ -10,8 +10,11 @@ module.exports = {
   },
   output: {
     path: path.resolve(__dirname, 'dist'),
-    filename: '[name].[hash:8].js'
+    filename: '[name].[hash:8].js',
+    sourceMapFilename: '[file].map'
   },
+  // devtool: 'cheap-module-eval-source-map',
+  devtool: 'cheap-source-map',
   module: {
     rules: [
       {

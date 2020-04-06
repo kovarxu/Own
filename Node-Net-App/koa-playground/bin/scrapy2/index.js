@@ -78,7 +78,7 @@ function findImgsInContent (html) {
 // 最多开五个子线程下载
 function downAllSources (sources) {
   const MAX_THREADS = 5
-  const threads = sources.length < 5 ? sources.length : MAX_THREADS
+  const threads = sources.length < MAX_THREADS ? sources.length : MAX_THREADS
   const _s = sources.slice()
 
   for (let i = 0; i < threads; i++) {
