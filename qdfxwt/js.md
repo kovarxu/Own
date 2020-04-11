@@ -25,6 +25,8 @@
 23. instanceof, typeof, getPrototypeOf
 24. webpack优化方案
 25. async, defer
+26. js对象属性遍历
+27. 重绘回流相关
 
 问题解答：
 
@@ -53,25 +55,33 @@ mark1 --- mark2 --- measure(name, mark1, mark2) --- entries = getEntriedByName(n
 
 1. 体积优化
 
-使用小图片，但是http2后不是必要了
-CSS的覆盖率测试
-组件的按需加载，使用babel-plugin-transform-runtime
+* 使用小图片，但是http2后不是必要了
+* CSS的覆盖率测试
+* 组件的按需加载，使用babel-plugin-transform-runtime
 
 2. 首屏优化
 
-使用骨架屏
+* 直接往#app节点里面写点东西
+* 使用HTMLWebpackPlugin嵌入一点东西
+* 使用prerender-spa-plugin预渲染出首屏
+* 除去外链css（css+js应该是作为模块维度来维护的，而非文件维度）
+* 使用骨架屏（placeholder）
 
 3. 打包优化
 
-配置webpack externals将依赖库外置，置于CDN上
-配置webpack dllplugin打包静态库文件，使用happypack启动多线程打包
-webpack，tree-shaking，optimization里面有splitChunks配置，提取公共代码
-使用webpack-bundle-analyser分析打包后的文件
+* 配置webpack externals将依赖库外置，置于CDN上
+* 配置webpack dllplugin打包静态库文件，使用happypack启动多线程打包
+* webpack，tree-shaking（正确使用，需要联合sideEffect配置避免摇树去掉了lodash这种库；需要设置babel.presets.env.modules = false 关闭babel默认的模块转义），optimization里面有splitChunks配置，提取公共代码
+* 使用webpack-bundle-analyser分析打包后的文件
+
 
 4. 加速优化
 
-使用CDN加速，HTTP层面使用并发连接、域名分片加速，或者升级到http2
-使用缓存
+* 使用CDN加速，HTTP层面使用并发连接、域名分片加速，或者升级到http2
+* 使用缓存
+* 使用动态PolyFill，一般使用的polyfill来自babel，可以外链`cdn.polyfill.io`这种链接减少polyfill数量从而对高端客户端打开更快速
+* 动态加载，`import().then, () => import, require.ensure`
+* 懒加载：图片额外添加data-src属性。原理是监听 window 对象或者父级对象的 scroll 事件，触发 load；或者使用 Intersection Observer API 来获取元素的可见性。
 
 5. 使用工具
 performance面板、performance API、lightHouse测试
@@ -251,7 +261,7 @@ loader
 
 * 初始化ruleset，处理inlineloader和webpack配置的loader (import 'style-loader!css-loader!stylus-loader?a=b!../../common.styl'这种就叫做inline loader)
 * 几个属性，loader.normal, loader.pitch, loader.raw
-* pitch顺序执行，可以是异步方法，只需要使用`let callback = this.async()`然后在callback中调用`callback(null, result)即可`,pitch函数返回参数，之后的loader不会执行；如果同步想传递多个参数：`this.callback(null, content, argA, argB)`
+* pitch顺序执行，可以是异步方法，只需要使用`let callback = this.async()`然后在callback中调用`callback(null, result)即可`,pitch函数返回一个值，之后的loader不会执行；如果同步想传递多个参数：`this.callback(null, content, argA, argB)`
 * normal逆序执行
 
 #### vue3.0的改进
@@ -361,6 +371,13 @@ API操作：
 经典问题：
 * 如何防止外部篡改？通过定义一个_committing的标，在commit之前设置它为true，在commit之后关闭它，如果外部篡改，这个标为false，则报警告
 
+### Vue-loader原理
+
+1. vue-loader处理`A.vue`文件，生成几个新的request: `A.vue?vue&type=template`, `A.vue?vue&type=css`, `A.vue?vue&type=js`
+2. VueLoaderPlugin发生作用，对`query`包含`vue`的资源指定`pitcher-loader`, 上面三个request均符合条件，`pitcher-loader`根据type构建三个request，移除自身和`es-lint-loader`，此时由于`pitcher-loader`的`pitch`函数返回了值，后续loader不执行
+3. 接上面一步，经过处理的`A.vue?vue&type=template`指明了`type`类型，`vue-loader`创建一个`A.vue.html`类型的资源，`type=css`和`type=js`的`request`同理
+4. 后续这三个文件分别用自己的`loader`进行处理，跟`vue-loader`没关系了
+
 #### webpack-plugin总结
 
 #### async和defer
@@ -376,3 +393,29 @@ defer与async的区别是：defer要等到整个页面在内存中正常渲染�
 * `() => import(/* chunkName=foo */ bar.vue)` import提案，内部promise
 * `require.ensure(['dependencies'], function(require) {require('bar.vue')}, function(err) {}, 'chunkname')`
 内部也是用的promise
+
+### js对象属性遍历
+
+* for ... in ...  适合原型链上所有可枚举属性
+* Object.keys()  适合自身所有可枚举属性
+* Object.getOwnPropertyNames()  适合自身所有非Symbol属性
+* Object.getOwnPropertySymbols()  适合自身所有Symbol属性
+* Object.ownKeys()  上述两者的合集
+
+### 重绘回流相关
+
+参考`https://mp.weixin.qq.com/s/g8MBJx1yG1duN1P-qth9NQ`
+
+访问这些表示元素尺寸和位置的属性时，发生回流
+offsetTop、offsetLeft、offsetWidth、offsetHeight
+scrollTop、scrollLeft、scrollWidth、scrollHeight
+clientTop、clientLeft、clientWidth、clientHeight
+getComputedStyle()、getBoundingClientRect
+
+以上属性和方法都需要返回最新的布局信息，因此浏览器不得不清空队列，触发回流重绘来返回正确的值。因此，我们在修改样式的时候，最好避免使用上面列出的属性，他们都会刷新渲染队列。如果要使用它们，最好将值缓存起来。
+
+优化途径：
+* 将对`el.style.padding, el.style.borderLeft`这种操作使用`class`操作代替
+* 批量修改DOM 1. display: none使元素脱离文档流；2. 使用documentFragment；3. 拷贝到内存，操作完再怼回去
+* 使用绝对定位让动画元素脱离文档流
+* 开启GPU加速（但是layer太多反而耗性能，而且字体会抗锯齿失效）
