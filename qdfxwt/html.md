@@ -80,6 +80,17 @@ Cookie相关：`Set-Cookie, Cookie`
 `Cookie: a=b;c=d`
 `Set-Cookie: a=b;HttpOnly;SameSite=Strict;Domain=.xxx.com;Max-Age=805520;Expires=22222;Path=/;Secure `
 
+SameSite选项为了防止跨站请求伪造，值有`Lax, None, Strict`
+
+* Strict和Lax `aaa.com`的iframe嵌套`bbb.com`的页面，`bbb.com`的Cookie不会发送  
+* Lax 顶级导航，安全请求(GET, HEAD)可发送 `aaa.com`通过链接点击的方式跳转`bbb.com`，Cookie发送  
+* Strict 顶级导航，安全请求也不发送  
+* None 级别最低，无任何保护
+
+最新Chrome默认`SameSite=Lax`，`SameSite`使用需要配置`Secure`选项，否则Chrome报警告
+
+Secure的意思是只会在https加密后的报文中发送，否则不发送Cookie
+
 #### 大文件传输
 
 1. 一般传输: `Content-Length: 11112`
