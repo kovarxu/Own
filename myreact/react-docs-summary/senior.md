@@ -179,9 +179,10 @@ React 将在组件挂载时，会调用 ref 回调函数并传入 DOM 元素，�
 
 #### 转发refs
 
-也可以实现父组件获取子组件的Dom
+也可以实现父组件获取子组件的DOM
 
 ```js
+// 有forward的意思就是想把自己的节点暴露出去
 const Child = React.forwardRef((props, ref) => (
   <div ref={ref}>{props.children}</div>
 ))
@@ -190,6 +191,57 @@ const ref = React.createRef()
 <Child ref={ref}>It is a nice world!</Child>
 ```
 
+### Fragments
 
+片段元素，使用`<React.Fragment></React.Fragment>`或者简写为`<></>`
 
+### 高阶组件
+
+高阶组件是参数为组件，返回值为新组件的函数。
+
+HOC 在 React 的第三方库中很常见，例如 Redux 的 connect 和 Relay 的 createFragmentContainer。
+
+HOC 不会修改传入的组件，也不会使用继承来复制其行为。相反，HOC 通过将组件包装在容器组件中来组成新组件。HOC 是纯函数，没有副作用。
+
+```js
+function createComponent(WrappedComp, data) {
+  return class extends React.Component {
+    ...
+    render () {
+      return (
+        <WrappedComp data={this.state.data} {...this.props} />
+      )
+    }
+  }
+}
+
+```
+
+修改传入组件的 HOC 是一种糟糕的抽象方式。调用者必须知道他们是如何实现的，以避免与其他 HOC 发生冲突。
+
+注意给组件一个displayName属性，表明它在React调试面板中的信息：`WithSubscription.displayName`
+
+#### 注意事项
+
+* 不要在render函数中生成高阶组件，这样每次render都会重复生成，浪费性能
+* 务必复制静态方法，可以使用`hoist-non-react-statics`
+* Refs不会传递，因为ref和key一样是特殊的键，并不在props中处理
+* 这东西非常灵活，写起来很爽，但是越是自由度高的东西，驾驭难度越大
+
+### 深入jsx
+
+实际上，JSX 仅仅只是 `React.createElement(component, props, ...children)` 函数的语法糖。
+
+组件名称可以使用点语法，但用户定义的组件名称必须以大写字母开头
+
+布尔值、null以及undefined会在渲染过程中被忽略，**但是0不会**
+
+```js
+// 这段代码当message为空的时候渲染0而不是什么都不做
+<div>
+  {props.messages.length &&
+    <MessageList messages={props.messages} />
+  }
+</div>
+```
 
