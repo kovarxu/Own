@@ -62,7 +62,7 @@ http.get(options, (res) => {
 function findImgsInContent (html) {
   let $ = cheerio.load(html)
   let imgs = $('.content img')
-  let sources = ['http://dev.xinhulu.com/go.jpg']
+  let sources = []
   Object.keys(imgs).forEach(id => {
     let img = imgs[id]
     let url = $(img).attr('src')
