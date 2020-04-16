@@ -38,19 +38,18 @@ export const browser = {
   }())
 }
 
-export function scrollFix (elem: HTMLElement | string): void {
+const _uselessNode = document.createElement('div')
 
+export function scrollFix (elem: HTMLElement | string): void {
   let startTopScroll: number,
       noScroll: boolean, 
-      dom: HTMLElement | null
+      dom: HTMLElement
 
   if (typeof elem === 'string') {
-    dom = document.querySelector(elem)
+    dom = document.querySelector(elem) || _uselessNode
   } else {
     dom = elem
   }
-
-  if (dom === null) return
 
   // Handle the start of interactions
   dom.addEventListener('touchstart', function () {

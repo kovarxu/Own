@@ -1,4 +1,3 @@
-import { typeAlias } from "@babel/types";
 
 type CheckFunc = (target: any) => boolean
 
