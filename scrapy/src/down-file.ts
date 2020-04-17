@@ -2,6 +2,7 @@
 import http from 'http'
 import fs from 'fs'
 import path from 'path'
+import { DOWN_FILE_DIR_PATH } from './config'
 
 process.on('message', (msg) => {
   let [ fileUrl, filename ] = msg.toString().split('|')
@@ -44,8 +45,6 @@ function httpGetFile (fileUrl: string): Promise<SaveContext> {
     })
   })
 }
-
-const DOWN_FILE_DIR_PATH = './down'
 
 function saveFile (filename: string, data: SaveContext): Promise<void> {
   let savedFilePath = path.join(DOWN_FILE_DIR_PATH, filename)

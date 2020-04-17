@@ -3,6 +3,8 @@ import zlib from 'zlib'
 import cheerio from 'cheerio'
 import child_process from 'child_process'
 import path from 'path'
+import fs from 'fs'
+import { MAX_THREADS, DOWN_FILE_DIR_PATH } from './config'
 
 const options: http.RequestOptions = {
   hostname: 'www.100.com',
@@ -67,12 +69,18 @@ function findImgsInContent (html: string): void {
       sources.push({ url, id})
     }
   })
-  
-  downAllSources(sources.slice(0,3))
+
+  if (sources.length) {
+    checkAndCreateDir(DOWN_FILE_DIR_PATH)
+    downAllSources(sources.slice(0,3))
+  }
 }
 
-// 最多开五个子线程下载
-const MAX_THREADS = 5
+function checkAndCreateDir (path: string): void {
+  if (!fs.existsSync(path)) {
+    fs.mkdirSync(path, { recursive: true })
+  }
+}
 
 function downAllSources (sources: ImageContext[]) {
   const threads = sources.length < MAX_THREADS ? sources.length : MAX_THREADS
