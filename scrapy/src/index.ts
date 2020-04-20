@@ -45,7 +45,7 @@ http.get(options, (res) => {
           findImgsInContent(result.toString('utf8'))
         })
       } else {
-        findImgsInContent(chunks.toString())
+        findImgsInContent(newBuf.toString('utf8'))
       }
     })
   } else {

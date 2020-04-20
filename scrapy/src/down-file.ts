@@ -13,14 +13,18 @@ process.on('message', (msg) => {
   }
 })
 
-function getFile(fileUrl: string, retry: number = 0): Promise<any> {
-  return httpGetFile(fileUrl).catch(e => {
+async function getFile(fileUrl: string, retry: number = 0): Promise<any> {
+  try {
+    return httpGetFile(fileUrl)
+  }
+  catch (e) {
     if (retry <= 3) {
       return getFile(fileUrl, retry + 1)
-    } else {
+    }
+    else {
       throw new Error(`${e}: 无法下载文件 ${fileUrl}`)
     }
-  })
+  }
 }
 
 function httpGetFile (fileUrl: string): Promise<SaveContext> {

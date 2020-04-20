@@ -51,6 +51,18 @@ const App = () => (
 
 目的：类似于Provide、Inject的依赖注入
 
+#### 创建
+
+`const MyContext = React.createContext(defaultValue);`
+
+#### 使用
+
+* 设定class的static属性`Myclass.contextType = Mycontext; // 在组件中使用this.context拿到属性`  
+* 在父组件中可以用`<Mycontext.Provide value={ // 某个值 }>...</Mycontext.Provide>`的形式
+* 在函数式组件中可以用`<Mycontext.Consume>{ value => // 基于某个值进行渲染 }</MyContext.Consume>`
+
+设定class的displayName属性`MyContext.displayName = 'MyDisplayName'; // 有利于devtools分析`
+
 ### Render-Props
 
 类似于作用于插槽（父亲“获取得到”儿子的states）
@@ -75,7 +87,7 @@ class Child {
 }
 
 // 父组件中
-// class Cat 使用了Child中的mouse信息
+// class Cat 使用了Child获取的mouse信息，Child渲染了另一个组件传入的组件Mouse
 class Father {
   render () {
     return (
@@ -245,3 +257,34 @@ function createComponent(WrappedComp, data) {
 </div>
 ```
 
+### portals
+
+可以将组件渲染进某个dom内部
+
+用法：在render函数中返回创建的portals
+
+`ReactDOM.createPortal(child, container)`, child为子组件，container为包含dom
+
+#### 进行事件冒泡
+
+注意react中合成事件可以被portals挂载的父组件获取到
+
+### profiler API
+
+用来测试性能，不能用于生产环境
+
+`<Profiler id="child" onRender="{callback}"><Child /></Profiler>`
+
+```js
+function callback(
+  id, // 发生提交的 Profiler 树的 “id”
+  phase, // "mount" （如果组件树刚加载） 或者 "update" （如果它重渲染了）之一
+  actualDuration, // 本次更新 committed 花费的渲染时间
+  baseDuration, // 估计不使用 memoization 的情况下渲染整颗子树需要的时间
+  startTime, // 本次更新中 React 开始渲染的时间
+  commitTime, // 本次更新中 React committed 的时间
+  interactions // 属于本次更新的 interactions 的集合
+) {
+  // 合计或记录渲染时间。。。
+}
+```
