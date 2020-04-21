@@ -56,4 +56,39 @@ trigger()方法通过target和key找到Dep，收集所有的computedEffect和Eff
 
 computedEffect提供了schduler，执行effect.options.scheduler(effect), 没有提供的则直接执行effect()
 
+### 函数注释和重载
 
+```js
+type Ret<T, R> = (foo: T) => R
+function cache<T, R extends string>(fn: Ret<T, R>): Ret<T, R>
+function cache(fn: Function) {
+  const m = new Map()
+  return function (foo: any) {
+    if (m.has(foo)) {
+      return m.get(foo)
+    } else {
+      const bar = fn(foo)
+      m.set(foo, bar)
+      return bar
+    }
+  }
+}
+
+function foo(a: number) {
+  return a + ''
+}
+
+var bar = cache(foo)
+
+// https://vuejsdevelopers.com/2020/03/16/vue-js-tutorial/
+function denote(value: void): never
+function denote<T>(value: T): [T, string]
+function denote(value: unknown) {
+  if (value === null || value === undefined) {
+    throw new Error('value can not be empty')
+  }
+  return [value, (value as any).toString()]
+}
+
+var d = denote(77)
+```
