@@ -1,14 +1,9 @@
-@import url('./gen.css');
 
 body {
   background-color: lightyellow;
 }
 
-#app {
-  min-height: 100vh;
-}
-
-.asv {
+/* .asv {
   width: 200px;
   height: 100px;
   border-radius: 10%;
@@ -18,4 +13,4 @@ body {
 
 .asv.active {
   width: 499px;
-}
+} */

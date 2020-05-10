@@ -1,0 +1,15 @@
+.before-mark {
+  color: #233;
+  line-height: 2rem;
+}
+
+.before-mark:before {
+  content: '';
+  display: inline-block;
+  vertical-align: middle;
+  margin: 0 10px;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #ed9564;
+}
