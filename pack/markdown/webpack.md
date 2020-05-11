@@ -1,19 +1,24 @@
 
+## 本文档是慕课webpack系统课程的笔记
+
 ### ToDo
 
-1. 读文档 `Concepts -- Modules` 和 `API -- Modules`部分
-2. 读文档 `Loader -- url-loader, file-loader`部分
-3. 读文档 `Loader -- css-loader, sass-loader, style-loader`部分
-4. sourceMap原理探索
-5. 读文档`API -- Command Line Interface, API -- Node.js API`
-6. 读文档`Guide -- HMR, Concepts -- HMR` 了解实现原理
-7. 读文档`splitChunksPlugin` 了解配置和原理
-8. 读文档`css extract`相关
-9. 读文档``相关
-10. 统计：常用的Plugins及其基本用法，并深入一两种
-11. 读文档`webpackDevServer`
-12. 了解`library, libraryTarget`等库打包的内容
-13. 多进程打包了解
+1. [×] 读文档 `Concepts -- Modules` 和 `API -- Modules`部分
+2. [×] 读文档 `Loader -- url-loader, file-loader`部分
+3. [×] 读文档 `Loader -- css-loader, sass-loader, style-loader`部分
+4. [×] sourceMap原理探索
+5. [×] 读文档`API -- Command Line Interface, API -- Node.js API`
+6. [×] 读文档`Guide -- HMR, Concepts -- HMR` 了解实现原理
+7. [×] 读文档`splitChunksPlugin` 了解配置和原理
+8. [×] 读文档`css extract`相关
+9. [×] 读文档``相关
+10. [×] 统计：常用的Plugins及其基本用法，并深入一两种
+11. [×] 读文档`webpackDevServer`
+12. [×] 了解`library, libraryTarget`等库打包的内容
+13. [×] 多进程打包了解
+14. [√] 按照教程自己打包一遍案例 
+15. [x] 整理webpack一些常见钩子及使用场景
+16. [x] 写一个bundler
 
 ### webpack基础
 Notes：
@@ -332,5 +337,34 @@ thread-loader, parallel-webpack 多页面打包, happypack
 #### 多页面打包配置
 
 1. 配置多个entry
-2. 包含对应个数的HTMLwebpackPlugin，指定每个Plugin的chunks参数包含对应的chunk
+2. 包含对应个数的HTMLwebpackPlugin，指定每个Plugin的chunks参数包含对应的chunk, 也可指定excludeChunks参数指定需要排除的chunkName
+
+### 高级内容
+
+#### 写loader
+
+使用场景：异常捕获、国际化、代码包装等
+
+设置解析：
+
+```js
+resolveLoader: {
+  modules: ['node_modules', './loaders']
+}
+```
+
+定义语法：
+
+```js
+// 同步
+this.callback(null, content, sourceMap)
+// 异步
+let callback = this.async() 
+callback(null, content, sourceMap)
+```
+
+#### 写plugin
+
+#### 写一个webpack bundler
+
 

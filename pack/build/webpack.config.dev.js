@@ -9,6 +9,7 @@ const devConfig = {
     sourceMapFilename: 'source.map'
   },
   devtool: 'eval-cheap-module-source-map',
+  // devtool: 'source-map', // for map testing
   devServer: {
     contentBase: './dist',
     port: 8008,

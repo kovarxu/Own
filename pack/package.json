@@ -10,6 +10,7 @@
     "sdev": "webpack --config ./build/webpack.config.dev.js",
     "build": "webpack --config ./build/webpack.config.prod.js",
     "build:dll": "webpack --config ./build/webpack.config.dll.js",
+    "test-source": "webpack --config ./sourceMap/webpack.config.js",
     "debug": "node --inspect-brk ./node_modules/webpack/bin/webpack.js --inline --progress",
     "stats": "webpack --profile --json > conpilation-stats.json",
     "bl": "babel bsrc --out-dir bout",

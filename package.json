@@ -1,0 +1,5 @@
+{
+  "devDependencies": {
+    "vlq": "^1.0.1"
+  }
+}
