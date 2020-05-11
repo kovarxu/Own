@@ -1,0 +1,14 @@
+{
+  "name": "typescript-ground",
+  "version": "1.0.0",
+  "description": "",
+  "scripts": {
+    "build": "tsc"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "typescript": "^3.8.3"
+  }
+}
