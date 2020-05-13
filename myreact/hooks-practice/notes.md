@@ -17,11 +17,11 @@
 1. [√] Context, ContextType 练习
 2. [√] lazy, Suspense, Error Boundary 练习
 3. [√] componentShouldUpdate, PureComponent 练习
-4. [×] memo 练习 查资料react怎么校验的属性相等
+4. [√] memo 练习 查资料react怎么校验的属性相等
 5. [√] useState 练习，调用setCount的时候传入相同的值，看看组件是否重渲染
 6. [√] useEffect 练习，试试各种场景中的情形
 7. [√] useContext 练习
-8. [×] useMemo, useCallback 练习
+8. [√] useMemo, useCallback 练习
 9. [×] useRef 练习，思考在副作用中怎么确定一个对象与上次渲染时不一样了
 10. [x] 自定义Hooks学习
 11. [x] 学习一遍官网关于hooks的内容
@@ -29,7 +29,7 @@
 13. [√] 改造12中的todolist实例，分别推导出dispatch（集中管理状态变化，将变化形式固定为`{ type, payload }`格式），actionCreator（抽取一个函数返回`{ type, payload }`对象），bindActionCreators（将dispatch与上面一个函数结合起来）
 14. [√] 改造13中的todolist实例，从actions中提取出reducer，把reducer拆分成以数据为维度
 15. [√] 改造14中的todolist实例，actionCreator的返回值可以是一个函数`func(dispatch, state)`了, 这样action就可以获取到现有的state并进行一波比较操作；接着赋予异步能力，但是state有闭包值不更新的问题 （抽取出store，利用useEffect在todos和score发生变化时更新store）
-16. [x] 复盘12-15，写点东西下来
+16. [√] 复盘12-15，写点东西下来，练习一下原版redux的使用
 
 ### Qu
 
@@ -161,3 +161,15 @@ useState的初始化只会执行一次（React底层做了操作），它必须�
 * forceUpdate
 
 新建一个useState，手动触发重渲染
+
+#### PWA
+
+PWA组成技术
+
+* Service Worker (on HTTPS)
+* Fetch API
+* Promise
+* cache API
+* Notification API
+
+* workbox-webpack-plugin 谷歌出品的PWA插件

@@ -1,3 +1,8 @@
+export const store = {
+  todos: [],
+  score: 0
+}
+
 export const reducers = {
   todos: (state, action) => {
     const { type, payload } = action

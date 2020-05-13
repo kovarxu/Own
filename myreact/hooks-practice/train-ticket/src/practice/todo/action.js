@@ -15,7 +15,7 @@ export function createAdd(payload) {
           payload
         })
       }
-    }, 300)
+    }, 100)
   }
 }
 
