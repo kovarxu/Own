@@ -1,38 +1,70 @@
-.App {
+body {
+  background: lightyellow;
+}
+
+.todo-wrapper {
+  width: 640px;
+  margin: auto;
+}
+
+/* control part */
+.control-container {
+
+}
+
+.todo-title {
+  font-size: 120px;
+  color: #678;
   text-align: center;
 }
 
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
+.todo-input {
+  display: block;
+  box-sizing: border-box;
+  padding: 6px 10px;
+  margin: 5px auto;
+  width: 620px;
+  box-sizing: border-box;
+  font-size: 24px;
+  border-radius: 4px;
+  appearance: none;
+  outline: none;
+  border: 1px solid rgb(252, 247, 185);
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
+/* todolist */
+.todo-list {
+  list-style: none;
+  padding: 5px 10px;
+  line-height: 1.2;
+  font-size: 20px;
 }
 
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
+.todo-item {
   display: flex;
-  flex-direction: column;
   align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
+  margin-bottom: 12px;
 }
 
-.App-link {
-  color: #61dafb;
+.todo-item input[type=checkbox] {
+  margin: 0 15px 0 10px;
 }
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+.todo-item button {
+  width: 3em;
+  margin-right: 10px;
+  appearance: none;
+  border: 1px solid purple;
+  background: rgba(123, 221, 11, 0.2);
+  border-radius: 2px;
+}
+
+.todo-item .todo-text {
+  flex: 1
+}
+
+.todo-item .todo-text.inactive {
+  text-decoration: line-through;
+  color: #333;
+  opacity: 0.7;
 }

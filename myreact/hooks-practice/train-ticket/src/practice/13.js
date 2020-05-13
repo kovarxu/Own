@@ -1,7 +1,6 @@
-import React, { useState, useEffect, useRef, useCallback, memo, useContext } from 'react';
+import React, { useState, useEffect, useRef, useMemo, memo } from 'react';
 import './App.css'
 import { createSet, createAdd, createRemove, createToggle, bindActionCreators } from './action'
-import { reducers, combineReducers } from './reducer'
 
 const Control = memo(function Control(props) {
   const inputRef = useRef()
@@ -79,39 +78,28 @@ interface Todo {
 
 const TODO_KEY = '&^%todo-list'
 
-const store = {
-  todos: [],
-  score: 0
-}
-
 function App (props) {
   const [todos, setTodos] = useState([])
-  const [score, setScore] = useState(0)
 
-  // 注意需要更新store
-  useEffect(() => {
-    store.todos = todos
-    store.score = score
-  }, [todos, score])
-
-  const reducer = combineReducers(reducers)
-
-  const dispatch = (action) => {
-    const setters = {
-      todos: setTodos,
-      score: setScore
-    }
-
-    // action is a function (dispatch, state) => todos
-    if (typeof action === 'function') {
-      return action(dispatch, store)
-    }
-
-    // 我们想要reducer帮我们返回新的state，把数据改变的逻辑都移动到里面去
-    const newState = reducer(store, action)
-
-    for (let key in setters) {
-      setters[key](newState[key])
+  const dispatch = ({ type, payload }) => {
+    switch (type) {
+      case 'SET': 
+        setTodos(payload)
+        break
+      case 'ADD':
+        setTodos([...todos, payload])
+        break
+      case 'REMOVE':
+        setTodos(todos.filter(todo => todo.id !== payload))
+        break
+      case 'TOGGLE':
+        setTodos(todos.map(todo => {
+          todo.id === payload && (todo.active = !todo.active)
+          return todo
+        }))
+        break
+      default:
+        break
     }
   }
 
