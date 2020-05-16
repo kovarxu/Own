@@ -1,0 +1,28 @@
+.journey-container {
+  display: flex;
+  align-items: center;
+  font-size: 1.4rem;
+  background: #ffffff;
+  padding: 0.6rem 1rem 0;
+}
+
+.journey-city {
+  flex: 1;
+  font-size: 2rem;
+  line-height: 3rem;
+}
+
+.journey-city input[type=text] {
+  width: 100%;
+  appearance: none;
+  border: none;
+  outline: none;
+  text-align: center;
+}
+
+.exchange-icon {
+  width: 2rem;
+  height: 2rem;
+  border-radius: 0.5rem;
+  background: #da2;
+}

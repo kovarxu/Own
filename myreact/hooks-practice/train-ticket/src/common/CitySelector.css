@@ -1,0 +1,91 @@
+.city-selector-wrapper {
+  position: absolute;
+  width: 100%;
+  min-height: 100vh;
+  background: #fff;
+  top: 0;
+  left: 0;
+}
+
+.hidden {
+  display: none;
+}
+
+.search-wrapper {
+  height: 5rem;
+  padding-right: 0.6rem;
+  background: rgb(11, 145, 116, 0.7);
+  display: flex;
+  align-items: center;
+  font-size: 1.6rem;
+}
+
+.search-wrapper .back-btn {
+
+}
+
+.search-wrapper .search-input {
+  flex: 1;
+  padding: .5rem;
+  border-radius: 5px;
+  background: #fff;
+}
+
+.search-wrapper .search-input input[type=text] {
+  appearance: none;
+  border: none;
+  outline: none;
+  box-shadow: none;
+  width: 100%;
+}
+
+.search-wrapper .search-input .search-clean-icon {
+  position: absolute;
+  top: 1.4rem;
+  right: 1rem;
+}
+
+.city-list-wrapper {
+  font-size: 1.8rem;
+  line-height: 2;
+}
+
+.city-chunk {
+  list-style: none;
+  margin: 0 0 1.6rem;
+  padding-inline-start: 0;
+}
+
+.city-chunk .city-item {
+  margin: 0 1.5rem;
+  color: #555;
+  border-bottom: 1px solid #ccc;
+}
+
+.city-chunk .city-title {
+  padding: 0 1.5rem;
+  color: #eee;
+  background: rgb(11, 145, 116, 0.5);
+  font-weight: bold;
+}
+
+.city-chunk .city-item:last-child {
+  border-bottom: none;
+}
+
+.alphabet {
+  position: fixed;
+  right: 0.6rem;
+  top: 4.5rem;
+  list-style: none;
+  padding-inline-start: 0;
+  font-size: 1.6rem;
+  font-weight: bold;
+  color: rgba(4, 80, 63, 0.6);
+  font-family: Arial, sans-serif;
+}
+
+.alphabet li {
+  margin: 0 0 0.4rem;
+
+}

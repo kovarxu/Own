@@ -1,0 +1,20 @@
+.header {
+  height: 5rem;
+  background: rgb(11, 145, 116, 0.7);
+  display: flex;
+  font-size: 1.6rem;
+  line-height: 1.2;
+}
+
+.header .back-btn {
+  position: absolute;
+  top: 0.3rem;
+}
+
+.header-title {
+  flex: 1;
+  font-size: 1.6rem;
+  color: #eee;
+  line-height: 1.2;
+  text-align: center;
+}
