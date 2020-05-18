@@ -2,29 +2,29 @@ type AvailableCarType = 'Benz' | 'Volkswagen'
 
 let car: AvailableCarType = 'Benz'
 
-interface SparkConstructor {
-  new (power: number, accuTime: number): any
-}
+// interface SparkConstructor {
+//   new (power: number, accuTime: number): any
+// }
 
-interface SparkInterface {
-  burn (target: BurnableObj): void
-}
+// interface SparkInterface {
+//   burn (target: BurnableObj): void
+// }
 
-interface BurnableObj {
-  burnWithEffects (): any
-}
+// interface BurnableObj {
+//   burnWithEffects (): any
+// }
 
-const MasterSpark: SparkConstructor = class MasterSpark implements SparkInterface {
-  power: number
-  accuTime: number
-  constructor (power=1000, accu=1000) {
-    this.power = power
-    this.accuTime = accu
-  }
-  burn (target: BurnableObj) {
-    target.burnWithEffects()
-  }
-}
+// const MasterSpark: SparkConstructor = class MasterSpark implements SparkInterface {
+//   power: number
+//   accuTime: number
+//   constructor (power=1000, accu=1000) {
+//     this.power = power
+//     this.accuTime = accu
+//   }
+//   burn (target: BurnableObj) {
+//     target.burnWithEffects()
+//   }
+// }
 
 // abstract class HumanEatting {
 //   static isHuman = true
