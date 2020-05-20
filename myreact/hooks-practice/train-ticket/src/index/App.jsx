@@ -6,13 +6,21 @@ import './App.css'
 import Header from 'src/common/Header';
 import Journey from './components/Journey';
 import CitySelector from 'src/common/CitySelector';
+import DateSelector from 'src/common/DateSelector';
+import Depart from './components/Depart';
+import HighSpeed from './components/HighSpeed';
+import Submit from './components/Submit';
 
 import {
   exchangeToFrom,
   showCitySelector,
   hideCitySelector,
   fetchCityData,
-  setSelectedCity
+  setSelectedCity,
+  showDeteSelector,
+  hideDeteSelector,
+  setSelectedDate,
+  toggleOnlyHighSpeed
 } from './actions';
 
 const App = (props) => {
@@ -22,7 +30,10 @@ const App = (props) => {
     dispatch,
     isCitySelectorVisible,
     cityData,
-    isLoadingCityData
+    isLoadingCityData,
+    isDateSelectorVisible,
+    selectedDate,
+    isOnlyHighSpeed
   } = props;
 
   const onBack = useCallback(() => {
@@ -34,7 +45,8 @@ const App = (props) => {
             exchangeToFrom,
             showCitySelector
           }, dispatch)
-    }, [dispatch]);
+    }, [dispatch]
+  );
 
   const citySelectorCbs = useMemo(() => {
     return bindActionCreators({
@@ -42,23 +54,57 @@ const App = (props) => {
             fetchCityData,
             onSelect: setSelectedCity
           }, dispatch)
-    }, [dispatch]);
+    }, [dispatch]
+  );
+
+  const departCbs = useMemo(() => {
+    return bindActionCreators({
+      showDeteSelector
+    }, dispatch)
+  }, [dispatch])
+
+  const dateSelectorCbs = useMemo(() => {
+    return bindActionCreators({
+      onBack: hideDeteSelector,
+      onSelect: setSelectedDate
+    }, dispatch)
+  }, [dispatch])
+  
+  const highSpeedCbs = useMemo(() => {
+    return bindActionCreators({
+      onToggle: toggleOnlyHighSpeed
+    }, dispatch)
+  }, [dispatch])
+  
 
   return (
     <div>
       <Header title="火车票" onBack={onBack} />
-      <form>
+      <form action="/query.html">
         <Journey 
           from={from}
           to={to}
           {...cbs}
         />
+        <Depart 
+          departDate={selectedDate}
+          {...departCbs}
+        />
+        <HighSpeed
+          onlyHigh={isOnlyHighSpeed}
+          {...highSpeedCbs}
+        />
+        <Submit />
       </form>
       <CitySelector 
         show={isCitySelectorVisible}
         cityData={cityData}
         isLoading={isLoadingCityData}
         {...citySelectorCbs}
+      />
+      <DateSelector
+        show={isDateSelectorVisible}
+        {...dateSelectorCbs}
       />
     </div>
   );

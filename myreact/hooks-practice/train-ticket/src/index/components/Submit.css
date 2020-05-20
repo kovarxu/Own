@@ -1,0 +1,17 @@
+.search-btn-wrapper {
+  margin: 1rem;
+}
+
+.search-btn {
+  display: block;
+  width: 100%;
+  font-size: 1.6rem;
+  line-height: 2.2;
+  text-align: center;
+  border-radius: .6rem;
+  background: rgb(255, 175, 2);
+  box-shadow: none;
+  outline: none;
+  border: none;
+  color: #fff;
+}

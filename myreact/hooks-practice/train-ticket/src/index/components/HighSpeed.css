@@ -1,0 +1,18 @@
+.high-speed {
+  font-size: 1.6rem;
+  line-height: 2;
+  display: flex;
+  align-items: center;
+  padding-left: 2rem;
+}
+
+.high-speed-text {
+  color: #333;
+  flex: 1;
+}
+
+.high-speed-toggler {
+  display: block;
+  width: 3rem;
+  margin-right: 2rem;
+}

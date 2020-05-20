@@ -1,0 +1,56 @@
+
+.calendar-wrapper {
+  padding-bottom: 2rem;
+}
+
+.calendar-table {
+  width: 90%;
+  margin: 1rem auto;
+  border: 1px solid #bbb;
+  border-collapse: collapse;
+}
+
+.calendar-table caption {
+  font-size: 2rem;
+  line-height: 1.6;
+}
+
+.td-cell {
+  font-size: 1.4rem;
+  line-height: 1.4;
+  text-align: center;
+  border-bottom: 1px solid #bbb;
+}
+
+.cell {
+  font-size: 1.6rem;
+  line-height: 2.4;
+  border: 1px solid #bbb;
+  text-align: center;
+}
+
+.cell.blank {
+  background: #eee;
+  border: none;
+}
+
+tr td:nth-of-type(6) {
+  color: rgb(238, 135, 0);
+}
+
+tr td:nth-of-type(7) {
+  color: rgb(238, 135, 0);
+}
+
+.cell.today {
+  
+}
+
+.cell.before {
+  background: #efefef;
+  color: #999;
+}
+
+.cell.behind {
+  
+}

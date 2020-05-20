@@ -1,0 +1,23 @@
+.depart-container {
+  display: flex;
+  line-height: 6rem;
+  padding-left: 2rem;
+}
+
+.depart-date {
+  font-size: 2.4rem;
+  padding-right: 1rem;
+  color: #556;
+}
+
+.depart-day {
+  color: #333;
+  font-size: 1.6rem;
+  padding-right: 1rem;
+}
+
+.depart-note {
+  color: #333;
+  font-size: 1.6rem;
+  opacity: 0.8;
+}

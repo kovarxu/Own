@@ -6,3 +6,21 @@
 body {
   font-size: 12px;
 }
+
+ol, ul {
+  list-style: none;
+  padding-inline-start: 0;
+}
+
+.hidden {
+  display: none;
+}
+
+.layer {
+  position: absolute;
+  width: 100%;
+  min-height: 100vh;
+  background: #fff;
+  top: 0;
+  left: 0;
+}

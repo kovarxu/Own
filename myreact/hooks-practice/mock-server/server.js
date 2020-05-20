@@ -11,9 +11,6 @@ const options = {
   length: function (n, key) {
     return n * 2 + key.length
   },
-  dispose: function (key, n) {
-    n.close()
-  },
   maxAge: 1000 * 60 * 60
 };
 const cache = new LRU(options);
@@ -21,6 +18,15 @@ const cache = new LRU(options);
 router
   .get('/', (ctx) => {
     ctx.body = 'welcome';
+  })
+  .get('/search', (ctx) => {
+    const { key } = ctx.query;
+    if (key) {
+      ctx.body = JSON.stringify([
+        key, key + key, key + key + key
+      ]);
+      ctx.type = 'json';
+    }
   })
 
 const files = fs.readdirSync(path.resolve(__dirname, './sources'));

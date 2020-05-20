@@ -78,7 +78,7 @@ WholeCityList.propTypes = {
 /** 字母表选择组件 */
 const alphaBets = Array.from({ length: 26 }, (_, index) => String.fromCharCode(index + 65));
 
-const AlbetChoose = (props) => {
+const AlbetChoose = memo((props) => {
   const { onClick } = props;
 
   return (
@@ -93,6 +93,77 @@ const AlbetChoose = (props) => {
       }
     </ul>
   );
+})
+
+/** 搜索条目组件 */
+const SearchItem = memo((props) => {
+  const { name, onClick } = props;
+
+  return (
+    <li onClick={() => onClick(name)} className="search-result-item">{name}</li>
+  );
+})
+
+SearchItem.propTypes = {
+  name: PropTypes.string.isRequired,
+  onClick: PropTypes.func.isRequired
+}
+
+/** 搜索结果组件 */
+const SearchResult = memo((props) => {
+  const { searchKey, onClick } = props;
+  const [result, setResult] = useState([]);
+  // 延迟执行搜索
+  const [_timer, _setTimer] = useState(null);
+
+  // 输入搜索需要做防抖
+  useEffect(() => {
+    // abort请求标
+    let aborted = false;
+
+    _setTimer(setTimeout(() => {
+      if (aborted) {
+        return ;
+      }
+      fetch('/search?key=' + searchKey)
+        .then(data => data.json())
+        .then(data => {
+          // 如果传回的键与查询的键不同，则不应该渲染
+          if (data.length && data[0] === searchKey && !aborted) {
+            setResult(data);
+          }
+        })
+    }, 200))
+    return () => {
+      aborted = true;
+      clearTimeout(_timer);
+      _setTimer(null);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [searchKey])
+
+  const fallbackSearchResult = useMemo(() => (
+    result.length ? result : [searchKey]
+  ), [searchKey, result]);
+
+  return (
+    <ul className="search-result">
+      {
+        fallbackSearchResult.map(item => (
+          <SearchItem
+            key={item}
+            name={item}
+            onClick={onClick}
+          />
+        ))
+      }
+    </ul>
+  )
+})
+
+SearchResult.propTypes = {
+  searchKey: PropTypes.string.isRequired,
+  onClick: PropTypes.func.isRequired
 }
 
 /** 城市选择器组件 */
@@ -131,6 +202,11 @@ const CitySelector = memo((props) => {
     }
   
     if (cityData) {
+      // 输入框有输入不渲染
+      if (cleanCityText) {
+        return null;
+      }
+
       return (
         <>
           <WholeCityList 
@@ -143,10 +219,23 @@ const CitySelector = memo((props) => {
     }
   
     return <div>Error in loading the city list.</div>;
-  }, [isLoading, cityData])
+  }, [isLoading, cityData, cleanCityText, handleChooseAlphaBet, onSelect])
+
+  // 条件渲染搜索结果
+  const renderSearchResult = useMemo(() => () => {
+    if (cleanCityText) {
+      return (
+        <SearchResult 
+          searchKey={cleanCityText}
+          onClick={onSelect}
+        />
+      )
+    }
+    return null;
+  }, [cleanCityText, onSelect])
 
   return (
-    <div className={classnames('city-selector-wrapper', { hidden: !show })}>
+    <div className={classnames('layer', { hidden: !show })}>
       <div className="search-wrapper">
         <div onClick={onBack} className="back-btn">
           <svg width="42" height="42">
@@ -174,6 +263,10 @@ const CitySelector = memo((props) => {
 
       <div className="city-wrapper">
         { renderCityList() }
+      </div>
+
+      <div className="search-result-wrapper">
+        { renderSearchResult() }
       </div>
     </div>
   );

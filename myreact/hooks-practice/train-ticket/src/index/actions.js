@@ -33,12 +33,6 @@ export function setIsLoadingCityData(payload) {
     payload
   }
 }
-export function setSelectedDate(payload) {
-  return {
-    type: ACTION_SET_SELECTED_DATE,
-    payload
-  }
-}
 
 // 交互一，点击展示城市选择浮层，关闭浮层
 export function showCitySelector (isSelectFrom) {
@@ -87,6 +81,17 @@ export function hideDeteSelector () {
   return {
     type: ACTION_SET_IS_DATE_SELECTOR_VISIBLE,
     payload: false
+  }
+}
+
+export function setSelectedDate(payload) {
+  return (dispatch) => {
+    dispatch({
+      type: ACTION_SET_SELECTED_DATE,
+      payload
+    })
+
+    dispatch(hideDeteSelector());
   }
 }
 

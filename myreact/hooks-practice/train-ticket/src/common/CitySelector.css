@@ -1,15 +1,3 @@
-.city-selector-wrapper {
-  position: absolute;
-  width: 100%;
-  min-height: 100vh;
-  background: #fff;
-  top: 0;
-  left: 0;
-}
-
-.hidden {
-  display: none;
-}
 
 .search-wrapper {
   height: 5rem;
@@ -51,9 +39,7 @@
 }
 
 .city-chunk {
-  list-style: none;
   margin: 0 0 1.6rem;
-  padding-inline-start: 0;
 }
 
 .city-chunk .city-item {
@@ -77,8 +63,6 @@
   position: fixed;
   right: 0.6rem;
   top: 4.5rem;
-  list-style: none;
-  padding-inline-start: 0;
   font-size: 1.6rem;
   font-weight: bold;
   color: rgba(4, 80, 63, 0.6);
@@ -87,5 +71,24 @@
 
 .alphabet li {
   margin: 0 0 0.4rem;
+}
 
+.search-result-wrapper {
+  position: absolute;
+  top: 5rem;
+  left: 0;
+  width: 100%;
+}
+
+.search-result {
+  
+}
+
+.search-result-item {
+  font-size: 1.8rem;
+  line-height: 2;
+  padding: 0 1rem;
+  margin: 0 0 0.4rem;
+  color: #666;
+  border-bottom: 1px solid #ccc;
 }
