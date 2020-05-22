@@ -178,3 +178,11 @@ PWA组成技术
 * Notification API
 
 * workbox-webpack-plugin 谷歌出品的PWA插件
+
+### 项目初始化
+
+1. 写骨架
+2. 写store，造字段
+3. 复制2中的字段，多行编辑actions，修改toggle
+4. 复制2中的字段，多行编辑reducers，赋默认值
+

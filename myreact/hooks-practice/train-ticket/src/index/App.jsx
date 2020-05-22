@@ -80,7 +80,7 @@ const App = (props) => {
   return (
     <div>
       <Header title="火车票" onBack={onBack} />
-      <form action="/query.html">
+      <form action="/query">
         <Journey 
           from={from}
           to={to}
