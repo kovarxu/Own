@@ -1,0 +1,34 @@
+.sel-layer {
+
+}
+.items-wrapper {
+  margin-top: 1rem;
+  display: flex;
+  padding: 1rem;
+  font-size: 2rem;
+}
+.item-cell {
+  width: 8rem;
+  margin-right: 0.6rem;
+  line-height: 4rem;
+  border-radius: 0.2rem;
+  background: #eee;
+  text-align: center;
+}
+.checked {
+  background: orange;
+  color: #fff;
+}
+.btn-wrapper {
+  display: flex;
+  font-size: 1.4rem;
+  margin-top: 1rem;
+}
+.btn {
+  width: 6rem;
+  margin-right: .5rem;
+  line-height: 3rem;
+  text-align: center;
+  background: lightsalmon;
+  color: #fff;
+} 

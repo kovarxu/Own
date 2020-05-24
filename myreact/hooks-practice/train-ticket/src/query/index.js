@@ -13,3 +13,9 @@ ReactDom.render(
   </Provider>, 
   document.getElementById('root')
 )
+
+// whistle
+// /\/static\/insuranceV2\/(.*)/ file://E:/Projects/web/insuranceV2/insuranceV2/$1
+// http://dev.xinhulu.com tpl://{mock-test}
+// http://dev.xinhulu.com js://E:/inject.js
+// https://beta.xinhulu.com log://

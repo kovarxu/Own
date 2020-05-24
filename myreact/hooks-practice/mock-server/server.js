@@ -28,6 +28,13 @@ router
       ctx.type = 'json';
     }
   })
+  .get('/avaitems', (ctx) => {
+    ctx.body = JSON.stringify({
+      code: 0,
+      data: [ 'A', 'V', 'F', 'S' ],
+      errmsg: ''
+    })
+  })
 
 const files = fs.readdirSync(path.resolve(__dirname, './sources'));
 files.forEach(filepath => {

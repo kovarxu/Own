@@ -1,64 +1,52 @@
-import React, { Component, PureComponent, useState, useRef, memo }  from 'react';
-import { connect } from 'react-redux';
-import './App.css';
+import React, { 
+  memo 
+} from "react";
+import { connect } from "react-redux";
+import "./App.css";
+import {
+  showSelectSeat,
+  hideSelectSeat,
+  setCheckedIndices
+} from './actions';
+import { bindActionCreators } from 'redux';
+import SelLayer from './components/SelLayer';
 
-const Foo = memo((props) => {
-  const { name, onChangeName } = props;
-  const [localName, setLocalName] = useState(() => {
-    console.log('localname inited');
-    return name;
-  });
-  console.log('foo rendered');
-  // const startNameRef = useRef(name);
-  // if (startNameRef.current !== localName) {
-  //   setLocalName(localName);
-  //   startNameRef.current = localName
-  // }
+const App = memo((props) => {
+  const {
+    dispatch,
+    isSelectSeatVisible,
+    aviableSeatItems,
+    checkedIndices,
+    isQueryingItems
+  } = props;
 
-  if (localName !== name) {
-    setLocalName(name);
-  }
-  
-  const onClick = () => {
-    const newName = localName + '@';
-    setLocalName(newName);
-    onChangeName(newName);
-  }
+  const showSelectSeatLayer = () => dispatch(showSelectSeat());
 
-  return (
-    <div onClick={onClick}>{localName}</div>
-  );
-})
-
-
-const App = (props) => {
-  console.log('app rendered');
-  const [name, setName] = useState('A');
-  const [age, setAge] = useState(2);
+  const selLayerCbs = bindActionCreators({
+    hide: hideSelectSeat,
+    setCheckedIndices
+  }, dispatch);
 
   return (
     <div>
-      <Foo
-        onChangeName={setName}
-        name={name}
+      <div>MyApp</div>
+      <button onClick={showSelectSeatLayer}>showSeatSelect</button>
+      <SelLayer 
+        isShown={isSelectSeatVisible}
+        aviableSeatItems={aviableSeatItems}
+        checkedIndices={checkedIndices}
+        isQueryingItems={isQueryingItems}
+        {...selLayerCbs}
       />
     </div>
-  );
-}
- 
+  )
+});
+
 export default connect(
   function mapStateToProps(state) {
-    return state
+    return state;
   },
   function mapDispatchToProps(dispatch, ownProps) {
-    return { dispatch }
+    return { dispatch };
   }
 )(App);
-
-// {
-//   foo: '',
-//   bar: '',
-//   isOnline: '',
-//   isOfflineVisible: '',
-//   shownData: null
-// }
