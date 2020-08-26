@@ -41,12 +41,12 @@ module.exports = {
       title: 'PIXI practice'
     }),
     new CleanWebpackPlugin(),
-    new AddAssetHTMLWebpackPlugin({
-      filepath: path.resolve(__dirname, `./dll/pixi.dll.js`)
-    }),
-    new webpack.DllReferencePlugin({
-      manifest: path.resolve(__dirname, `./dll/pixi.manifest.json`)
-    }),
+    // new AddAssetHTMLWebpackPlugin({
+    //   filepath: path.resolve(__dirname, `./dll/pixi.dll.js`)
+    // }),
+    // new webpack.DllReferencePlugin({
+    //   manifest: path.resolve(__dirname, `./dll/pixi.manifest.json`)
+    // }),
     new webpack.HotModuleReplacementPlugin()
   ]
 }
