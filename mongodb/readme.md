@@ -23,7 +23,7 @@ use admin
 db.createUser({user:"admin",pwd:"123456",roles:["root"]} # 添加管理员
 db.createUser({user: "root", pwd: "123456", roles: [{ role: "dbOwner", db: "test" }]}) # 创建用户
 db.auth("admin", "123456") # 认证
-mongo -u kovarxu -p db123456789 --authenticationDatabase admin # docker登录
+mongo -u kovarxu -p db123456789 --authenticationDatabase admin # docker镜像登录
 ```
 
 ## 核心概念
