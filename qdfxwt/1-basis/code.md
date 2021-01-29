@@ -52,16 +52,3 @@ async function foo () {
 }
 ```
 
-* async拆解
-
-```js
-async function foo() {
-  part1
-  await part2.then(part3)
-  part4
-  await part5.then(part6)
-}
-
-// 等价于
-[ part1 + part2 ].then[ part3 ].then[ part4 + part5 ].then[ part6 ]
-```

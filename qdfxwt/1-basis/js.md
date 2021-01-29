@@ -455,3 +455,17 @@ getComputedStyle()、getBoundingClientRect
 * 批量修改DOM 1. display: none使元素脱离文档流；2. 使用documentFragment；3. 拷贝到内存，操作完再怼回去
 * 使用绝对定位让动画元素脱离文档流
 * 开启GPU加速（但是layer太多反而耗性能，而且字体会抗锯齿失效）
+
+### async拆解
+
+```js
+async function foo() {
+  part1
+  await part2
+  part4
+  await part5.then(part6)
+}
+
+// 等价于
+[ part1 + part2 ].then[ part4 + part5 ].then[ part6 ]
+```

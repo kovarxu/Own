@@ -49,6 +49,16 @@ show profile for query 2;
 
 指令执行顺序：`FROM(JOIN ON) > WHERE > GROUP BY > HAVING > SELECT的字段 > DISTINCT > ORDER BY(DESC) > LIMIT`
 
+关键词作用：
+
+- SELECT 输出是哪些列
+- FROM 输入是什么
+- WHERE 数据满足什么条件
+- GROUP BY 整理输出的格式，相同的归类
+- HAVING 归类后再次筛选的条件
+- ORDER BY 整理输出的格式，按照什么排序
+- LIMIT 限制最多输出多少条
+
 基本原理：每一步的输出都是一个中间虚拟表
 
 ### WHERE子句
@@ -71,7 +81,7 @@ show profile for query 2;
 
 - 总函数：`COUNT` `COUNT(*)`统计总量（包含NULL), `COUNT(some_field)`统计相关列不为NULL的数量
 - 最值：`MAX, MIN` 如`MAX(t_age)`
-- 统计：`AVG, SUM`, 如`ROUNT(AVG(DISTINCT hp), 2)`算出所有不重复血量的平均值（取2位小数点）
+- 统计：`AVG, SUM`, 如`ROUND(AVG(DISTINCT hp), 2)`算出所有不重复血量的平均值（取2位小数点）
 
 ### 排序
 
@@ -90,6 +100,33 @@ eg: `SELECT num, t_klass1, t_klass_2 FROM t_info WHERE date > 29 AND month > 10 
 ### 子查询
 
 非关联子查询，先子后主的顺序执行，如“获取队名为篮网队的球员信息”，首先在子句中查team表查到篮网队的team_id, 然后用它在player表中找到球员信息。
+
+理解关联子查询：子查询是一个分-合的过程
+
+eg1: 每队大于平均身高的球员
+
+`select * from player as a where a.height > (select avg(height) from player as b where a.team_id = b.team_id);`
+
+`a.team_id = b.team_id` 这个操作其实将该查询操作进行了子集划分，每个子集分别进行计算，最后把得到的结果组装回来。
+
+步骤：
+1. 从player表取所有值
+2. 在第1步的结果中取第一条，将team_id代入子查询语句中，得到该team_id的平均身高
+3. 判断`a.height > xxx`, 得到是否保留第一条的结果
+4. 在第1步的结果中取第二条，依此类推操作
+5. 最后整合所有结果，得到最终结果
+
+eg2: 列出参赛的队名和球队总人数
+
+`select h_team_id, (select count(*) from player as p where t.v_team_id = p.team_id) as team_count, (select team_name from team as te where te.team_id = t.v_team_id) as team_name from team_score as t;`
+
+本质还是子集划分，只不过现在希望从子集中获取数据，于是将它放在`select`和`from`之间。
+
+eg3: 找到每队身高最高的球员
+
+方法1：`select max(height) from player group by team_id;`
+
+方法2: `select distinct team_id, (select max(height) from player as b where b.team_id = a.team_id) from player as a;`
 
 关联子查询，父子查询之间经过循环的查询过程，如“找到参加了比赛的所有球员信息”，可以先在player_score表中找到所有player_id, 然后循环找是否在player表中存在(`IN`)；也可以先在player表中找到所有player_id, 循环找是否在 player_score 表中出现过(`EXISTS`)
 
