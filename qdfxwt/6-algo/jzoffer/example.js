@@ -120,3 +120,84 @@ var isSymmetric = function(root) {
   return isSym(root.left, root.right);
 };
 
+var reverseList = function(head) {
+  if (!head  || !head.next)  return head;
+  const newHead = reverseList(head.next);
+  head.next.next = head;
+  head.next = null;
+  return newHead;
+};
+
+var deleteDuplicates = function(head) {
+  let [a, b] = [null, head];
+  while (b) {
+    const next = b.next;
+    if (a === null) {
+      a = b;
+      a.next = null;
+    } else if (a.val !== b.val) {
+      a.next = b;
+      a = b;
+      a.next = null;
+    }
+    b = next;
+  }
+  return head;
+};
+
+var detectCycle = function(head) {
+  const pivot = new ListNode();
+  pivot.next = head;
+  let [p1, p2, p3] = [pivot, pivot, pivot];
+  while (true) {
+    p2 = p2.next;
+    p3 = p3.next;
+    if (!p3) return null;
+    p3 = p3.next;
+    if (!p3) return null;
+    // 两个指针相遇了，有环
+    if (p2 === p3) {
+      while(p1 !== p2) {
+        p1 = p1.next;
+        p2 = p2.next;
+      }
+      return p1;
+    }
+  }
+};
+
+var getKthFromEnd = function(head, k) {
+  if (!head) {
+    throw new Error();
+  }
+  const pivot = new ListNode();
+  pivot.next = head;
+  let [a, b] = [pivot, pivot];
+  for (let i = 0; i < k; i++) {
+    b = b.next;
+    if (!b) {
+      throw new Error();
+    }
+  }
+  while (b) {
+    a = a.next;
+    b = b.next;
+  }
+  return a;
+};
+
+var lengthOfLongestSubstring = function(s) {
+  const m = {};
+  let [rk, ans] = [-1, 0];
+  for (let i = 0; i < s.length; i++) {
+    if (i !== 0) {
+      m[s[i - 1]] = 0;
+    }
+    while (rk + 1 < s.length && !m[s[rk + 1]]) {
+      m[s[rk + 1]] = 1;
+      rk++;
+    }
+    ans = Math.max(ans, rk - i + 1);
+  }
+  return ans;
+};

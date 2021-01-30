@@ -133,3 +133,148 @@ var isSymmetric = function(root) {
   return isSym(root.left, root.right);
 };
 ```
+
+### 链表
+
+题目
+-------------
+1. 链表翻转
+2. 删除排序链表中的重复元素
+3. 环形链表的入口
+4. 两个链表的第一个公共节点
+5. 链表中倒数第K个节点
+6. 复杂链表的复制（每一个节点都有一个指向任意节点或null的random字段）
+7. 最后一个小朋友
+
+解答：
+-------------
+1. 经典的五行代码
+
+```js
+var reverseList = function(head) {
+  // !head 为了防止输入是null
+  if (!head  || !head.next)  return head;
+  // 这是典型的递归从尾至头执行运算（一般的情况都是先运算然后递归，这个是先递归，再执行运算，相当于从尾至头的运算）
+  const newHead = reverseList(head.next);
+  head.next.next = head;
+  head.next = null;
+  return newHead;
+};
+```
+
+2. 经典的双指针
+
+```js
+var deleteDuplicates = function(head) {
+  let [a, b] = [null, head];
+  while (b) {
+    // 先保存一下next，因为下面把后指针所在的元素的next设为了null
+    const next = b.next;
+    if (a === null) {
+      a = b;
+      a.next = null;
+    } else if (a.val !== b.val) {
+      a.next = b;
+      a = b;
+      a.next = null;
+    }
+    b = next;
+  }
+  return head;
+};
+```
+
+3. 双指针解决
+
+要点：
+- 识别是否有环：快慢指针，一个一次进一格，另一个一次进两格，如果两个指针能够相遇则肯定存在环
+- 注意需要从-1位置开始移动，不能从头开始，所以需要pivot指向头指针打辅助
+
+```js
+var detectCycle = function(head) {
+  const pivot = new ListNode();
+  pivot.next = head;
+  let [p1, p2, p3] = [pivot, pivot, pivot];
+  while (true) {
+    p2 = p2.next;
+    p3 = p3.next;
+    if (!p3) return null;
+    p3 = p3.next;
+    if (!p3) return null;
+    // 两个指针相遇了，有环
+    if (p2 === p3) {
+      while(p1 !== p2) {
+        p1 = p1.next;
+        p2 = p2.next;
+      }
+      return p1;
+    }
+  }
+};
+```
+
+4. 先遍历一个链表给每个节点打下标记，然后遍历另外一个链表即可
+
+5. 比较常见的题目，注意处理边界条件，画个图/设定一个pivot可以简化操作
+
+```js
+var getKthFromEnd = function(head, k) {
+  if (!head) {
+    throw new Error();
+  }
+  const pivot = new ListNode();
+  pivot.next = head;
+  let [a, b] = [pivot, pivot];
+  for (let i = 0; i < k; i++) {
+    b = b.next;
+    if (!b) {
+      throw new Error();
+    }
+  }
+  while (b) {
+    a = a.next;
+    b = b.next;
+  }
+  return a;
+};
+```
+
+6. 思路：先遍历一次确定主链的复制正确性，期间保留`<源Node, 复制Node>`的映射到Map中；然后再一次遍历两条链，处理random数据
+
+7. 背代码
+
+### 栈
+
+题目
+-------------
+1. 两个栈实现队列
+2. 包含min的栈
+3. 栈的压入、弹出序列（给出一个压入顺序和一个弹出顺序，判断是否符合栈）
+4. 滑动窗口的最大值（模拟一个队列解决）
+5. 无重复字符的最长字串（双指针典范）
+
+解答：
+-------------
+3. 思路是建立一个栈来模拟操作，如果最后栈非空则失败
+
+5. 第一眼看这题的反应，（我以前做过这个题好几遍了）。再看一眼之后发现，（什么？我什么时候做过这个题？）
+
+这道题并非来自《剑指offer》，但是比较经典
+
+```js
+var lengthOfLongestSubstring = function(s) {
+  const m = {};
+  let [rk, ans] = [-1, 0];
+  for (let i = 0; i < s.length; i++) {
+    if (i !== 0) {
+      m[s[i - 1]] = 0;
+    }
+    while (rk + 1 < s.length && !m[s[rk + 1]]) {
+      m[s[rk + 1]] = 1;
+      rk++;
+    }
+    ans = Math.max(ans, rk - i + 1);
+  }
+  return ans;
+};
+```
