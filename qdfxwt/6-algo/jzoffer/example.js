@@ -264,3 +264,59 @@ var nthUglyNumber = function(n) {
   }
   return list.pop();
 };
+
+var movingCount = function(m, n, k) {
+  const V = Array(m);
+  let sum = 0;
+  const getDimDum = x => {
+    let res = 0;
+    while (x) {
+      res += x % 10;
+      x = x / 10 | 0;
+    }
+    return res;
+  }
+  const isValid = (x, y) => {
+    return getDimDum(x) + getDimDum(y) <= k
+  }
+
+  for (let i = 0; i < m; i++) {
+    V[i] = Array(n);
+    for (let j = 0; j < n; j++) {
+      V[i][j] = false;
+    }
+  }
+
+  for (let i = 0; i < m; i++) {
+    for (let j = 0; j < n; j++) {
+      if (isValid(i, j)) {
+        V[i][j] = (i === 0 && j === 0) || 
+                  (i > 0 && V[i-1][j]) ||
+                  (i < m - 1 && V[i+1][j]) ||
+                  (j > 0 && V[i][j-1]) ||
+                  (j < n - 1 && V[i][j+1]);
+      }
+      if (V[i][j]) {
+        sum++;
+      }
+    }
+  }
+
+  return sum;
+};
+
+var findNumberIn2DArray = function(matrix, target) {
+  if (!matrix.length) return 0;
+  const firstRow = matrix[0];
+  let [x, y] = [0, firstRow.length - 1];
+  while (y >= 0 && x < matrix.length) {
+    if (matrix[x][y] === target) {
+      return true;
+    } else if (matrix[x][y] > target) {
+      y--;
+    } else {
+      x++;
+    }
+  }
+  return false;
+};

@@ -289,7 +289,15 @@ var lengthOfLongestSubstring = function(s) {
 4. 旋转数组的最小数字
 5. 丑数（质因数仅包含2,3,5）
 6. 数组中重复的数字（map）
-7. 顺时针打印矩阵（需要注意点：）
+7. 顺时针打印矩阵
+8. 机器人的运动范围
+9. 二维数组中的查找
+10. 斐波那契数列相关题目（台阶跳跃、2*1矩阵铺平都是类似问题）
+11. 剪绳子，达到逐端长度相乘最大（每段长3的时候有最大值）
+12. 和为n的两个数字（排序数列，输出乘积最小的组合，解法双指针）
+13. 最小的K个数
+14. 逆序对的数目（核心是一个归并排序，并的过程中算逆序对数目）
+15. 构建乘积数组
 
 解答：
 -------------
@@ -460,3 +468,34 @@ function spiralOrder(matrix) {
   }
 };
 ```
+
+8. 这道题是一个遍历问题，维护一个二维数组保存机器人是否可达的数据，核心逻辑是(i,j)点是否可达既取决于该点坐标的逐数位加和，又取决于其四周的几个格子是否可达。
+
+9. 给出的二维数组是有序的，即每行从左到右、每列从上到下递增
+
+思路：从右上角出发进行移动，直到找到指定值或者越界
+
+```js
+var findNumberIn2DArray = function(matrix, target) {
+  if (!matrix.length) return 0;
+  const firstRow = matrix[0];
+  let [x, y] = [0, firstRow.length - 1];
+  while (y >= 0 && x < matrix.length) {
+    if (matrix[x][y] === target) {
+      return true;
+    } else if (matrix[x][y] > target) {
+      y--;
+    } else {
+      x++;
+    }
+  }
+  return false;
+};
+```
+
+13. 有几种思路：
+
+- 排序后取前m个，时间复杂度O(nlogn)
+- 选择排序选择m个，时间复杂度O(m*n)
+- 建立堆，然后选取m个，时间复杂度O(n + mlogn)
+- 使用快排的辅助函数
