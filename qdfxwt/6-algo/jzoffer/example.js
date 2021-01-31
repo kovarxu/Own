@@ -201,3 +201,66 @@ var lengthOfLongestSubstring = function(s) {
   }
   return ans;
 };
+
+var findContinuousSequence = function(target) {
+  // 公式法
+  const result = [];
+  for(let i = 1; i < target; i++) {
+    const delta2 = 1 + 4(i * i - i + 2 * target);
+    if (delta2 < 0) continue;
+    const root = (-1 + Math.sqrt(delta2)) / 2;
+    if (Math.abs(root - Math.round(root)) < Number.EPSILON) {
+      result.push(`${i} to ${root} is a valid sequence.`);
+    }
+  }
+  return result;
+};
+
+// incorrect solution
+var minArray = function(numbers) {
+  // 2 2 2 3 0 1
+  const checkIsTarget = (pos) => {
+    return (pos < numbers.length - 1 && numbers[pos] > numbers[pos + 1]) ||
+      (pos === 0 && numbers[pos] > numbers[pos + 1]);
+  }
+  let [start, end] = [0, numbers.length - 1];
+  while (start < end) {
+    const center = (start + end) / 2 | 0;
+    let result = checkIsTarget(center);
+    if (result) {
+      return result;
+    }
+    if (numbers[center] >= numbers[start]) {
+      start = center + 1;
+    } else {
+      end = center - 1;
+    }
+  }
+};
+
+var nthUglyNumber = function(n) {
+  // 2, 3, 5
+  // 自身在自身组成的序列上移动
+  const list = [1];
+  let [p2, p3, p5] = [0, 0, 0];
+  let [s2, s3, s5] = [2, 3, 5];
+  for (let i = 1; i < n; i++) {
+    // 1. 找到s中的最小值，push进list中
+    const min = Math.min(s2, s3, s5);
+    list.push(min);
+    // 2. 找到s中最小值对应的index，移动p并更新s
+    if (s2 === min) {
+      p2++;
+      s2 = 2 * list[p2];
+    }
+    if (s3 === min) {
+      p3++;
+      s3 = 3 * list[p3];
+    }
+    if (s5 === min) {
+      p5++;
+      s5 = 5 * list[p5];
+    }
+  }
+  return list.pop();
+};

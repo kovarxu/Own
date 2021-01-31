@@ -278,3 +278,185 @@ var lengthOfLongestSubstring = function(s) {
   return ans;
 };
 ```
+
+### 排序
+
+题目
+-------------
+1. 归并和快速排序
+2. 数据流的中位数（二分搜索）
+3. 和为s的连续正数序列（给出一个值如9，找到连续数字相加等于它的序列，如`[[2,3,4], [4,5]]`
+4. 旋转数组的最小数字
+5. 丑数（质因数仅包含2,3,5）
+6. 数组中重复的数字（map）
+7. 顺时针打印矩阵（需要注意点：）
+
+解答：
+-------------
+1. 归并和快排
+
+```js
+// 归并：先分后合，这个helper可以用于“合并两个排序数组”类似的问题
+const sortHelper = (list1, list2) => {
+  let [i, j] = [0, 0];
+  const result = [];
+  // 要领1：合并两个有序数组，三个while
+  while (i < list1.length || j < list2.length) {
+    if (list1[i] < list2[j] || j >= list2.length) {
+      result.push(list1[i]);
+      i++;
+    } else {
+      result.push(list2[j]);
+      j++;
+    }
+  }
+  return result;
+}
+
+export function sort(nums) {
+  // 归并排序
+  if (nums.length <= 1) {
+    return nums;
+  }
+  // 要领2：这里不可以写nums.length - 1，需要保证长度为2的数组不能死循环
+  const center = nums.length / 2 | 0;
+
+  return sortHelper(
+    sort(nums.slice(0, center)),
+    sort(nums.slice(center, nums.length)
+  ));
+}
+```
+
+```ts
+// 快排
+function swap<T>(arr: Array<T>, ida: number, idb: number) {
+  const tmp: T = arr[ida];
+  arr[ida] = arr[idb];
+  arr[idb] = tmp;
+}
+
+// 这个helper是关键，可以用于“数组中第K大的数”之类的问题
+// 步骤：交换 -- 前后指针递进 -- 后指针进1 -- 交换
+const sortHelper = (arr: Array<number>, start: number, end: number): number => {
+  if (start === end) {
+    return start;
+  } else if (start > end) {
+    throw 'start need to be no less than end';
+  }
+
+  let p = start - 1;
+  let center = ((start + end) / 2) | 0;
+  swap(arr, center, end);
+  const pivot = arr[end];
+  for (let q = start; q < end; q++) {
+    if (arr[q] < pivot) {
+      p ++;
+      p !== q && swap(arr, p, q);
+    }
+  }
+  p ++;
+  swap(arr, p, end);
+  return p;
+}
+
+export const rapid = (arr: Array<number>, ...rest: Array<number>): Array<number> => {
+  const [ start = 0, end = arr.length - 1 ] = rest;
+  if (start < end) {
+    const qIndex = sortHelper(arr, start, end);
+    rapid(arr, start, qIndex - 1);
+    rapid(arr, qIndex + 1, end);
+  }
+  return arr;
+}
+```
+
+3. 有多种思路
+
+- 暴力法，以每一个数字为起点逐步向前找，直到找到一个大于或等于目标值的和
+- 数学公式法，连续数字是有求和公式的
+- 双指针法，是对暴力法的优化，在暴力法中很多计算都重复了，比如在对`1`运算是需要算`1+2+3+4+5+...`，在对`2`运算是需要算`2+3+4+5+...`，很多操作其实是重复的，双指针法将这些操作进行了合并
+
+4. 直接取数组中的最小值即可，使用二分法需要考虑重复数字的情况，还要回退到使用线性查询，比较麻烦
+
+5. 2,3,5三个指针分别在解析到的数组上向前移动
+
+```js
+var nthUglyNumber = function(n) {
+  // 2, 3, 5
+  // 自身在自身组成的序列上移动
+  const list = [1];
+  let [p2, p3, p5] = [0, 0, 0];
+  let [s2, s3, s5] = [2, 3, 5];
+  for (let i = 1; i < n; i++) {
+    // 1. 找到s中的最小值，push进list中
+    const min = Math.min(s2, s3, s5);
+    list.push(min);
+    // 2. 找到s中最小值对应的index，移动p并更新s
+    if (s2 === min) {
+      p2++;
+      s2 = 2 * list[p2];
+    }
+    if (s3 === min) {
+      p3++;
+      s3 = 3 * list[p3];
+    }
+    if (s5 === min) {
+      p5++;
+      s5 = 5 * list[p5];
+    }
+  }
+  return list.pop();
+};
+```
+
+7. 细节较多这道题
+
+```js
+function spiralOrder(matrix) {
+  const row = matrix.length;
+  const column = matrix[0].length;
+  const result = [];
+  let iter = 0;
+
+  while (true) {
+    if (iter >= Math.min(column, row) - iter) {
+      return result;
+    }
+    // 1
+    let i = iter;
+    for (; i < column - iter; i++) {
+      result.push(matrix[iter][i]);
+    }
+
+    // 2
+    i--;
+    let j = iter + 1;
+    for (; j < row - iter; j++) {
+      result.push(matrix[j][i]);
+    }
+
+    // 3
+    j--;
+    // 边界条件，如果这一行打印和第一行一致，则说明已经结束了
+    if (iter === j) {
+      return result;
+    }
+    for (i = column - iter - 2; i >= iter; i--) {
+      result.push(matrix[j][i]);
+    }
+
+    // 4
+    i++;
+    // 边界条件，如果这一列打印和第一列一致，则说明已经结束了
+    if (column - iter - 1 === iter) {
+      return result;
+    }
+    for (j = row - iter - 2; j > iter; j--) {
+      result.push(matrix[j][iter]);
+    }
+
+    iter++;
+  }
+};
+```
