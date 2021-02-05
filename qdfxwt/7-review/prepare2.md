@@ -29,6 +29,8 @@
 
 ### 监控的技术细化
 
+错误监控的核心：监控`error`和`unhandledrejection`; 利用performance的Entry监控资源加载错误; 利用劫持XHR获取XHR加载超时或者失败
+
 1. 接口测速，hack xhr和fetch，可配置接口的ret返回字段和错误枚举，方便上报
 2. 资源测速，包括但不限于image元素，如果支持 PerformanceObserverInstance.observe({ entryTypes: ['resource'] }) 则使用它进行监控，否则使用 performance.getEntriesByType('resource') 然后每隔3s执行一次
 3. 监控设备信息、内核版本、网络制式
