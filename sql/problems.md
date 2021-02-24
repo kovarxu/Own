@@ -10,6 +10,8 @@
 6. 维度转换
 7. 连续出现的满足条件的数据
 8. 分数排名（重要）
+9. 部门工资前三高的所有员工（*）
+10. 行程和用户（*）
 
 ## answers
 -----------
@@ -321,3 +323,176 @@ order by score desc;
 - `cast(A as signed)` 函数将 A 转化为符号整数，因为 case when 得到的是字符串
 - 赋值一定需要使用`:=`
 
+### 部门工资前三高的所有员工
+
+`employee`表：
+
++----+-------+--------+--------------+
+| Id | Name  | Salary | DepartmentId |
++----+-------+--------+--------------+
+| 1  | Joe   | 85000  | 1            |
+| 2  | Henry | 80000  | 2            |
+| 3  | Sam   | 60000  | 2            |
+| 4  | Max   | 90000  | 1            |
+| 5  | Janet | 69000  | 1            |
+| 6  | Randy | 85000  | 1            |
+| 7  | Will  | 70000  | 1            |
++----+-------+--------+--------------+
+
+`department`表：
+
++----+----------+
+| Id | Name     |
++----+----------+
+| 1  | IT       |
+| 2  | Sales    |
++----+----------+
+
+需要的结果：按照`departmentid`确定每个部门前三薪资的所有员工，返回如下：
+
++------------+----------+--------+
+| Department | Employee | Salary |
++------------+----------+--------+
+| IT         | Max      | 90000  |
+| IT         | Randy    | 85000  |
+| IT         | Joe      | 85000  |
+| IT         | Will     | 70000  |
+| Sales      | Henry    | 80000  |
+| Sales      | Sam      | 60000  |
++------------+----------+--------+
+
+* 题解：
+
+本题的核心是找到*部门前三的所有员工id*，使用的sql语句为：
+
+```sql
+-- e1中的salary小于e2中salary的个数不大于2，说明e1就是前三
+select e1.id, e1.departmentid
+-- 必须left join，只用join的化每个department的第一名无法检索出来
+from employee as e1 left join employee as e2
+on e1.departmentid = e2.departmentid
+and e1.salary < e2.salary
+-- 注意这里需要在having中使用聚类函数
+having count(distinct(e2.salary) <= 2);
+```
+
+上一步是关键步骤，之后是连表查询：
+
+```sql
+select
+  department.name as 'department',
+  employee.name as 'employee',
+  employee.salary as 'salary'
+from 
+  employee, 
+  (select e1.id, e1.departmentid 
+  from employee as e1
+  left join employee as e2
+  on e1.departmentid = e2.departmentid
+  and e1.salary < e2.salary
+  group by e1.id
+  having count(distinct e2.salary) <= 2) as top3,
+  department
+where
+  employee.departmentid = top3.departmentid
+  and employee.id = top3.id
+  and employee.departmentid = department.id;
+```
+
+### 行程和用户
+
+`trips`表：
+
++----+-----------+-----------+---------+---------------------+------------+
+| Id | Client_Id | Driver_Id | City_Id | Status              | Request_at |
++----+-----------+-----------+---------+---------------------+------------+
+| 1  | 1         | 10        | 1       | completed           | 2013-10-01 |
+| 2  | 2         | 11        | 1       | cancelled_by_driver | 2013-10-01 |
+| 3  | 3         | 12        | 6       | completed           | 2013-10-01 |
+| 4  | 4         | 13        | 6       | cancelled_by_client | 2013-10-01 |
+| 5  | 1         | 10        | 1       | completed           | 2013-10-02 |
+| 6  | 2         | 11        | 6       | completed           | 2013-10-02 |
+| 7  | 3         | 12        | 6       | completed           | 2013-10-02 |
+| 8  | 2         | 12        | 12      | completed           | 2013-10-03 |
+| 9  | 3         | 10        | 12      | completed           | 2013-10-03 |
+| 10 | 4         | 13        | 12      | cancelled_by_driver | 2013-10-03 |
++----+-----------+-----------+---------+---------------------+------------+
+
+`users`表：
+
++----------+--------+--------+
+| Users_Id | Banned | Role   |
++----------+--------+--------+
+| 1        | No     | client |
+| 2        | Yes    | client |
+| 3        | No     | client |
+| 4        | No     | client |
+| 10       | No     | driver |
+| 11       | No     | driver |
+| 12       | No     | driver |
+| 13       | No     | driver |
++----------+--------+--------+
+
+从trips表中的client_id，driver_id都不users.banned = 'yes'的数据，然后计算订单未取消的几率，按Request_at时间分类。
+
+本题难点是求出前半部分，即client_id，driver_id都不users.banned = 'yes'的数据。
+
+* 思路一，子查询分别搜索
+
+```sql
+select trips.id, trips.request_at from trips 
+where trips.client_id not in (select users_id from users where banned='yes') 
+and trips.driver_id not in (select users_id from users where banned='yes');
+```
+
+* 思路二，联结两次
+
+伪代码：
+
+```js
+if (
+  (trips.client_id == users.users_id && users.banned == 'no') || 
+  (trips.driver_id == users.users_id && users.banned == 'no')
+) then ...
+```
+
+```sql
+select trips.id, trips.request_at
+from trips 
+join users on trips.client_id = users.users_id and users.banned != 'yes'
+join users as u on trips.driver_id = u.users_id and u.banned != 'yes';
+```
+
+* 思路三，联结两次
+
+伪代码：
+
+```js
+if (
+  !(trips.client_id == users.users_id && users.banned == 'yes') &&
+  !(trips.driver_id == users.users_id && users.banned == 'yes')
+) then ...
+```
+
+```sql
+select trips.id, trips.request_at 
+from trips 
+left join (select users_id from users where banned = 'yes') as A on (trips.client_id = A.users_id) 
+left join (select users_id from users where banned = 'yes') as A1 on (trips.driver_id = A1.users_id) 
+where A.users_id is null and A1.users_id is null;
+```
+
+都需要将`client_id`和`driver_id`分开进行计算。
+
+整体答案：
+
+```sql
+select
+  request_at as 'Day',
+  round(count(if(status != 'completed', status, null)) / count(client_id), 2) as 'Cancellation Rate'
+from trips
+  join users on trips.client_id = users.users_id and users.banned != 'Yes'
+  join users as u on trips.driver_id = u.users_id and users.banned != 'Yes'
+where trips.request_at >= '2013-10-01' and trips.request_at <= '2013-10-03'
+group by request_at;
+```
