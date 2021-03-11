@@ -6,12 +6,13 @@
 2. 查找第n高的数据
 3. 多表查询
 4. 日期diff
-5. 分类汇总的同时求平均
+5. 分类汇总的同时求平均 / 过滤百分比
 6. 维度转换
 7. 连续出现的满足条件的数据
 8. 分数排名（重要）
 9. 部门工资前三高的所有员工（*）
 10. 行程和用户（*）
+11. 超过5名学生选了的课
 
 ## answers
 -----------
@@ -39,7 +40,7 @@
 
 - `select name, c from (select name, count(name) as c from borrow_record group by name) as p where p.c > 1` 可以作为本题答案，通过子查询先按组汇总name的名字
 
-- `select name, count(name) as c from borrow_record group by name having c > 1` 更好用
+- `select name, count(name) as c from borrow_record group by name having c > 1` 是比较标准的答案
 
 ### 查找第n高的数据
 
@@ -162,6 +163,25 @@ group by klass;
 3. 使用`sun...case...when...then...else...end`语法来计算总人数和人数占比
 
 注意：on语句中不可以直接带`p.av >= 80`作为过滤条件，因为过滤后就没法算占比了。
+
+#### 另一个问题：计算分数排名20%以下的人的平均成绩
+
+获得分数排名20%以下的人：
+
+```sql
+-- 方式1，窗口函数
+select stud_id, grade, row_number() over(order by grade) as rank
+-- 方式2，使用变量
+select stud_id, grade, (select @cur := @cur + 1) as rank from grade, (select @cur := 0) t order by grade desc;
+```
+
+最终代码：
+
+```sql
+select avg(grade) from
+(select stud_id, grade, (select @cur := @cur + 1) as rank from grade, (select @cur := 0) t order by grade desc) as r
+where r.rank > 0.2 * (select count(*) from grade);
+```
 
 ### 维度转换
 
@@ -482,7 +502,7 @@ left join (select users_id from users where banned = 'yes') as A1 on (trips.driv
 where A.users_id is null and A1.users_id is null;
 ```
 
-都需要将`client_id`和`driver_id`分开进行计算。
+所有解法都需要将`client_id`和`driver_id`分开进行计算。
 
 整体答案：
 
@@ -495,4 +515,37 @@ from trips
   join users as u on trips.driver_id = u.users_id and users.banned != 'Yes'
 where trips.request_at >= '2013-10-01' and trips.request_at <= '2013-10-03'
 group by request_at;
+```
+
+### 超过5名学生选了的课
+
+`courses`表：
+
++---------+----------+
+| student | class    |
++---------+----------+
+| A       | Math     |
+| B       | English  |
+| C       | Math     |
+| D       | Biology  |
+| E       | Math     |
+| F       | Computer |
+| G       | Math     |
+| A       | Math     |
++---------+----------+
+
+courses表的记录是有重叠的，所以需要先去个重：
+
+```sql
+select class
+-- 注意这里的 `distinct student` 和 `class` 是可以混合输出的，并不会引起维度问题
+from (select distinct student, class from courses) as r
+group by class
+having count(*) >= 5;
+```
+
+进一步可以优化成这样：
+
+```sql
+select class from courses group by class having count(distinct student) >= 5;
 ```
